@@ -124,7 +124,7 @@ const Products = () => {
                     <p className="text-muted-foreground mb-3">{product.description}</p>
                     <p className="text-sm text-primary font-semibold mb-4">{product.specs}</p>
                     <Button variant="outline" className="w-full group">
-                      More Details
+                      Más Detalles
                       <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                     </Button>
                   </Card>

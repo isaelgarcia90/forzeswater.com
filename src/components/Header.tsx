@@ -23,13 +23,12 @@ const Header = () => {
   };
 
   const navItems = [
-    { label: "Home", id: "hero" },
-    { label: "About Us", id: "about" },
-    { label: "Solutions", id: "solutions" },
-    { label: "Products", id: "products" },
-    { label: "Services", id: "services" },
-    { label: "Projects", id: "projects" },
-    { label: "Contact", id: "contact" },
+    { label: "Inicio", id: "hero" },
+    { label: "Nosotros", id: "about" },
+    { label: "Soluciones", id: "solutions" },
+    { label: "Productos", id: "products" },
+    { label: "Servicios", id: "services" },
+    { label: "Contacto", id: "contact" },
   ];
 
   return (
@@ -61,7 +60,7 @@ const Header = () => {
 
         <div className="hidden md:block">
           <Button onClick={() => scrollToSection("contact")} className="bg-gradient-primary">
-            Get a Quote
+            Solicitar Cotización
           </Button>
         </div>
 
@@ -88,7 +87,7 @@ const Header = () => {
               </button>
             ))}
             <Button onClick={() => scrollToSection("contact")} className="bg-gradient-primary w-full">
-              Get a Quote
+              Solicitar Cotización
             </Button>
           </div>
         </div>
