@@ -5,23 +5,23 @@ const About = () => {
   const benefits = [
     {
       icon: Award,
-      title: "10+ Years Experience",
-      description: "Over a decade of expertise in water treatment solutions",
+      title: "Más de 10 Años de Experiencia",
+      description: "Más de una década de experiencia en soluciones de tratamiento de agua",
     },
     {
       icon: Shield,
-      title: "Engineering-Grade Equipment",
-      description: "Industrial-strength systems built to last",
+      title: "Equipos de Grado Ingenieril",
+      description: "Sistemas de resistencia industrial construidos para durar",
     },
     {
       icon: Wrench,
-      title: "Turnkey Installation",
-      description: "Complete automation and installation services",
+      title: "Instalación Llave en Mano",
+      description: "Automatización completa y servicios de instalación",
     },
     {
       icon: HeadphonesIcon,
-      title: "Technical Support",
-      description: "Maintenance and 24/7 support for your systems",
+      title: "Soporte Técnico",
+      description: "Mantenimiento y soporte 24/7 para sus sistemas",
     },
   ];
 
@@ -30,11 +30,11 @@ const About = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-            About AquaTech Solutions
+            Acerca de AquaTech Solutions
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Leading provider of comprehensive water treatment systems with a commitment to quality,
-            innovation, and environmental sustainability.
+            Proveedor líder de sistemas integrales de tratamiento de agua con un compromiso con la calidad,
+            innovación y sostenibilidad ambiental.
           </p>
         </div>
 

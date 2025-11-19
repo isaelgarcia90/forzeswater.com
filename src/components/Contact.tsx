@@ -115,9 +115,9 @@ const Contact = () => {
                 <Mail className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h3 className="font-bold text-lg text-foreground mb-1">Email</h3>
+                <h3 className="font-bold text-lg text-foreground mb-1">Correo Electrónico</h3>
                 <p className="text-muted-foreground">info@aquatech-solutions.com</p>
-                <p className="text-muted-foreground">sales@aquatech-solutions.com</p>
+                <p className="text-muted-foreground">ventas@aquatech-solutions.com</p>
               </div>
             </Card>
 
@@ -126,15 +126,15 @@ const Contact = () => {
                 <MapPin className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h3 className="font-bold text-lg text-foreground mb-1">Address</h3>
-                <p className="text-muted-foreground">123 Industrial Avenue</p>
-                <p className="text-muted-foreground">Water Treatment District</p>
-                <p className="text-muted-foreground">City, State 12345</p>
+                <h3 className="font-bold text-lg text-foreground mb-1">Dirección</h3>
+                <p className="text-muted-foreground">123 Avenida Industrial</p>
+                <p className="text-muted-foreground">Distrito de Tratamiento de Agua</p>
+                <p className="text-muted-foreground">Ciudad, Estado 12345</p>
               </div>
             </Card>
 
             <div className="h-64 rounded-lg overflow-hidden bg-muted flex items-center justify-center">
-              <p className="text-muted-foreground">Map integration placeholder</p>
+              <p className="text-muted-foreground">Integración de mapa</p>
             </div>
           </div>
         </div>

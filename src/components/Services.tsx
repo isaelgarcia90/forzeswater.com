@@ -5,33 +5,33 @@ const Services = () => {
   const services = [
     {
       icon: Ruler,
-      title: "Engineering & Design",
-      description: "Custom water treatment system design and engineering services tailored to your requirements",
+      title: "Ingeniería y Diseño",
+      description: "Diseño personalizado de sistemas de tratamiento de agua e ingeniería adaptada a sus requisitos",
     },
     {
       icon: Construction,
-      title: "Installation",
-      description: "Professional installation services with certified technicians and quality assurance",
+      title: "Instalación",
+      description: "Servicios de instalación profesional con técnicos certificados y garantía de calidad",
     },
     {
       icon: Calendar,
-      title: "Preventive Maintenance",
-      description: "Regular maintenance programs to ensure optimal system performance and longevity",
+      title: "Mantenimiento Preventivo",
+      description: "Programas de mantenimiento regular para garantizar el rendimiento óptimo y la longevidad del sistema",
     },
     {
       icon: Phone,
-      title: "Technical Support",
-      description: "24/7 on-site technical support and emergency response services",
+      title: "Soporte Técnico",
+      description: "Soporte técnico en sitio 24/7 y servicios de respuesta de emergencia",
     },
     {
       icon: FlaskConical,
-      title: "Water Analysis",
-      description: "Comprehensive water quality testing and consulting services",
+      title: "Análisis de Agua",
+      description: "Pruebas exhaustivas de calidad del agua y servicios de consultoría",
     },
     {
       icon: Settings,
-      title: "Custom Manufacturing",
-      description: "Bespoke water treatment equipment manufactured to your specifications",
+      title: "Fabricación Personalizada",
+      description: "Equipos de tratamiento de agua personalizados fabricados según sus especificaciones",
     },
   ];
 
@@ -40,10 +40,10 @@ const Services = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Our Services
+            Nuestros Servicios
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Complete water treatment services from design to maintenance
+            Servicios completos de tratamiento de agua desde el diseño hasta el mantenimiento
           </p>
         </div>
 

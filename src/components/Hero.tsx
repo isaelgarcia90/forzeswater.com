@@ -26,11 +26,11 @@ const Hero = () => {
       <div className="relative z-10 container mx-auto px-4 py-32">
         <div className="max-w-3xl">
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
-            Professional Water Treatment Solutions
+            Soluciones Profesionales de Tratamiento de Agua
           </h1>
           <p className="text-xl md:text-2xl text-white/90 mb-8 leading-relaxed">
-            We design, manufacture, and install high-efficiency water treatment systems, pumps,
-            filtration units, and purification plants for industry, commerce, and residential systems.
+            Diseñamos, fabricamos e instalamos sistemas de tratamiento de agua de alta eficiencia, bombas,
+            unidades de filtración y plantas de purificación para industria, comercio y sistemas residenciales.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <Button
@@ -38,7 +38,7 @@ const Hero = () => {
               onClick={() => scrollToSection("contact")}
               className="bg-white text-primary hover:bg-white/90 shadow-large group"
             >
-              Request a Quote
+              Solicitar Cotización
               <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Button>
             <Button
@@ -48,7 +48,7 @@ const Hero = () => {
               className="bg-white/10 backdrop-blur-sm text-white border-white/30 hover:bg-white/20"
             >
               <PlayCircle className="mr-2 h-5 w-5" />
-              Explore Products
+              Explorar Productos
             </Button>
           </div>
         </div>

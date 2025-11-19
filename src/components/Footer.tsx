@@ -20,7 +20,7 @@ const Footer = () => {
               <span className="text-xl font-bold">AquaTech Solutions</span>
             </div>
             <p className="text-white/80 mb-4">
-              Professional water treatment solutions for a cleaner, healthier future.
+              Soluciones profesionales de tratamiento de agua para un futuro más limpio y saludable.
             </p>
             <div className="flex space-x-4">
               <a href="#" className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
@@ -39,15 +39,20 @@ const Footer = () => {
           </div>
 
           <div>
-            <h3 className="text-lg font-bold mb-4">Quick Links</h3>
+            <h3 className="text-lg font-bold mb-4">Enlaces Rápidos</h3>
             <ul className="space-y-2">
-              {["Home", "About Us", "Solutions", "Products"].map((item) => (
-                <li key={item}>
+              {[
+                { label: "Inicio", id: "hero" },
+                { label: "Nosotros", id: "about" },
+                { label: "Soluciones", id: "solutions" },
+                { label: "Productos", id: "products" }
+              ].map((item) => (
+                <li key={item.id}>
                   <button
-                    onClick={() => scrollToSection(item.toLowerCase().replace(" ", ""))}
+                    onClick={() => scrollToSection(item.id)}
                     className="text-white/80 hover:text-white transition-colors"
                   >
-                    {item}
+                    {item.label}
                   </button>
                 </li>
               ))}
@@ -55,15 +60,18 @@ const Footer = () => {
           </div>
 
           <div>
-            <h3 className="text-lg font-bold mb-4">Services</h3>
+            <h3 className="text-lg font-bold mb-4">Servicios</h3>
             <ul className="space-y-2">
-              {["Services", "Projects", "Contact"].map((item) => (
-                <li key={item}>
+              {[
+                { label: "Servicios", id: "services" },
+                { label: "Contacto", id: "contact" }
+              ].map((item) => (
+                <li key={item.id}>
                   <button
-                    onClick={() => scrollToSection(item.toLowerCase())}
+                    onClick={() => scrollToSection(item.id)}
                     className="text-white/80 hover:text-white transition-colors"
                   >
-                    {item}
+                    {item.label}
                   </button>
                 </li>
               ))}
@@ -71,12 +79,12 @@ const Footer = () => {
           </div>
 
           <div>
-            <h3 className="text-lg font-bold mb-4">Contact Info</h3>
+            <h3 className="text-lg font-bold mb-4">Información de Contacto</h3>
             <ul className="space-y-2 text-white/80">
               <li>+1 (555) 123-4567</li>
               <li>info@aquatech-solutions.com</li>
-              <li>123 Industrial Avenue</li>
-              <li>City, State 12345</li>
+              <li>123 Avenida Industrial</li>
+              <li>Ciudad, Estado 12345</li>
             </ul>
           </div>
         </div>

@@ -5,33 +5,33 @@ const Solutions = () => {
   const solutions = [
     {
       icon: Droplets,
-      title: "Water Pumping Systems",
-      description: "High-efficiency pumps for all water distribution needs",
+      title: "Sistemas de Bombeo de Agua",
+      description: "Bombas de alta eficiencia para todas las necesidades de distribución de agua",
     },
     {
       icon: Filter,
-      title: "Filtration & Sedimentation",
-      description: "Advanced multi-stage filtration for clean water",
+      title: "Filtración y Sedimentación",
+      description: "Filtración avanzada de múltiples etapas para agua limpia",
     },
     {
       icon: Waves,
-      title: "Reverse Osmosis Systems",
-      description: "State-of-the-art RO technology for pure water",
+      title: "Sistemas de Ósmosis Inversa",
+      description: "Tecnología RO de última generación para agua pura",
     },
     {
       icon: Gauge,
-      title: "Water Softening",
-      description: "Complete water softening and desalination systems",
+      title: "Ablandamiento de Agua",
+      description: "Sistemas completos de ablandamiento y desalinización de agua",
     },
     {
       icon: Factory,
-      title: "Treatment Plants",
-      description: "Industrial and commercial water treatment facilities",
+      title: "Plantas de Tratamiento",
+      description: "Instalaciones de tratamiento de agua industrial y comercial",
     },
     {
       icon: Cpu,
-      title: "Automation & Control",
-      description: "Smart control panels and PLC integration",
+      title: "Automatización y Control",
+      description: "Paneles de control inteligentes e integración PLC",
     },
   ];
 
@@ -40,10 +40,10 @@ const Solutions = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Our Solutions
+            Nuestras Soluciones
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Comprehensive water treatment solutions tailored to your specific needs
+            Soluciones integrales de tratamiento de agua adaptadas a sus necesidades específicas
           </p>
         </div>
 
