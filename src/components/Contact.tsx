@@ -18,8 +18,8 @@ const Contact = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     toast({
-      title: "Message Sent!",
-      description: "We'll get back to you as soon as possible.",
+      title: "¡Mensaje Enviado!",
+      description: "Nos pondremos en contacto contigo lo antes posible.",
     });
     setFormData({ name: "", email: "", phone: "", message: "" });
   };
@@ -33,10 +33,10 @@ const Contact = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Get In Touch
+            Contáctanos
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Request a quote or contact us for any inquiries about our water treatment solutions
+            Solicita una cotización o contáctanos para cualquier consulta sobre nuestras soluciones de tratamiento de agua
           </p>
         </div>
 
@@ -45,7 +45,7 @@ const Contact = () => {
             <Card className="p-8 bg-card border-border">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Name</label>
+                  <label className="block text-sm font-medium text-foreground mb-2">Nombre</label>
                   <Input
                     type="text"
                     name="name"
@@ -53,11 +53,11 @@ const Contact = () => {
                     onChange={handleChange}
                     required
                     className="w-full"
-                    placeholder="Your full name"
+                    placeholder="Tu nombre completo"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Email</label>
+                  <label className="block text-sm font-medium text-foreground mb-2">Correo Electrónico</label>
                   <Input
                     type="email"
                     name="email"
@@ -65,22 +65,22 @@ const Contact = () => {
                     onChange={handleChange}
                     required
                     className="w-full"
-                    placeholder="your.email@example.com"
+                    placeholder="tu.correo@ejemplo.com"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Phone</label>
+                  <label className="block text-sm font-medium text-foreground mb-2">Teléfono</label>
                   <Input
                     type="tel"
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
                     className="w-full"
-                    placeholder="+1 (555) 000-0000"
+                    placeholder="+52 (55) 0000-0000"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Message</label>
+                  <label className="block text-sm font-medium text-foreground mb-2">Mensaje</label>
                   <Textarea
                     name="message"
                     value={formData.message}
@@ -88,11 +88,11 @@ const Contact = () => {
                     required
                     rows={6}
                     className="w-full"
-                    placeholder="Tell us about your project requirements..."
+                    placeholder="Cuéntanos sobre los requerimientos de tu proyecto..."
                   />
                 </div>
                 <Button type="submit" className="w-full bg-gradient-primary">
-                  Send Message
+                  Enviar Mensaje
                 </Button>
               </form>
             </Card>
@@ -104,9 +104,9 @@ const Contact = () => {
                 <Phone className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h3 className="font-bold text-lg text-foreground mb-1">Phone</h3>
-                <p className="text-muted-foreground">+1 (555) 123-4567</p>
-                <p className="text-muted-foreground">+1 (555) 765-4321</p>
+                <h3 className="font-bold text-lg text-foreground mb-1">Teléfono</h3>
+                <p className="text-muted-foreground">+52 (55) 123-4567</p>
+                <p className="text-muted-foreground">+52 (55) 765-4321</p>
               </div>
             </Card>
 
@@ -116,8 +116,8 @@ const Contact = () => {
               </div>
               <div>
                 <h3 className="font-bold text-lg text-foreground mb-1">Correo Electrónico</h3>
-                <p className="text-muted-foreground">info@aquatech-solutions.com</p>
-                <p className="text-muted-foreground">ventas@aquatech-solutions.com</p>
+                <p className="text-muted-foreground">info@forseswater.com</p>
+                <p className="text-muted-foreground">ventas@forseswater.com</p>
               </div>
             </Card>
 
