@@ -15,9 +15,9 @@ const Footer = () => {
           <div>
             <div className="flex items-center space-x-2 mb-4">
               <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
-                <span className="text-xl font-bold">AQ</span>
+                <span className="text-xl font-bold">FW</span>
               </div>
-              <span className="text-xl font-bold">AquaTech Solutions</span>
+              <span className="text-xl font-bold">Forses Water</span>
             </div>
             <p className="text-white/80 mb-4">
               Soluciones profesionales de tratamiento de agua para un futuro más limpio y saludable.
@@ -81,8 +81,8 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-bold mb-4">Información de Contacto</h3>
             <ul className="space-y-2 text-white/80">
-              <li>+1 (555) 123-4567</li>
-              <li>info@aquatech-solutions.com</li>
+              <li>+52 (55) 123-4567</li>
+              <li>info@forseswater.com</li>
               <li>123 Avenida Industrial</li>
               <li>Ciudad, Estado 12345</li>
             </ul>
@@ -90,7 +90,7 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-white/20 pt-8 text-center text-white/60">
-          <p>&copy; {new Date().getFullYear()} AquaTech Solutions. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Forses Water. Todos los derechos reservados.</p>
         </div>
       </div>
     </footer>

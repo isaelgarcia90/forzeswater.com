@@ -40,9 +40,9 @@ const Header = () => {
       <nav className="container mx-auto px-4 py-4 flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <div className="w-10 h-10 rounded-lg bg-gradient-primary flex items-center justify-center">
-            <span className="text-xl font-bold text-white">AQ</span>
+            <span className="text-xl font-bold text-white">FW</span>
           </div>
-          <span className="text-xl font-bold text-foreground">AquaTech Solutions</span>
+          <span className="text-xl font-bold text-foreground">Forses Water</span>
         </div>
 
         {/* Desktop Navigation */}
