@@ -23,7 +23,7 @@ const Footer = () => {
               Soluciones profesionales de tratamiento de agua para un futuro más limpio y saludable.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
+              <a href="https://www.facebook.com/forses.psco" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
                 <Facebook className="h-5 w-5" />
               </a>
               <a href="#" className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
@@ -81,7 +81,7 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-bold mb-4">Información de Contacto</h3>
             <ul className="space-y-2 text-white/80">
-              <li>+52 (55) 123-4567</li>
+              <li>+52 55 1807 0867</li>
               <li>info@forseswater.com</li>
               <li>123 Avenida Industrial</li>
               <li>Ciudad, Estado 12345</li>

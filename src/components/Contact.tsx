@@ -76,7 +76,7 @@ const Contact = () => {
                     value={formData.phone}
                     onChange={handleChange}
                     className="w-full"
-                    placeholder="+52 (55) 0000-0000"
+                    placeholder="+52 55 1807 0867"
                   />
                 </div>
                 <div>
@@ -105,8 +105,12 @@ const Contact = () => {
               </div>
               <div>
                 <h3 className="font-bold text-lg text-foreground mb-1">Teléfono</h3>
-                <p className="text-muted-foreground">+52 (55) 123-4567</p>
-                <p className="text-muted-foreground">+52 (55) 765-4321</p>
+                <p className="text-muted-foreground">+52 55 1807 0867</p>
+                <p className="text-muted-foreground">
+                  <a href="https://wa.me/525518070867" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
+                    WhatsApp: +52 55 1807 0867
+                  </a>
+                </p>
               </div>
             </Card>
 
