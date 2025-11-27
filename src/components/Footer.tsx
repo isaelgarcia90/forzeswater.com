@@ -23,7 +23,7 @@ const Footer = () => {
               Soluciones profesionales de tratamiento de agua para un futuro más limpio y saludable.
             </p>
             <div className="flex space-x-4">
-              <a href="https://www.facebook.com/forses.psco" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
+              <a href="https://www.facebook.com/forses.psco" target="_blank" rel="noopener noreferrer nofollow" className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
                 <Facebook className="h-5 w-5" />
               </a>
               <a href="#" className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
