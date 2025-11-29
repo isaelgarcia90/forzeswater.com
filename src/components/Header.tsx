@@ -42,7 +42,9 @@ const Header = () => {
           <div className="w-10 h-10 rounded-lg bg-gradient-primary flex items-center justify-center">
             <span className="text-xl font-bold text-white">FW</span>
           </div>
-          <span className="text-xl font-bold text-foreground">Forses Water</span>
+          <span className={`text-xl font-bold transition-colors ${
+            isScrolled ? "text-foreground" : "text-white"
+          }`}>Forses Water</span>
         </div>
 
         {/* Desktop Navigation */}
@@ -51,7 +53,9 @@ const Header = () => {
             <button
               key={item.id}
               onClick={() => scrollToSection(item.id)}
-              className="text-sm font-medium text-foreground hover:text-primary transition-colors"
+              className={`text-sm font-medium hover:text-primary transition-colors ${
+                isScrolled ? "text-foreground" : "text-white"
+              }`}
             >
               {item.label}
             </button>
@@ -66,7 +70,9 @@ const Header = () => {
 
         {/* Mobile Menu Button */}
         <button
-          className="md:hidden p-2 text-foreground"
+          className={`md:hidden p-2 transition-colors ${
+            isScrolled ? "text-foreground" : "text-white"
+          }`}
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         >
           {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
