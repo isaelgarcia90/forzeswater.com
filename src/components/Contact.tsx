@@ -179,14 +179,24 @@ const Contact = () => {
               </div>
               <div>
                 <h3 className="font-bold text-lg text-foreground mb-1">Dirección</h3>
-                <p className="text-muted-foreground">123 Avenida Industrial</p>
-                <p className="text-muted-foreground">Distrito de Tratamiento de Agua</p>
-                <p className="text-muted-foreground">Ciudad, Estado 12345</p>
+                <p className="text-muted-foreground">Forses Water</p>
+                <p className="text-muted-foreground">Sonora, Chalma de Guadalupe</p>
+                <p className="text-muted-foreground">Gustavo A. Madero, 07210</p>
+                <p className="text-muted-foreground">Ciudad de México, CDMX</p>
               </div>
             </Card>
 
-            <div className="h-64 rounded-lg overflow-hidden bg-muted flex items-center justify-center">
-              <p className="text-muted-foreground">Integración de mapa</p>
+            <div className="h-64 rounded-lg overflow-hidden">
+              <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d234.9787687500776!2d-99.15236263258704!3d19.55619245314375!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1ses-419!2smx!4v1764695401983!5m2!1ses-419!2smx"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Ubicación de Forses Water"
+              />
             </div>
           </div>
         </div>
