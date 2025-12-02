@@ -1,27 +1,63 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
-import { Mail, Phone, MapPin } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { Mail, Phone, MapPin, CheckCircle, XCircle, Loader2 } from "lucide-react";
+
+type SubmitStatus = "idle" | "loading" | "success" | "error";
 
 const Contact = () => {
-  const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
     message: "",
   });
+  const [status, setStatus] = useState<SubmitStatus>("idle");
+  const [showPopup, setShowPopup] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    if (status === "success" || status === "error") {
+      setShowPopup(true);
+      const timer = setTimeout(() => {
+        setShowPopup(false);
+        if (status === "success") {
+          setStatus("idle");
+        }
+      }, 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [status]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: "¡Mensaje Enviado!",
-      description: "Nos pondremos en contacto contigo lo antes posible.",
-    });
-    setFormData({ name: "", email: "", phone: "", message: "" });
+    setStatus("loading");
+
+    try {
+      const response = await fetch("https://formspree.io/f/xblnyzay", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          Nombre: formData.name,
+          "Correo Electrónico": formData.email,
+          Teléfono: formData.phone,
+          Mensaje: formData.message,
+        }),
+      });
+
+      if (response.ok) {
+        setStatus("success");
+        setFormData({ name: "", email: "", phone: "", message: "" });
+      } else {
+        setStatus("error");
+      }
+    } catch {
+      setStatus("error");
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -91,8 +127,20 @@ const Contact = () => {
                     placeholder="Cuéntanos sobre los requerimientos de tu proyecto..."
                   />
                 </div>
-                <Button type="submit" className="w-full bg-gradient-primary">
-                  Enviar Mensaje
+                <Button 
+                  type="submit" 
+                  className="w-full bg-gradient-primary"
+                  disabled={status === "loading"}
+                  aria-busy={status === "loading"}
+                >
+                  {status === "loading" ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Enviando...
+                    </>
+                  ) : (
+                    "Enviar Mensaje"
+                  )}
                 </Button>
               </form>
             </Card>
@@ -143,6 +191,39 @@ const Contact = () => {
           </div>
         </div>
       </div>
+
+      {/* Animated Popup */}
+      {showPopup && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 animate-fade-in"
+          role="alert"
+          aria-live="assertive"
+        >
+          <div className={`
+            mx-4 max-w-md w-full p-6 rounded-xl shadow-2xl animate-scale-in
+            ${status === "success" 
+              ? "bg-gradient-to-br from-green-500 to-emerald-600" 
+              : "bg-gradient-to-br from-red-500 to-rose-600"
+            }
+          `}>
+            <div className="flex flex-col items-center text-center text-white">
+              {status === "success" ? (
+                <CheckCircle className="h-16 w-16 mb-4 animate-bounce" />
+              ) : (
+                <XCircle className="h-16 w-16 mb-4 animate-bounce" />
+              )}
+              <h3 className="text-xl font-bold mb-2">
+                {status === "success" ? "¡Excelente!" : "¡Lo sentimos!"}
+              </h3>
+              <p className="text-white/90">
+                {status === "success"
+                  ? "Tu mensaje ha sido enviado satisfactoriamente. Nos pondremos en contacto a la brevedad."
+                  : "Algo salió mal. Por favor intenta de nuevo más tarde. Si el problema persiste contacta directamente a soporte técnico."}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };
