@@ -27,10 +27,10 @@ const Footer = () => {
                 <Facebook className="h-5 w-5" />
               </a>
               <a href="#" className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
-                <Linkedin className="h-5 w-5" />
+                <Instagram className="h-5 w-5" />
               </a>
               <a href="#" className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
-                <Instagram className="h-5 w-5" />
+                <Linkedin className="h-5 w-5" />
               </a>
             </div>
           </div>
