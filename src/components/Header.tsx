@@ -44,7 +44,7 @@ const Header = () => {
           </div>
           <span className={`text-xl font-bold transition-colors ${
             isScrolled ? "text-foreground" : "text-white"
-          }`}>Forses Water</span>
+          }`}>Forzes Water</span>
         </div>
 
         {/* Desktop Navigation */}

@@ -44,7 +44,7 @@ const About = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Acerca de Forses Water
+            Acerca de Forzes Water
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             Proveedor líder de sistemas integrales de tratamiento de agua con un compromiso con la calidad,

@@ -168,8 +168,8 @@ const Contact = () => {
               </div>
               <div>
                 <h3 className="font-bold text-lg text-foreground mb-1">Correo Electrónico</h3>
-                <p className="text-muted-foreground">info@forseswater.com</p>
-                <p className="text-muted-foreground">ventas@forseswater.com</p>
+                <p className="text-muted-foreground">info@forzeswater.com</p>
+                <p className="text-muted-foreground">ventas@forzeswater.com</p>
               </div>
             </Card>
 
@@ -179,7 +179,7 @@ const Contact = () => {
               </div>
               <div>
                 <h3 className="font-bold text-lg text-foreground mb-1">Dirección</h3>
-                <p className="text-muted-foreground">Forses Water</p>
+                <p className="text-muted-foreground">Forzes Water</p>
                 <p className="text-muted-foreground">Sonora, Chalma de Guadalupe</p>
                 <p className="text-muted-foreground">Gustavo A. Madero, 07210</p>
                 <p className="text-muted-foreground">Ciudad de México, CDMX</p>
@@ -195,7 +195,7 @@ const Contact = () => {
                 allowFullScreen
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                title="Ubicación de Forses Water"
+                title="Ubicación de Forzes Water"
               />
             </div>
           </div>
