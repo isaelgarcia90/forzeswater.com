@@ -80,8 +80,9 @@ const Footer = () => {
             <ul className="space-y-2 text-white/80">
               <li>+52 55 1807 0867</li>
               <li>info@forseswater.com</li>
-              <li>123 Avenida Industrial</li>
-              <li>Ciudad, Estado 12345</li>
+              <li>Sonora, Chalma de Guadalupe</li>
+              <li>Gustavo A. Madero, 07210</li>
+              <li>Ciudad de México, CDMX</li>
             </ul>
           </div>
         </div>
