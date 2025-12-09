@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, PlayCircle } from "lucide-react";
 import heroImage from "@/assets/hero-water-treatment.jpg";
+import WaterDropsBackground from "./WaterDropsBackground";
 
 const Hero = () => {
   const scrollToSection = (id: string) => {
@@ -21,6 +22,9 @@ const Hero = () => {
         />
         <div className="absolute inset-0 bg-gradient-to-r from-primary/90 via-primary/70 to-transparent"></div>
       </div>
+      
+      {/* Water Drops Animation */}
+      <WaterDropsBackground />
 
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 py-32">
