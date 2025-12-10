@@ -2,13 +2,26 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, PlayCircle } from "lucide-react";
 import heroImage from "@/assets/hero-water-treatment.jpg";
 import WaterDropsBackground from "./WaterDropsBackground";
+import { useAnalytics } from "@/hooks/useAnalytics";
 
 const Hero = () => {
+  const { trackCTAClick } = useAnalytics();
+
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
     }
+  };
+
+  const handleQuoteClick = () => {
+    trackCTAClick("Solicitar Cotización", "Hero");
+    scrollToSection("contact");
+  };
+
+  const handleProductsClick = () => {
+    trackCTAClick("Explorar Productos", "Hero");
+    scrollToSection("products");
   };
 
   return (
@@ -39,7 +52,7 @@ const Hero = () => {
           <div className="flex flex-col sm:flex-row gap-4">
             <Button
               size="lg"
-              onClick={() => scrollToSection("contact")}
+              onClick={handleQuoteClick}
               className="bg-white text-primary hover:bg-white/90 shadow-large group"
             >
               Solicitar Cotización
@@ -48,7 +61,7 @@ const Hero = () => {
             <Button
               size="lg"
               variant="outline"
-              onClick={() => scrollToSection("products")}
+              onClick={handleProductsClick}
               className="bg-white/10 backdrop-blur-sm text-white border-white/30 hover:bg-white/20"
             >
               <PlayCircle className="mr-2 h-5 w-5" />

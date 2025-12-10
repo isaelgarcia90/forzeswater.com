@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
+import { useAnalytics } from "@/hooks/useAnalytics";
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { trackCTAClick, trackNavigation } = useAnalytics();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -14,12 +16,18 @@ const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const scrollToSection = (id: string) => {
+  const scrollToSection = (id: string, label: string) => {
+    trackNavigation(label);
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
       setIsMobileMenuOpen(false);
     }
+  };
+
+  const handleQuoteClick = () => {
+    trackCTAClick("Solicitar Cotización", "Header");
+    scrollToSection("contact", "Contacto");
   };
 
   const navItems = [
@@ -28,6 +36,7 @@ const Header = () => {
     { label: "Soluciones", id: "solutions" },
     { label: "Productos", id: "products" },
     { label: "Servicios", id: "services" },
+    { label: "FAQ", id: "faq" },
     { label: "Contacto", id: "contact" },
   ];
 
@@ -52,7 +61,7 @@ const Header = () => {
           {navItems.map((item) => (
             <button
               key={item.id}
-              onClick={() => scrollToSection(item.id)}
+              onClick={() => scrollToSection(item.id, item.label)}
               className={`text-sm font-medium hover:text-primary transition-colors ${
                 isScrolled ? "text-foreground" : "text-white"
               }`}
@@ -63,7 +72,7 @@ const Header = () => {
         </div>
 
         <div className="hidden md:block">
-          <Button onClick={() => scrollToSection("contact")} className="bg-gradient-primary">
+          <Button onClick={handleQuoteClick} className="bg-gradient-primary">
             Solicitar Cotización
           </Button>
         </div>
@@ -86,13 +95,13 @@ const Header = () => {
             {navItems.map((item) => (
               <button
                 key={item.id}
-                onClick={() => scrollToSection(item.id)}
+                onClick={() => scrollToSection(item.id, item.label)}
                 className="text-left text-sm font-medium text-foreground hover:text-primary transition-colors py-2"
               >
                 {item.label}
               </button>
             ))}
-            <Button onClick={() => scrollToSection("contact")} className="bg-gradient-primary w-full">
+            <Button onClick={handleQuoteClick} className="bg-gradient-primary w-full">
               Solicitar Cotización
             </Button>
           </div>
