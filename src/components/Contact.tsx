@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { Mail, Phone, MapPin, CheckCircle, XCircle, Loader2 } from "lucide-react";
+import { useAnalytics } from "@/hooks/useAnalytics";
 
 type SubmitStatus = "idle" | "loading" | "success" | "error";
 
@@ -16,6 +17,7 @@ const Contact = () => {
   });
   const [status, setStatus] = useState<SubmitStatus>("idle");
   const [showPopup, setShowPopup] = useState(false);
+  const { trackFormSubmit, trackContactClick } = useAnalytics();
 
   useEffect(() => {
     if (status === "success" || status === "error") {
@@ -51,17 +53,32 @@ const Contact = () => {
 
       if (response.ok) {
         setStatus("success");
+        trackFormSubmit("Contact Form", true);
         setFormData({ name: "", email: "", phone: "", message: "" });
       } else {
         setStatus("error");
+        trackFormSubmit("Contact Form", false);
       }
     } catch {
       setStatus("error");
+      trackFormSubmit("Contact Form", false);
     }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handlePhoneClick = () => {
+    trackContactClick("Phone");
+  };
+
+  const handleWhatsAppClick = () => {
+    trackContactClick("WhatsApp");
+  };
+
+  const handleEmailClick = () => {
+    trackContactClick("Email");
   };
 
   return (
@@ -153,9 +170,13 @@ const Contact = () => {
               </div>
               <div>
                 <h3 className="font-bold text-lg text-foreground mb-1">Teléfono</h3>
-                <p className="text-muted-foreground">+52 55 1807 0867</p>
                 <p className="text-muted-foreground">
-                  <a href="https://wa.me/525518070867" target="_blank" rel="noopener noreferrer nofollow" className="hover:text-primary transition-colors">
+                  <a href="tel:+525518070867" onClick={handlePhoneClick} className="hover:text-primary transition-colors">
+                    +52 55 1807 0867
+                  </a>
+                </p>
+                <p className="text-muted-foreground">
+                  <a href="https://wa.me/525518070867" target="_blank" rel="noopener noreferrer nofollow" onClick={handleWhatsAppClick} className="hover:text-primary transition-colors">
                     WhatsApp: +52 55 1807 0867
                   </a>
                 </p>
@@ -168,8 +189,16 @@ const Contact = () => {
               </div>
               <div>
                 <h3 className="font-bold text-lg text-foreground mb-1">Correo Electrónico</h3>
-                <p className="text-muted-foreground">info@forzeswater.com</p>
-                <p className="text-muted-foreground">ventas@forzeswater.com</p>
+                <p className="text-muted-foreground">
+                  <a href="mailto:info@forzeswater.com" onClick={handleEmailClick} className="hover:text-primary transition-colors">
+                    info@forzeswater.com
+                  </a>
+                </p>
+                <p className="text-muted-foreground">
+                  <a href="mailto:ventas@forzeswater.com" onClick={handleEmailClick} className="hover:text-primary transition-colors">
+                    ventas@forzeswater.com
+                  </a>
+                </p>
               </div>
             </Card>
 
