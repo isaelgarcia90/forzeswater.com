@@ -9,7 +9,7 @@ import { useAnalytics } from "@/hooks/useAnalytics";
 type SubmitStatus = "idle" | "loading" | "success" | "error";
 
 const PHONE_REGEX = /^\+?[\d\s\-()]{7,20}$/;
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -91,6 +91,15 @@ const Contact = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const newData = { ...formData, [e.target.name]: e.target.value };
     setFormData(newData);
+    // Always validate email in real-time as user types
+    if (e.target.name === "email") {
+      const val = e.target.value.trim();
+      if (val && !EMAIL_REGEX.test(val)) {
+        setErrors(prev => ({ ...prev, email: "Correo electrónico no válido" }));
+      } else if (val) {
+        setErrors(prev => { const { email, ...rest } = prev; return rest; });
+      }
+    }
     if (attempted) {
       const errs = validate(newData);
       setErrors(errs);
