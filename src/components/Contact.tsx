@@ -98,7 +98,7 @@ const Contact = () => {
             <Card className="p-8 bg-card border-border">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Nombre</label>
+                  <label className="block text-sm font-medium text-foreground mb-2">Nombre <span className="text-red-500">*</span></label>
                   <Input
                     type="text"
                     name="name"
@@ -110,7 +110,7 @@ const Contact = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Correo Electrónico</label>
+                  <label className="block text-sm font-medium text-foreground mb-2">Correo Electrónico <span className="text-red-500">*</span></label>
                   <Input
                     type="email"
                     name="email"
@@ -122,7 +122,7 @@ const Contact = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Teléfono</label>
+                  <label className="block text-sm font-medium text-foreground mb-2">Teléfono <span className="text-red-500">*</span></label>
                   <Input
                     type="tel"
                     name="phone"
@@ -134,7 +134,7 @@ const Contact = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Mensaje</label>
+                  <label className="block text-sm font-medium text-foreground mb-2">Mensaje <span className="text-red-500">*</span></label>
                   <Textarea
                     name="message"
                     value={formData.message}
@@ -172,11 +172,6 @@ const Contact = () => {
               <div>
                 <h3 className="font-bold text-lg text-foreground mb-1">Teléfono</h3>
                 <p className="text-muted-foreground">
-                  <a href="tel:+525518070867" onClick={handlePhoneClick} className="hover:text-primary transition-colors">
-                    +52 55 1807 0867
-                  </a>
-                </p>
-                <p className="text-muted-foreground">
                   <a href="https://wa.me/525518070867" target="_blank" rel="noopener noreferrer nofollow" onClick={handleWhatsAppClick} className="hover:text-primary transition-colors">
                     WhatsApp: +52 55 1807 0867
                   </a>
@@ -191,13 +186,8 @@ const Contact = () => {
               <div>
                 <h3 className="font-bold text-lg text-foreground mb-1">Correo Electrónico</h3>
                 <p className="text-muted-foreground">
-                  <a href="mailto:info@forzeswater.com" onClick={handleEmailClick} className="hover:text-primary transition-colors">
-                    info@forzeswater.com
-                  </a>
-                </p>
-                <p className="text-muted-foreground">
-                  <a href="mailto:ventas@forzeswater.com" onClick={handleEmailClick} className="hover:text-primary transition-colors">
-                    ventas@forzeswater.com
+                  <a href="mailto:forzeswater@outlook.com" onClick={handleEmailClick} className="hover:text-primary transition-colors">
+                    forzeswater@outlook.com
                   </a>
                 </p>
               </div>
@@ -210,7 +200,7 @@ const Contact = () => {
               <div>
                 <h3 className="font-bold text-lg text-foreground mb-1">Dirección</h3>
                 <p className="text-muted-foreground">Forzes Water</p>
-                <p className="text-muted-foreground">Sonora, Chalma de Guadalupe</p>
+                <p className="text-muted-foreground">Campeche 1723-111, Chalma de Guadalupe</p>
                 <p className="text-muted-foreground">Gustavo A. Madero, 07210</p>
                 <p className="text-muted-foreground">Ciudad de México, CDMX</p>
               </div>
