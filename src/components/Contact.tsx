@@ -8,6 +8,9 @@ import { useAnalytics } from "@/hooks/useAnalytics";
 
 type SubmitStatus = "idle" | "loading" | "success" | "error";
 
+const PHONE_REGEX = /^\+?[\d\s\-()]{7,20}$/;
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 const Contact = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -17,6 +20,8 @@ const Contact = () => {
   });
   const [status, setStatus] = useState<SubmitStatus>("idle");
   const [showPopup, setShowPopup] = useState(false);
+  const [attempted, setAttempted] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const { trackFormSubmit, trackContactClick } = useAnalytics();
 
   useEffect(() => {
@@ -32,8 +37,24 @@ const Contact = () => {
     }
   }, [status]);
 
+  const validate = (data: typeof formData) => {
+    const errs: Record<string, string> = {};
+    if (!data.name.trim()) errs.name = "Campo obligatorio";
+    if (!data.email.trim()) errs.email = "Campo obligatorio";
+    else if (!EMAIL_REGEX.test(data.email.trim())) errs.email = "Correo electrónico no válido";
+    if (!data.phone.trim()) errs.phone = "Campo obligatorio";
+    else if (!PHONE_REGEX.test(data.phone.trim())) errs.phone = "Número telefónico no válido";
+    if (!data.message.trim()) errs.message = "Campo obligatorio";
+    return errs;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setAttempted(true);
+    const errs = validate(formData);
+    setErrors(errs);
+    if (Object.keys(errs).length > 0) return;
+
     setStatus("loading");
 
     try {
@@ -55,6 +76,8 @@ const Contact = () => {
         setStatus("success");
         trackFormSubmit("Contact Form", true);
         setFormData({ name: "", email: "", phone: "", message: "" });
+        setAttempted(false);
+        setErrors({});
       } else {
         setStatus("error");
         trackFormSubmit("Contact Form", false);
@@ -66,7 +89,12 @@ const Contact = () => {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const newData = { ...formData, [e.target.name]: e.target.value };
+    setFormData(newData);
+    if (attempted) {
+      const errs = validate(newData);
+      setErrors(errs);
+    }
   };
 
   const handlePhoneClick = () => {
@@ -96,54 +124,62 @@ const Contact = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           <div>
             <Card className="p-8 bg-card border-border">
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-6" noValidate>
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Nombre <span className="text-red-500">*</span></label>
+                  <label className="block text-sm font-medium text-foreground mb-2">
+                    Nombre {errors.name && <span className="text-red-500">*</span>}
+                  </label>
                   <Input
                     type="text"
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    required
-                    className="w-full"
+                    className={`w-full ${errors.name ? "border-red-500" : ""}`}
                     placeholder="Tu nombre completo"
                   />
+                  {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Correo Electrónico <span className="text-red-500">*</span></label>
+                  <label className="block text-sm font-medium text-foreground mb-2">
+                    Correo Electrónico {errors.email && <span className="text-red-500">*</span>}
+                  </label>
                   <Input
                     type="email"
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    required
-                    className="w-full"
+                    className={`w-full ${errors.email ? "border-red-500" : ""}`}
                     placeholder="tu.correo@ejemplo.com"
                   />
+                  {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Teléfono <span className="text-red-500">*</span></label>
+                  <label className="block text-sm font-medium text-foreground mb-2">
+                    Teléfono {errors.phone && <span className="text-red-500">*</span>}
+                  </label>
                   <Input
                     type="tel"
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    required
-                    className="w-full"
+                    className={`w-full ${errors.phone ? "border-red-500" : ""}`}
                     placeholder="+52 55 1807 0867"
                   />
+                  {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Mensaje <span className="text-red-500">*</span></label>
+                  <label className="block text-sm font-medium text-foreground mb-2">
+                    Mensaje {errors.message && <span className="text-red-500">*</span>}
+                  </label>
                   <Textarea
                     name="message"
                     value={formData.message}
                     onChange={handleChange}
-                    required
                     rows={6}
-                    className="w-full"
+                    className={`w-full ${errors.message ? "border-red-500" : ""}`}
                     placeholder="Cuéntanos sobre los requerimientos de tu proyecto..."
                   />
+                  {errors.message && <p className="text-red-500 text-xs mt-1">{errors.message}</p>}
                 </div>
                 <Button 
                   type="submit" 
