@@ -128,6 +128,7 @@ const Contact = () => {
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
+                    required
                     className="w-full"
                     placeholder="+52 55 1807 0867"
                   />
