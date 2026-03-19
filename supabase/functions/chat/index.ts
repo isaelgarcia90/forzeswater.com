@@ -21,7 +21,7 @@ const SYSTEM_PROMPT = `Eres el asistente virtual de **Forzes Water**, una empres
 
 **Contacto:**
 - WhatsApp: +52 55 1807 0867
-- Correo: forzeswater@outlook.com
+- Correo: forzeswater@gmail.com
 - Dirección: Campeche 1723-111, Chalma de Guadalupe, Gustavo A. Madero, 07210, Ciudad de México
 
 **Horario:** Lunes a Viernes 9:00 - 18:00

@@ -250,8 +250,8 @@ const Contact = () => {
               <div>
                 <h3 className="font-bold text-lg text-foreground mb-1">Correo Electrónico</h3>
                 <p className="text-muted-foreground">
-                  <a href="mailto:forzeswater@outlook.com" onClick={handleEmailClick} className="hover:text-primary transition-colors">
-                    forzeswater@outlook.com
+                  <a href="mailto:forzeswater@gmail.com" onClick={handleEmailClick} className="hover:text-primary transition-colors">
+                    forzeswater@gmail.com
                   </a>
                 </p>
               </div>
