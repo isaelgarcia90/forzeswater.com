@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Send, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,6 +11,12 @@ const ChatBotInContact = () => {
   const { messages, isLoading, sendMessage } = useChatBot();
   const inputRef = useRef<HTMLInputElement>(null);
   const initialized = useRef(false);
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [messages, isLoading]);
 
   // Auto-greet on first render
   if (!initialized.current && messages.length === 0) {

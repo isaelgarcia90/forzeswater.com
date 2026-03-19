@@ -15,7 +15,7 @@ const ChatBot = () => {
     if (isOpen && inputRef.current) {
       inputRef.current.focus();
     }
-  }, [isOpen]);
+  }, [isOpen, messages, isLoading]);
 
   const handleSend = () => {
     const text = input.trim();
