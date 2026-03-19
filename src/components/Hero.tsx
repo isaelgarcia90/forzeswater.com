@@ -45,7 +45,7 @@ const Hero = () => {
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
             Soluciones Profesionales de Tratamiento de Agua
           </h1>
-          <p className="text-xl md:text-2xl text-white/90 mb-8 leading-relaxed">
+          <p className="text-xl md:text-2xl text-white/90 mb-8 leading-relaxed text-justify">
             Diseñamos, fabricamos e instalamos sistemas de tratamiento de agua de alta eficiencia, bombas,
             unidades de filtración y plantas de purificación para industria, comercio y sistemas residenciales.
           </p>
