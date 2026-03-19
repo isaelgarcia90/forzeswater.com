@@ -74,7 +74,7 @@ const Solutions = () => {
                 <solution.icon className="h-8 w-8 text-white" />
               </div>
               <h3 className="text-2xl font-bold text-foreground mb-3">{solution.title}</h3>
-              <p className="text-muted-foreground text-lg">{solution.description}</p>
+              <p className="text-muted-foreground text-lg text-justify">{solution.description}</p>
             </Card>
           ))}
         </div>
