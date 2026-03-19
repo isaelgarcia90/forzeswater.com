@@ -12,6 +12,12 @@ const ChatBotInContact = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const initialized = useRef(false);
 
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [messages, isLoading]);
+
   // Auto-greet on first render
   if (!initialized.current && messages.length === 0) {
     initialized.current = true;
