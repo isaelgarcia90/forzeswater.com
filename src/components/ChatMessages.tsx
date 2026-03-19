@@ -16,7 +16,7 @@ const ChatMessages = ({ messages, isLoading }: ChatMessagesProps) => {
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }, [messages, isLoading]);
 
   return (
