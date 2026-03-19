@@ -19,7 +19,7 @@ const Footer = () => {
               </div>
               <span className="text-xl font-bold">Forzes Water</span>
             </div>
-            <p className="text-white/80 mb-4">
+            <p className="text-white/80 mb-4 text-justify">
               Soluciones profesionales de tratamiento de agua para un futuro más limpio y saludable.
             </p>
             <div className="flex space-x-4">
