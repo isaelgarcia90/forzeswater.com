@@ -80,8 +80,8 @@ const About = () => {
                     })()}
                   </div>
                   <DialogTitle className="text-2xl">{benefits[selectedBenefit].title}</DialogTitle>
-                  <DialogDescription className="text-base leading-relaxed pt-4">
-                    {benefits[selectedBenefit].detailedDescription}
+                  <DialogDescription className="text-base leading-relaxed pt-4 text-justify">
+                     {benefits[selectedBenefit].detailedDescription}
                   </DialogDescription>
                 </DialogHeader>
               </>

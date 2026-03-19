@@ -213,7 +213,7 @@ const Products = () => {
                     </div>
                     <div>
                       <h4 className="font-semibold text-foreground mb-2">Detalles:</h4>
-                      <p className="text-muted-foreground leading-relaxed">
+                      <p className="text-muted-foreground leading-relaxed text-justify">
                         {product.details}
                       </p>
                     </div>

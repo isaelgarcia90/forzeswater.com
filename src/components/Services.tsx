@@ -96,7 +96,7 @@ const Services = () => {
                   </DialogDescription>
                 </DialogHeader>
                 <div className="mt-4">
-                  <p className="text-muted-foreground leading-relaxed">
+                  <p className="text-muted-foreground leading-relaxed text-justify">
                     {services[selectedService].details}
                   </p>
                 </div>
