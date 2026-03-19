@@ -13,7 +13,7 @@ const ChatBot = () => {
 
   useEffect(() => {
     if (isOpen && inputRef.current) {
-      inputRef.current.focus();
+      inputRef.current.focus({ preventScroll: true });
     }
   }, [isOpen, messages, isLoading]);
 
