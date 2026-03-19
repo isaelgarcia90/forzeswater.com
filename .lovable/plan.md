@@ -1,22 +1,57 @@
 
 
-## Plan: Justificar texto en todas las tarjetas
+## Plan: Chatbot conversacional con IA para recopilación de datos
 
-Agregar `text-justify` a los párrafos descriptivos de todas las tarjetas en cada sección de la página.
+Crear un chatbot con IA que converse naturalmente con los visitantes, responda preguntas sobre Forzes Water y recopile los datos del cliente (nombre, correo, teléfono, mensaje). Los datos se envían a Formspree y se guardan en base de datos.
 
-### Archivos a modificar
+### Componentes a crear/modificar
 
-1. **`src/components/About.tsx`** (línea ~67): Agregar `text-justify` al `<p>` de descripción en las tarjetas de beneficios.
+#### 1. Tabla en base de datos: `chat_leads`
+- Migración SQL para crear tabla con campos: `id`, `name`, `email`, `phone`, `message`, `conversation_history` (jsonb), `created_at`
+- RLS policy para permitir inserts anónimos (público, sin auth requerido)
 
-2. **`src/components/Solutions.tsx`** (línea 77): Agregar `text-justify` al `<p>` de descripción en las tarjetas de soluciones. También en el detalle del dialog (línea 99).
+#### 2. Edge Function: `chat` 
+- Usa Lovable AI (Gemini) con system prompt que instruye al bot a:
+  - Presentarse como asistente de Forzes Water
+  - Responder preguntas sobre servicios de tratamiento de agua
+  - Recopilar nombre, correo, teléfono y consulta de forma conversacional
+  - Retornar un JSON estructurado cuando tenga todos los datos (via tool calling)
+- Streaming SSE para respuestas en tiempo real
 
-3. **`src/components/Products.tsx`** (línea 179): Agregar `text-justify` al `<p>` de descripción en las tarjetas de productos. También en el detalle del dialog (línea 216).
+#### 3. Edge Function: `save-chat-lead`
+- Recibe los datos recopilados por el chatbot
+- Guarda en tabla `chat_leads`
+- Envía a Formspree (mismo endpoint `xblnyzay`)
 
-4. **`src/components/Services.tsx`** (línea ~88): Agregar `text-justify` al `<p>` de descripción en las tarjetas de servicios. También en el detalle del dialog.
+#### 4. Componente: `ChatBot.tsx`
+- Botón flotante (icono de chat) en esquina inferior derecha, encima del botón de WhatsApp
+- Ventana de chat con:
+  - Header con logo/nombre Forzes Water y botón cerrar
+  - Área de mensajes con burbujas estilizadas (gradientes del sistema de diseño)
+  - Input de texto con botón enviar
+  - Indicador de "escribiendo..."
+  - Streaming token por token
+- Estilos consistentes: `bg-card`, `border-border`, gradientes `gradient-primary`
 
-5. **`src/components/FAQ.tsx`** (línea ~97): Agregar `text-justify` al contenido de las respuestas del accordion.
+#### 5. Componente: `ChatBotInContact.tsx`
+- Versión embebida del chatbot para la sección de contacto
+- Card al lado del formulario existente o como tab alternativa
+- Misma lógica, diferente layout (más ancho, sin botón flotante)
+
+#### 6. Modificar `Contact.tsx`
+- Agregar tabs o toggle: "Formulario" / "Chat con IA"
+- Integrar `ChatBotInContact` como opción alternativa
+
+#### 7. Modificar `Index.tsx`
+- Agregar componente `ChatBot` flotante
 
 ### Detalle técnico
 
-En cada caso se agrega la clase de Tailwind `text-justify` a los elementos `<p>` y `<AccordionContent>` que contienen texto descriptivo dentro de tarjetas. No se justifican títulos ni etiquetas cortas, solo párrafos de contenido.
+- **Modelo IA**: `google/gemini-3-flash-preview` (default, rápido y conversacional)
+- **System prompt**: Contextualizado con info de Forzes Water (servicios, productos, dirección, contacto)
+- **Detección de datos completos**: El bot usa tool calling para extraer datos estructurados cuando detecta que tiene nombre, correo, teléfono y mensaje
+- **Streaming**: SSE desde edge function, renderizado token por token en el frontend
+- **Markdown**: Respuestas renderizadas con `react-markdown`
+- **Formspree + DB**: Al completar la recopilación, se llama `save-chat-lead` que guarda en ambos destinos
+- **Posición flotante**: `bottom-36 right-6` (encima del botón WhatsApp que está en `bottom-20`)
 
