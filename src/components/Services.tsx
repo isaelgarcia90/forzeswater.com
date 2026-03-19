@@ -74,7 +74,7 @@ const Services = () => {
                 <service.icon className="h-8 w-8 text-white" />
               </div>
               <h3 className="text-2xl font-bold text-foreground mb-3">{service.title}</h3>
-              <p className="text-muted-foreground text-lg leading-relaxed">{service.description}</p>
+              <p className="text-muted-foreground text-lg leading-relaxed text-justify">{service.description}</p>
             </Card>
           ))}
         </div>
