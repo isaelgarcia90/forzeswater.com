@@ -176,7 +176,7 @@ const Products = () => {
                     </div>
                     <div className="p-6">
                       <h3 className="text-xl font-bold text-foreground mb-2">{product.title}</h3>
-                      <p className="text-muted-foreground mb-3">{product.description}</p>
+                      <p className="text-muted-foreground mb-3 text-justify">{product.description}</p>
                       <p className="text-sm text-primary font-semibold">{product.specs}</p>
                     </div>
                   </Card>
@@ -213,7 +213,7 @@ const Products = () => {
                     </div>
                     <div>
                       <h4 className="font-semibold text-foreground mb-2">Detalles:</h4>
-                      <p className="text-muted-foreground leading-relaxed">
+                      <p className="text-muted-foreground leading-relaxed text-justify">
                         {product.details}
                       </p>
                     </div>

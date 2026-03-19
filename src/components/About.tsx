@@ -63,7 +63,7 @@ const About = () => {
                 <benefit.icon className="h-7 w-7 text-white" />
               </div>
               <h3 className="text-xl font-bold text-foreground mb-2">{benefit.title}</h3>
-              <p className="text-muted-foreground">{benefit.description}</p>
+              <p className="text-muted-foreground text-justify">{benefit.description}</p>
             </Card>
           ))}
         </div>
@@ -80,8 +80,8 @@ const About = () => {
                     })()}
                   </div>
                   <DialogTitle className="text-2xl">{benefits[selectedBenefit].title}</DialogTitle>
-                  <DialogDescription className="text-base leading-relaxed pt-4">
-                    {benefits[selectedBenefit].detailedDescription}
+                  <DialogDescription className="text-base leading-relaxed pt-4 text-justify">
+                     {benefits[selectedBenefit].detailedDescription}
                   </DialogDescription>
                 </DialogHeader>
               </>
