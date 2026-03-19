@@ -51,6 +51,7 @@ const Index = () => {
       </main>
       <Footer />
       <WhatsAppButton />
+      <ChatBot />
       <StickyCTABar />
     </div>
   );
