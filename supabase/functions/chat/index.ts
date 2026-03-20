@@ -42,15 +42,43 @@ const SYSTEM_PROMPT = `Eres el asistente virtual de **Forzes Water**, una empres
 8. Si no sabes algo específico, sugiere contactar directamente por WhatsApp o correo.
 9. Mantén respuestas concisas (máximo 3-4 oraciones por mensaje).`;
 
+// In-memory rate limit store (resets on cold start)
+const rateLimitMap = new Map<string, { start: number; count: number }>();
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
+  // Simple in-memory rate limiting (per-isolate)
+  const clientIP = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+  const now = Date.now();
+  const windowMs = 60_000; // 1 minute window
+  const maxRequests = 10;
+
+  const entry = rateLimitMap.get(clientIP);
+  if (entry && now - entry.start < windowMs) {
+    if (entry.count >= maxRequests) {
+      return new Response(
+        JSON.stringify({ error: "Demasiadas solicitudes, intenta de nuevo en un momento." }),
+        { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+    entry.count++;
+  } else {
+    rateLimitMap.set(clientIP, { start: now, count: 1 });
+  }
+
   try {
     const { messages } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
+    if (!LOVABLE_API_KEY) {
+      console.error("LOVABLE_API_KEY is not configured");
+      return new Response(
+        JSON.stringify({ error: "Error interno del servidor" }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
 
     const response = await fetch(
       "https://ai.gateway.lovable.dev/v1/chat/completions",
@@ -129,7 +157,7 @@ serve(async (req) => {
   } catch (e) {
     console.error("chat error:", e);
     return new Response(
-      JSON.stringify({ error: e instanceof Error ? e.message : "Error desconocido" }),
+      JSON.stringify({ error: "Error interno del servidor" }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
