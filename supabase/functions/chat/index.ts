@@ -42,6 +42,9 @@ const SYSTEM_PROMPT = `Eres el asistente virtual de **Forzes Water**, una empres
 8. Si no sabes algo específico, sugiere contactar directamente por WhatsApp o correo.
 9. Mantén respuestas concisas (máximo 3-4 oraciones por mensaje).`;
 
+// In-memory rate limit store (resets on cold start)
+const rateLimitMap = new Map<string, { start: number; count: number }>();
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
