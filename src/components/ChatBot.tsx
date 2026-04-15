@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { MessageSquare, X, Send, Loader2 } from "lucide-react";
+import { Bot, X, Send, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useChatBot } from "@/hooks/useChatBot";
@@ -51,7 +51,7 @@ const ChatBot = () => {
           className="fixed bottom-36 right-6 z-50 w-14 h-14 bg-gradient-primary text-white rounded-full shadow-large flex items-center justify-center transition-all duration-300 hover:scale-110 group"
           aria-label="Abrir chat con asistente IA"
         >
-          <MessageSquare className="h-7 w-7" />
+          <Bot className="h-7 w-7" />
           <span className="absolute right-full mr-3 bg-card text-foreground px-3 py-2 rounded-lg shadow-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-sm border border-border">
             Chat con IA
           </span>
