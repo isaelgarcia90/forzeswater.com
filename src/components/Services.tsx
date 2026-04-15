@@ -147,7 +147,7 @@ const Services = () => {
                               {brand}
                             </span>
                           ))}
-                          <span className="px-3 py-1 rounded-full bg-muted text-sm text-muted-foreground italic">entre otras</span>
+                          
                         </div>
                       </div>
                     </div>
