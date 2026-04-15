@@ -87,7 +87,7 @@ const Services = () => {
         </div>
 
         <Dialog open={selectedService !== null} onOpenChange={() => setSelectedService(null)}>
-          <DialogContent className="max-w-2xl">
+          <DialogContent className={selectedService !== null && services[selectedService].customDetails ? "max-w-2xl gap-0" : "max-w-2xl"}>
             {selectedService !== null && (
               <>
                 <DialogHeader className="space-y-0">
