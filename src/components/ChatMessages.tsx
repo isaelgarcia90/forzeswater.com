@@ -13,14 +13,17 @@ interface ChatMessagesProps {
 }
 
 const ChatMessages = ({ messages, isLoading }: ChatMessagesProps) => {
+  const containerRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    if (containerRef.current) {
+      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+    }
   }, [messages, isLoading]);
 
   return (
-    <div className="flex-1 overflow-y-auto p-3 space-y-3">
+    <div ref={containerRef} className="flex-1 overflow-y-auto p-3 space-y-3">
       {messages.map((msg, i) => (
         <div
           key={i}
