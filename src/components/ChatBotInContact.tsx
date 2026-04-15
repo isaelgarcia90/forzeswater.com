@@ -19,11 +19,12 @@ const ChatBotInContact = () => {
     }
   }, [messages, isLoading]);
 
-  // Auto-greet on first render
-  if (!initialized.current && messages.length === 0) {
-    initialized.current = true;
-    sendMessage("Hola");
-  }
+  useEffect(() => {
+    if (!initialized.current && messages.length === 0) {
+      initialized.current = true;
+      sendMessage("Hola");
+    }
+  }, []);
 
   const handleSend = () => {
     const text = input.trim();
