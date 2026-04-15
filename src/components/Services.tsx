@@ -17,8 +17,9 @@ const Services = () => {
       icon: Package,
       title: "Venta de Refacciones e Insumos",
       description: "Amplio inventario de refacciones, consumibles e insumos para todo tipo de sistemas de tratamiento de agua, con las mejores marcas del mercado",
-      details: "Contamos con un extenso catálogo de refacciones y consumibles para mantener sus sistemas operando al máximo rendimiento. Nuestra oferta incluye: cartuchería, membranas para ósmosis inversa, refacciones para cualquier tipo de válvula, tarjetas electrónicas, pistones, sellos, resina catiónica, resina para suavizador, resina aniónica, tanques en fibra de vidrio, tanques en acero al carbón, tanques en acero inoxidable, zeolita, carbón activado, arena filtrante, sal en pellet, dosificadoras, rotámetros, manómetros, refacciones para cualquier tipo de bomba, bombas superficiales, bombas sumergibles, bombas para R.O., tableros de control e insumos químicos para plantas.\n\nMarcas que manejamos: Fleck, Clack, Pentair, Dow, Aquatrol, Hydronix, Canature, Aquex, Hydranautics, Purolite y America Water, entre otras.",
+      details: "Contamos con un extenso catálogo de refacciones y consumibles para mantener sus sistemas operando al máximo rendimiento. Nuestra oferta incluye: cartuchería, membranas para ósmosis inversa, refacciones para cualquier tipo de válvula, tarjetas electrónicas, pistones, sellos, resina catiónica, resina para suavizador, resina aniónica, tanques en fibra de vidrio, tanques en acero al carbón, tanques en acero inoxidable, zeolita, carbón activado, arena filtrante, sal en pellet, dosificadoras, rotámetros, manómetros, refacciones para cualquier tipo de bomba, bombas superficiales, bombas sumergibles, bombas para R.O., tableros de control e insumos químicos para plantas. Marcas que manejamos: Fleck, Clack, Pentair, Dow, Aquatrol, Hydronix, Canature, Aquex, Hydranautics, Purolite y America Water, entre otras.",
     },
+    {
       icon: Ruler,
       title: "Ingeniería y Diseño",
       description: "Diseño personalizado de sistemas de tratamiento de agua e ingeniería adaptada a sus requisitos",
