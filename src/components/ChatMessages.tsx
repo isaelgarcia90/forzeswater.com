@@ -13,10 +13,13 @@ interface ChatMessagesProps {
 }
 
 const ChatMessages = ({ messages, isLoading }: ChatMessagesProps) => {
+  const containerRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
+    if (containerRef.current) {
+      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+    }
   }, [messages, isLoading]);
 
   return (
