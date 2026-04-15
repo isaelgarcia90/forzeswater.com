@@ -1,4 +1,4 @@
-import { Ruler, Construction, Calendar, Phone, FlaskConical, Settings } from "lucide-react";
+import { Ruler, Construction, Calendar, Phone, FlaskConical, Settings, Package } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import {
   Dialog,
