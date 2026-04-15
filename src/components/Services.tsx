@@ -97,9 +97,11 @@ const Services = () => {
                     })()}
                   </div>
                   <DialogTitle className="text-2xl">{services[selectedService].title}</DialogTitle>
-                  <DialogDescription className="text-base">
-                    {services[selectedService].description}
-                  </DialogDescription>
+                  {services[selectedService].description && services[selectedService].title !== "Venta de Refacciones e Insumos" && (
+                    <DialogDescription className="text-base">
+                      {services[selectedService].description}
+                    </DialogDescription>
+                  )}
                 </DialogHeader>
                 <div className="mt-4">
                   <p className="text-muted-foreground leading-relaxed text-justify">
