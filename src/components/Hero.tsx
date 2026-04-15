@@ -47,8 +47,8 @@ const Hero = () => {
           </h1>
           <p className="text-xl md:text-2xl text-white/90 mb-8 leading-relaxed text-justify">
             Diseñamos, fabricamos e instalamos sistemas de tratamiento de agua de alta eficiencia, bombas,
-            unidades de filtración y plantas de purificación para industria, comercio y sistemas residenciales.
-            Así como proyectos llave en mano, mantenimiento y venta de refacciones e insumos.
+            unidades de filtración y plantas de purificación para industria, comercio y sistemas residenciales,
+            así como proyectos llave en mano, mantenimiento y venta de refacciones e insumos.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <Button
