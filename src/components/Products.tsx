@@ -149,7 +149,7 @@ const Products = () => {
           </p>
         </div>
 
-        <Tabs defaultValue="pumps" className="w-full">
+        <Tabs defaultValue="plants" className="w-full">
           <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 mb-12">
             {productCategories.map((category) => (
               <TabsTrigger key={category.id} value={category.id} className="text-base">
