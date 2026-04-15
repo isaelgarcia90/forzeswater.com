@@ -23,7 +23,7 @@ const ChatMessages = ({ messages, isLoading }: ChatMessagesProps) => {
   }, [messages, isLoading]);
 
   return (
-    <div className="flex-1 overflow-y-auto p-3 space-y-3">
+    <div ref={containerRef} className="flex-1 overflow-y-auto p-3 space-y-3">
       {messages.map((msg, i) => (
         <div
           key={i}
