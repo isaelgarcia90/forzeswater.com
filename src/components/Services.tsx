@@ -97,7 +97,7 @@ const Services = () => {
                     })()}
                   </div>
                   <DialogTitle className="text-2xl">{services[selectedService].title}</DialogTitle>
-                  <DialogDescription className="text-base">
+                  <DialogDescription className="sr-only">
                     {services[selectedService].description}
                   </DialogDescription>
                 </DialogHeader>
