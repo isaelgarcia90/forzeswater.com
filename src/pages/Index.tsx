@@ -16,6 +16,11 @@ import { useAnalytics } from "@/hooks/useAnalytics";
 const Index = () => {
   const { trackScrollDepth } = useAnalytics();
 
+  // Ensure page starts at top
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // Track scroll depth
   useEffect(() => {
     const scrollThresholds = [25, 50, 75, 100];
