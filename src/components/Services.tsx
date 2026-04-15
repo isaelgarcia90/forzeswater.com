@@ -106,7 +106,7 @@ const Services = () => {
                 </DialogHeader>
                 <div className="mt-4">
                   {services[selectedService].customDetails ? (
-                    <div className="space-y-4 text-muted-foreground leading-relaxed">
+                    <div className="space-y-4 text-muted-foreground leading-relaxed -mt-2">
                       <p className="text-justify">
                         Contamos con un extenso catálogo de refacciones y consumibles para mantener sus sistemas operando al máximo rendimiento.
                       </p>
