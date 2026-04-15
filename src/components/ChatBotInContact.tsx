@@ -11,9 +11,10 @@ const ChatBotInContact = () => {
   const { messages, isLoading, sendMessage } = useChatBot();
   const inputRef = useRef<HTMLInputElement>(null);
   const initialized = useRef(false);
+  const hasInteracted = useRef(false);
 
   useEffect(() => {
-    if (inputRef.current) {
+    if (hasInteracted.current && inputRef.current) {
       inputRef.current.focus({ preventScroll: true });
     }
   }, [messages, isLoading]);
