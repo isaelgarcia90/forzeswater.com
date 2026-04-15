@@ -28,6 +28,33 @@ const Products = () => {
   
   const productCategories = [
     {
+      id: "plants",
+      label: "Plantas de Tratamiento",
+      products: [
+        {
+          title: "Plantas de Ósmosis Inversa",
+          description: "Sistemas completos de purificación de agua por ósmosis inversa",
+          specs: "Capacidad de 100 LPH a 100,000 LPH",
+          details: "Plantas de ósmosis inversa completas llave en mano. Incluyen pretratamiento con filtros multimedia y carbón activado, dosificación de antiincrustante, filtros de cartucho 5 micras, bombas de alta presión en acero inoxidable, membranas de última generación (Dow, Hydranautics o Toray), portamembranas en fibra de vidrio, instrumentación digital (TDS, pH, flujo, presión), sistema CIP de limpieza química, panel de control con PLC y HMI. Recuperación de 50-75%. Rechazo de sales >98%. Incluye skid estructural, tubería CPVC/acero inoxidable, válvulas y accesorios.",
+          image: plantaOsmosis,
+        },
+        {
+          title: "Tratamiento de Aguas Residuales",
+          description: "Tratamiento de aguas residuales industriales y municipales",
+          specs: "Tratamiento biológico y químico",
+          details: "Plantas de tratamiento de aguas residuales (PTAR) diseñadas según características del efluente y normativa aplicable. Procesos disponibles: tratamiento primario (cribado, desarenado, sedimentación), secundario biológico (lodos activados, SBR, MBBR, filtros percoladores), terciario (filtración, desinfección UV/cloro). Tratamiento físico-químico para efluentes industriales. Manejo de lodos con espesamiento y deshidratación. Sistemas compactos prefabricados o construcción en sitio. Cumplimiento de NOM-001-SEMARNAT, NOM-002 y NOM-003. Capacidades de 1 a 500 m³/día.",
+          image: plantaResiduales,
+        },
+        {
+          title: "Plantas de Agua Potable",
+          description: "Instalaciones llave en mano para producción de agua potable",
+          specs: "Cumplimiento con estándares de la OMS",
+          details: "Plantas potabilizadoras completas para producción de agua de consumo humano. Tren de tratamiento personalizado según análisis de agua cruda: coagulación-floculación, sedimentación, filtración multimedia, desinfección (cloro, UV, ozono), ajuste de pH, fluoruración. Sistemas de dosificación automática de químicos. Tanques de contacto de cloro. Instrumentación y control automático. Almacenamiento de agua tratada. Sistema de distribución. Cumplimiento total con NOM-127-SSA1 y estándares OMS para agua potable. Desde 5 hasta 500 m³/h. Incluye laboratorio de análisis básico.",
+          image: plantaPotable,
+        },
+      ],
+    },
+    {
       id: "pumps",
       label: "Bombas de Agua",
       products: [
@@ -105,33 +132,6 @@ const Products = () => {
           specs: "Opciones de 1-100 micras",
           details: "Sistemas de filtración de cartucho para remoción de partículas finas. Portafiltros en acero inoxidable 304/316 o polipropileno reforzado. Disponibles en configuraciones de 1 hasta 60 cartuchos. Cartuchos de 10, 20, 30 o 40 pulgadas de longitud. Medios filtrantes: polipropileno plisado, celulosa, fibra de vidrio o poliéster lavable. Micronajes de 1, 5, 10, 20, 50 o 100 micras. Conexiones de 1/2 hasta 4 pulgadas. Presión de trabajo hasta 150 PSI. Ideal para prefiltración de ósmosis inversa, protección de equipos y agua de proceso.",
           image: filtroCartucho,
-        },
-      ],
-    },
-    {
-      id: "plants",
-      label: "Plantas de Tratamiento",
-      products: [
-        {
-          title: "Plantas de Ósmosis Inversa",
-          description: "Sistemas completos de purificación de agua por ósmosis inversa",
-          specs: "Capacidad de 100 LPH a 100,000 LPH",
-          details: "Plantas de ósmosis inversa completas llave en mano. Incluyen pretratamiento con filtros multimedia y carbón activado, dosificación de antiincrustante, filtros de cartucho 5 micras, bombas de alta presión en acero inoxidable, membranas de última generación (Dow, Hydranautics o Toray), portamembranas en fibra de vidrio, instrumentación digital (TDS, pH, flujo, presión), sistema CIP de limpieza química, panel de control con PLC y HMI. Recuperación de 50-75%. Rechazo de sales >98%. Incluye skid estructural, tubería CPVC/acero inoxidable, válvulas y accesorios.",
-          image: plantaOsmosis,
-        },
-        {
-          title: "Tratamiento de Aguas Residuales",
-          description: "Tratamiento de aguas residuales industriales y municipales",
-          specs: "Tratamiento biológico y químico",
-          details: "Plantas de tratamiento de aguas residuales (PTAR) diseñadas según características del efluente y normativa aplicable. Procesos disponibles: tratamiento primario (cribado, desarenado, sedimentación), secundario biológico (lodos activados, SBR, MBBR, filtros percoladores), terciario (filtración, desinfección UV/cloro). Tratamiento físico-químico para efluentes industriales. Manejo de lodos con espesamiento y deshidratación. Sistemas compactos prefabricados o construcción en sitio. Cumplimiento de NOM-001-SEMARNAT, NOM-002 y NOM-003. Capacidades de 1 a 500 m³/día.",
-          image: plantaResiduales,
-        },
-        {
-          title: "Plantas de Agua Potable",
-          description: "Instalaciones llave en mano para producción de agua potable",
-          specs: "Cumplimiento con estándares de la OMS",
-          details: "Plantas potabilizadoras completas para producción de agua de consumo humano. Tren de tratamiento personalizado según análisis de agua cruda: coagulación-floculación, sedimentación, filtración multimedia, desinfección (cloro, UV, ozono), ajuste de pH, fluoruración. Sistemas de dosificación automática de químicos. Tanques de contacto de cloro. Instrumentación y control automático. Almacenamiento de agua tratada. Sistema de distribución. Cumplimiento total con NOM-127-SSA1 y estándares OMS para agua potable. Desde 5 hasta 500 m³/h. Incluye laboratorio de análisis básico.",
-          image: plantaPotable,
         },
       ],
     },
