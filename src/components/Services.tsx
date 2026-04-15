@@ -17,7 +17,8 @@ const Services = () => {
       icon: Package,
       title: "Venta de Refacciones e Insumos",
       description: "Amplio inventario de refacciones, consumibles e insumos para todo tipo de sistemas de tratamiento de agua, con las mejores marcas del mercado",
-      details: "Contamos con un extenso catálogo de refacciones y consumibles para mantener sus sistemas operando al máximo rendimiento. Nuestra oferta incluye: cartuchería, membranas para ósmosis inversa, refacciones para cualquier tipo de válvula, tarjetas electrónicas, pistones, sellos, resina catiónica, resina para suavizador, resina aniónica, tanques en fibra de vidrio, tanques en acero al carbón, tanques en acero inoxidable, zeolita, carbón activado, arena filtrante, sal en pellet, dosificadoras, rotámetros, manómetros, refacciones para cualquier tipo de bomba, bombas superficiales, bombas sumergibles, bombas para R.O., tableros de control e insumos químicos para plantas. Marcas que manejamos: Fleck, Clack, Pentair, Dow, Aquatrol, Hydronix, Canature, Aquex, Hydranautics, Purolite y America Water, entre otras.",
+      details: "",
+      customDetails: true,
     },
     {
       icon: Ruler,
@@ -104,9 +105,57 @@ const Services = () => {
                   )}
                 </DialogHeader>
                 <div className="mt-4">
-                  <p className="text-muted-foreground leading-relaxed text-justify">
-                    {services[selectedService].details}
-                  </p>
+                  {services[selectedService].customDetails ? (
+                    <div className="space-y-4 text-muted-foreground leading-relaxed">
+                      <p className="text-justify">
+                        Contamos con un extenso catálogo de refacciones y consumibles para mantener sus sistemas operando al máximo rendimiento.
+                      </p>
+                      
+                      <div>
+                        <h4 className="font-semibold text-foreground mb-2">Nuestra oferta incluye:</h4>
+                        <ul className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm list-disc list-inside">
+                          <li>Cartuchería</li>
+                          <li>Membranas para ósmosis inversa</li>
+                          <li>Refacciones para válvulas</li>
+                          <li>Tarjetas electrónicas</li>
+                          <li>Pistones y sellos</li>
+                          <li>Resina catiónica</li>
+                          <li>Resina para suavizador</li>
+                          <li>Resina aniónica</li>
+                          <li>Tanques en fibra de vidrio</li>
+                          <li>Tanques en acero al carbón</li>
+                          <li>Tanques en acero inoxidable</li>
+                          <li>Zeolita y carbón activado</li>
+                          <li>Arena filtrante</li>
+                          <li>Sal en pellet</li>
+                          <li>Dosificadoras</li>
+                          <li>Rotámetros y manómetros</li>
+                          <li>Refacciones para bombas</li>
+                          <li>Bombas superficiales</li>
+                          <li>Bombas sumergibles</li>
+                          <li>Bombas para R.O.</li>
+                          <li>Tableros de control</li>
+                          <li>Insumos químicos para plantas</li>
+                        </ul>
+                      </div>
+
+                      <div>
+                        <h4 className="font-semibold text-foreground mb-2">Marcas que manejamos:</h4>
+                        <div className="flex flex-wrap gap-2">
+                          {["Fleck", "Clack", "Pentair", "Dow", "Aquatrol", "Hydronix", "Canature", "Aquex", "Hydranautics", "Purolite", "America Water"].map((brand) => (
+                            <span key={brand} className="px-3 py-1 rounded-full bg-muted text-sm font-medium text-foreground">
+                              {brand}
+                            </span>
+                          ))}
+                          <span className="px-3 py-1 rounded-full bg-muted text-sm text-muted-foreground italic">entre otras</span>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <p className="text-muted-foreground leading-relaxed text-justify">
+                      {services[selectedService].details}
+                    </p>
+                  )}
                 </div>
               </>
             )}
