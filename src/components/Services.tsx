@@ -90,7 +90,7 @@ const Services = () => {
           <DialogContent className="max-w-2xl">
             {selectedService !== null && (
               <>
-                <DialogHeader>
+                <DialogHeader className={services[selectedService].customDetails ? "space-y-0" : undefined}>
                   <div className="w-16 h-16 rounded-xl bg-gradient-primary flex items-center justify-center mb-4">
                     {(() => {
                       const ServiceIcon = services[selectedService].icon;
