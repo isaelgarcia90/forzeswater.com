@@ -28,6 +28,7 @@ const ChatBotInContact = () => {
   const handleSend = () => {
     const text = input.trim();
     if (!text || isLoading) return;
+    hasInteracted.current = true;
     setInput("");
     sendMessage(text);
   };
