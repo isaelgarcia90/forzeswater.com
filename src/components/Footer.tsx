@@ -78,7 +78,7 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-bold mb-4">Información de Contacto</h3>
             <ul className="space-y-2 text-white/80 text-justify">
-              <li>+52 55 1807 0867</li>
+              <li>+52 55 3948 7283</li>
               <li>forzeswater@gmail.com</li>
               <li>Campeche 1723-111, Chalma de Guadalupe</li>
               <li>Gustavo A. Madero, 07210</li>
