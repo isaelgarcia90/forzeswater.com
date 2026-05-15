@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, PlayCircle } from "lucide-react";
-import heroImage from "@/assets/hero-water-treatment.jpg";
+import heroImage from "@/assets/hero-water-treatment.webp";
 import WaterDropsBackground from "./WaterDropsBackground";
 import { useAnalytics } from "@/hooks/useAnalytics";
 
