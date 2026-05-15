@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      catalog_downloads: {
+        Row: {
+          company: string | null
+          created_at: string
+          email: string
+          id: string
+          line_of_interest: string | null
+          name: string
+          phone: string | null
+        }
+        Insert: {
+          company?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          line_of_interest?: string | null
+          name: string
+          phone?: string | null
+        }
+        Update: {
+          company?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          line_of_interest?: string | null
+          name?: string
+          phone?: string | null
+        }
+        Relationships: []
+      }
       chat_leads: {
         Row: {
           conversation_history: Json | null
