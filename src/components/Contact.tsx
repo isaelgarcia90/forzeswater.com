@@ -202,13 +202,13 @@ const Contact = () => {
                         setFormData(prev => ({ ...prev, countryCode: code }));
                       }}
                     >
-                      <SelectTrigger className="w-[130px] flex-shrink-0">
+                      <SelectTrigger className="w-[170px] flex-shrink-0 text-xs">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent className="max-h-72 bg-card z-50">
                         {COUNTRY_CODES.map((c) => (
-                          <SelectItem key={`${c.code}-${c.country}`} value={`${c.code}-${c.country}`}>
-                            {c.country} {c.code}
+                          <SelectItem key={`${c.code}-${c.country}`} value={`${c.code}-${c.country}`} className="text-xs">
+                            {c.name} ({c.code})
                           </SelectItem>
                         ))}
                       </SelectContent>
