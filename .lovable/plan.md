@@ -1,57 +1,18 @@
+## Objetivo
 
+Reducir el peso de la imagen hero (`src/assets/hero-water-treatment.jpg`, ~220 KB) convirtiéndola a WebP para acelerar el LCP en la home.
 
-## Plan: Chatbot conversacional con IA para recopilación de datos
+## Pasos
 
-Crear un chatbot con IA que converse naturalmente con los visitantes, responda preguntas sobre Forzes Water y recopile los datos del cliente (nombre, correo, teléfono, mensaje). Los datos se envían a Formspree y se guardan en base de datos.
+1. Generar `src/assets/hero-water-treatment.webp` a partir del JPG actual usando `cwebp` (calidad ~82, sin redimensionar para conservar nitidez en pantallas grandes). Esperado: 60–75% menos peso (~60–90 KB).
+2. Actualizar el import en `src/components/Hero.tsx` para apuntar al nuevo `.webp`. Vite lo servirá con hash y cache largo. Se conservan los atributos ya añadidos (`width`, `height`, `fetchPriority="high"`, `decoding="async"`).
+3. Eliminar el `.jpg` original para no inflar el repo (Vite solo bundlea lo importado, pero limpiamos el asset huérfano).
+4. Verificar visualmente en preview que la imagen se ve idéntica y que no hay regresiones de layout.
 
-### Componentes a crear/modificar
+## Notas técnicas
 
-#### 1. Tabla en base de datos: `chat_leads`
-- Migración SQL para crear tabla con campos: `id`, `name`, `email`, `phone`, `message`, `conversation_history` (jsonb), `created_at`
-- RLS policy para permitir inserts anónimos (público, sin auth requerido)
+- WebP tiene soporte universal en navegadores modernos (>97%); no se requiere fallback `<picture>` para este caso.
+- No se toca el sistema de diseño ni la animación p5.js de gotas que va encima.
+- Tras aplicar, será necesario republicar para que el cambio impacte la versión live (donde se mide el SEO).
 
-#### 2. Edge Function: `chat` 
-- Usa Lovable AI (Gemini) con system prompt que instruye al bot a:
-  - Presentarse como asistente de Forzes Water
-  - Responder preguntas sobre servicios de tratamiento de agua
-  - Recopilar nombre, correo, teléfono y consulta de forma conversacional
-  - Retornar un JSON estructurado cuando tenga todos los datos (via tool calling)
-- Streaming SSE para respuestas en tiempo real
-
-#### 3. Edge Function: `save-chat-lead`
-- Recibe los datos recopilados por el chatbot
-- Guarda en tabla `chat_leads`
-- Envía a Formspree (mismo endpoint `xblnyzay`)
-
-#### 4. Componente: `ChatBot.tsx`
-- Botón flotante (icono de chat) en esquina inferior derecha, encima del botón de WhatsApp
-- Ventana de chat con:
-  - Header con logo/nombre Forzes Water y botón cerrar
-  - Área de mensajes con burbujas estilizadas (gradientes del sistema de diseño)
-  - Input de texto con botón enviar
-  - Indicador de "escribiendo..."
-  - Streaming token por token
-- Estilos consistentes: `bg-card`, `border-border`, gradientes `gradient-primary`
-
-#### 5. Componente: `ChatBotInContact.tsx`
-- Versión embebida del chatbot para la sección de contacto
-- Card al lado del formulario existente o como tab alternativa
-- Misma lógica, diferente layout (más ancho, sin botón flotante)
-
-#### 6. Modificar `Contact.tsx`
-- Agregar tabs o toggle: "Formulario" / "Chat con IA"
-- Integrar `ChatBotInContact` como opción alternativa
-
-#### 7. Modificar `Index.tsx`
-- Agregar componente `ChatBot` flotante
-
-### Detalle técnico
-
-- **Modelo IA**: `google/gemini-3-flash-preview` (default, rápido y conversacional)
-- **System prompt**: Contextualizado con info de Forzes Water (servicios, productos, dirección, contacto)
-- **Detección de datos completos**: El bot usa tool calling para extraer datos estructurados cuando detecta que tiene nombre, correo, teléfono y mensaje
-- **Streaming**: SSE desde edge function, renderizado token por token en el frontend
-- **Markdown**: Respuestas renderizadas con `react-markdown`
-- **Formspree + DB**: Al completar la recopilación, se llama `save-chat-lead` que guarda en ambos destinos
-- **Posición flotante**: `bottom-36 right-6` (encima del botón WhatsApp que está en `bottom-20`)
-
+¿Procedo con la conversión?
