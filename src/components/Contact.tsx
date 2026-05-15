@@ -3,18 +3,46 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Mail, Phone, MapPin, CheckCircle, XCircle, Loader2 } from "lucide-react";
 import { useAnalytics } from "@/hooks/useAnalytics";
 
 type SubmitStatus = "idle" | "loading" | "success" | "error";
 
-const PHONE_REGEX = /^\+?[\d\s\-()]{7,20}$/;
+const PHONE_REGEX = /^[\d\s\-()]{6,20}$/;
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+const COUNTRY_CODES = [
+  { code: "+52", country: "MX", name: "México" },
+  { code: "+1", country: "US", name: "Estados Unidos" },
+  { code: "+1", country: "CA", name: "Canadá" },
+  { code: "+54", country: "AR", name: "Argentina" },
+  { code: "+591", country: "BO", name: "Bolivia" },
+  { code: "+55", country: "BR", name: "Brasil" },
+  { code: "+56", country: "CL", name: "Chile" },
+  { code: "+57", country: "CO", name: "Colombia" },
+  { code: "+506", country: "CR", name: "Costa Rica" },
+  { code: "+53", country: "CU", name: "Cuba" },
+  { code: "+593", country: "EC", name: "Ecuador" },
+  { code: "+503", country: "SV", name: "El Salvador" },
+  { code: "+34", country: "ES", name: "España" },
+  { code: "+502", country: "GT", name: "Guatemala" },
+  { code: "+504", country: "HN", name: "Honduras" },
+  { code: "+505", country: "NI", name: "Nicaragua" },
+  { code: "+507", country: "PA", name: "Panamá" },
+  { code: "+595", country: "PY", name: "Paraguay" },
+  { code: "+51", country: "PE", name: "Perú" },
+  { code: "+1", country: "PR", name: "Puerto Rico" },
+  { code: "+1", country: "DO", name: "Rep. Dominicana" },
+  { code: "+598", country: "UY", name: "Uruguay" },
+  { code: "+58", country: "VE", name: "Venezuela" },
+];
 
 const Contact = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    countryCode: "+52",
     phone: "",
     message: "",
   });
@@ -67,7 +95,7 @@ const Contact = () => {
         body: JSON.stringify({
           Nombre: formData.name,
           "Correo Electrónico": formData.email,
-          Teléfono: formData.phone,
+          Teléfono: `${formData.countryCode} ${formData.phone}`.trim(),
           Mensaje: formData.message,
         }),
       });
@@ -75,7 +103,7 @@ const Contact = () => {
       if (response.ok) {
         setStatus("success");
         trackFormSubmit("Contact Form", true);
-        setFormData({ name: "", email: "", phone: "", message: "" });
+        setFormData({ name: "", email: "", countryCode: "+52", phone: "", message: "" });
         setAttempted(false);
         setErrors({});
       } else {
@@ -166,14 +194,34 @@ const Contact = () => {
                   <label className="block text-sm font-medium text-foreground mb-2">
                     Teléfono {errors.phone && <span className="text-red-500">*</span>}
                   </label>
-                  <Input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className={`w-full ${errors.phone ? "border-red-500" : ""}`}
-                    placeholder="+52 55 1807 0867"
-                  />
+                  <div className="flex gap-2">
+                    <Select
+                      value={`${formData.countryCode}-${COUNTRY_CODES.find(c => c.code === formData.countryCode)?.country ?? "MX"}`}
+                      onValueChange={(val) => {
+                        const code = val.split("-")[0];
+                        setFormData(prev => ({ ...prev, countryCode: code }));
+                      }}
+                    >
+                      <SelectTrigger className="w-[130px] flex-shrink-0">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="max-h-72 bg-card z-50">
+                        {COUNTRY_CODES.map((c) => (
+                          <SelectItem key={`${c.code}-${c.country}`} value={`${c.code}-${c.country}`}>
+                            {c.country} {c.code}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <Input
+                      type="tel"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      className={`flex-1 ${errors.phone ? "border-red-500" : ""}`}
+                      placeholder="55 1807 0867"
+                    />
+                  </div>
                   {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
                 </div>
                 <div>
