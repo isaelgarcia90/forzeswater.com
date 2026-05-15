@@ -194,14 +194,34 @@ const Contact = () => {
                   <label className="block text-sm font-medium text-foreground mb-2">
                     Teléfono {errors.phone && <span className="text-red-500">*</span>}
                   </label>
-                  <Input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className={`w-full ${errors.phone ? "border-red-500" : ""}`}
-                    placeholder="+52 55 1807 0867"
-                  />
+                  <div className="flex gap-2">
+                    <Select
+                      value={`${formData.countryCode}-${COUNTRY_CODES.find(c => c.code === formData.countryCode)?.country ?? "MX"}`}
+                      onValueChange={(val) => {
+                        const code = val.split("-")[0];
+                        setFormData(prev => ({ ...prev, countryCode: code }));
+                      }}
+                    >
+                      <SelectTrigger className="w-[130px] flex-shrink-0">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="max-h-72 bg-card z-50">
+                        {COUNTRY_CODES.map((c) => (
+                          <SelectItem key={`${c.code}-${c.country}`} value={`${c.code}-${c.country}`}>
+                            {c.country} {c.code}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <Input
+                      type="tel"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      className={`flex-1 ${errors.phone ? "border-red-500" : ""}`}
+                      placeholder="55 1807 0867"
+                    />
+                  </div>
                   {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
                 </div>
                 <div>
