@@ -42,6 +42,7 @@ const Contact = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    countryCode: "+52",
     phone: "",
     message: "",
   });
