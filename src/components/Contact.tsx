@@ -3,10 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Mail, Phone, MapPin, CheckCircle, XCircle, Loader2, MessageSquare, FileText } from "lucide-react";
+import { Mail, Phone, MapPin, CheckCircle, XCircle, Loader2 } from "lucide-react";
 import { useAnalytics } from "@/hooks/useAnalytics";
-import ChatBotInContact from "./ChatBotInContact";
 
 type SubmitStatus = "idle" | "loading" | "success" | "error";
 
@@ -134,98 +132,81 @@ const Contact = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           <div>
-            <Tabs defaultValue="chat" className="w-full">
-              <TabsList className="w-full mb-4">
-                <TabsTrigger value="chat" className="flex-1 gap-2">
-                  <MessageSquare className="h-4 w-4" />
-                  Chat con IA
-                </TabsTrigger>
-                <TabsTrigger value="form" className="flex-1 gap-2">
-                  <FileText className="h-4 w-4" />
-                  Formulario
-                </TabsTrigger>
-              </TabsList>
-              <TabsContent value="chat">
-                <ChatBotInContact />
-              </TabsContent>
-              <TabsContent value="form">
-                <Card className="p-8 bg-card border-border">
-                  <form onSubmit={handleSubmit} className="space-y-6" noValidate>
-                    <div>
-                      <label className="block text-sm font-medium text-foreground mb-2">
-                        Nombre {errors.name && <span className="text-red-500">*</span>}
-                      </label>
-                      <Input
-                        type="text"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        className={`w-full ${errors.name ? "border-red-500" : ""}`}
-                        placeholder="Tu nombre completo"
-                      />
-                      {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-foreground mb-2">
-                        Correo Electrónico {errors.email && <span className="text-red-500">*</span>}
-                      </label>
-                      <Input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        className={`w-full ${errors.email ? "border-red-500" : ""}`}
-                        placeholder="tu.correo@ejemplo.com"
-                      />
-                      {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-foreground mb-2">
-                        Teléfono {errors.phone && <span className="text-red-500">*</span>}
-                      </label>
-                      <Input
-                        type="tel"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleChange}
-                        className={`w-full ${errors.phone ? "border-red-500" : ""}`}
-                        placeholder="+52 55 1807 0867"
-                      />
-                      {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-foreground mb-2">
-                        Mensaje {errors.message && <span className="text-red-500">*</span>}
-                      </label>
-                      <Textarea
-                        name="message"
-                        value={formData.message}
-                        onChange={handleChange}
-                        rows={6}
-                        className={`w-full ${errors.message ? "border-red-500" : ""}`}
-                        placeholder="Cuéntanos sobre los requerimientos de tu proyecto..."
-                      />
-                      {errors.message && <p className="text-red-500 text-xs mt-1">{errors.message}</p>}
-                    </div>
-                    <Button 
-                      type="submit" 
-                      className="w-full bg-gradient-primary"
-                      disabled={status === "loading"}
-                      aria-busy={status === "loading"}
-                    >
-                      {status === "loading" ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Enviando...
-                        </>
-                      ) : (
-                        "Enviar Mensaje"
-                      )}
-                    </Button>
-                  </form>
-                </Card>
-              </TabsContent>
-            </Tabs>
+            <Card className="p-8 bg-card border-border">
+              <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-2">
+                    Nombre {errors.name && <span className="text-red-500">*</span>}
+                  </label>
+                  <Input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    className={`w-full ${errors.name ? "border-red-500" : ""}`}
+                    placeholder="Tu nombre completo"
+                  />
+                  {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-2">
+                    Correo Electrónico {errors.email && <span className="text-red-500">*</span>}
+                  </label>
+                  <Input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className={`w-full ${errors.email ? "border-red-500" : ""}`}
+                    placeholder="tu.correo@ejemplo.com"
+                  />
+                  {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-2">
+                    Teléfono {errors.phone && <span className="text-red-500">*</span>}
+                  </label>
+                  <Input
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    className={`w-full ${errors.phone ? "border-red-500" : ""}`}
+                    placeholder="+52 55 1807 0867"
+                  />
+                  {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-2">
+                    Mensaje {errors.message && <span className="text-red-500">*</span>}
+                  </label>
+                  <Textarea
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    rows={6}
+                    className={`w-full ${errors.message ? "border-red-500" : ""}`}
+                    placeholder="Cuéntanos sobre los requerimientos de tu proyecto..."
+                  />
+                  {errors.message && <p className="text-red-500 text-xs mt-1">{errors.message}</p>}
+                </div>
+                <Button
+                  type="submit"
+                  className="w-full bg-gradient-primary"
+                  disabled={status === "loading"}
+                  aria-busy={status === "loading"}
+                >
+                  {status === "loading" ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Enviando...
+                    </>
+                  ) : (
+                    "Enviar Mensaje"
+                  )}
+                </Button>
+              </form>
+            </Card>
           </div>
 
           <div className="space-y-6">
