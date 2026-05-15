@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { FileText, Download, CheckCircle, XCircle, Loader2, MessageCircle, Phone as PhoneIcon, FileSearch } from "lucide-react";
+import { FileText, Download, CheckCircle, XCircle, Loader2, MessageCircle, Phone as PhoneIcon, FileSearch, Droplets } from "lucide-react";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import { COUNTRY_CODES } from "@/lib/country-codes";
 import { supabase } from "@/integrations/supabase/client";
@@ -13,23 +13,77 @@ type SubmitStatus = "idle" | "loading" | "success" | "error";
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const PHONE_REGEX = /^[\d\s\-()]{6,20}$/;
 
-const PDF_PATH = "/lista-precios-forzes-water-2026.pdf";
+type CatalogKey = "sbo" | "piq";
 
-const PRODUCT_LINES = [
-  "Tanques Presurizados",
-  "Línea DAB",
-  "Línea Pentair",
-  "Línea Leo",
-  "Línea Aquex",
-  "Línea Arenka",
-  "Centrífugas Comerciales",
-  "Bombas Solares",
-  "Aplicaciones Específicas",
-  "Automatización Eléctrica",
-  "Accesorios",
-];
+const CATALOGS: Record<CatalogKey, {
+  key: CatalogKey;
+  title: string;
+  subtitle: string;
+  pages: string;
+  edition: string;
+  pdf: string;
+  filename: string;
+  icon: typeof FileText;
+  gradient: string;
+  lines: string[];
+}> = {
+  sbo: {
+    key: "sbo",
+    title: "Lista de Precios SBO",
+    subtitle: "Sistemas de Bombeo · Edición 2026",
+    pages: "40 páginas",
+    edition: "2026",
+    pdf: "/lista-precios-forzes-water-2026.pdf",
+    filename: "Lista-Precios-SBO-Forzes-Water-2026.pdf",
+    icon: FileText,
+    gradient: "bg-gradient-primary",
+    lines: [
+      "Tanques Presurizados",
+      "Línea DAB",
+      "Línea Pentair",
+      "Línea Leo",
+      "Línea Aquex",
+      "Línea Arenka",
+      "Centrífugas Comerciales",
+      "Bombas Solares",
+      "Aplicaciones Específicas",
+      "Automatización Eléctrica",
+      "Accesorios",
+    ],
+  },
+  piq: {
+    key: "piq",
+    title: "Lista de Precios PIQ",
+    subtitle: "Piscinas y Químicos · Edición 2025",
+    pages: "+50 páginas",
+    edition: "2025",
+    pdf: "/lista-precios-piscinas-quimicos-2026.pdf",
+    filename: "Lista-Precios-PIQ-Forzes-Water.pdf",
+    icon: Droplets,
+    gradient: "bg-gradient-accent",
+    lines: [
+      "Filtración",
+      "Motobombas",
+      "Calentamiento",
+      "Empotrables",
+      "Iluminación",
+      "Automatización",
+      "Hidromasaje",
+      "Mantenimiento",
+      "Fuentes y Cascadas",
+      "Seguridad",
+      "Recubrimientos",
+      "Generadores de Vapor y Saunas",
+      "Válvulas y Accesorios PVC",
+      "Productos Químicos",
+      "Equipos Comerciales",
+      "Refacciones",
+    ],
+  },
+};
 
 const Catalog = () => {
+  const [selectedCatalog, setSelectedCatalog] = useState<CatalogKey>("sbo");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -43,6 +97,13 @@ const Catalog = () => {
   const [attempted, setAttempted] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const { trackEvent, trackContactClick } = useAnalytics();
+
+  const current = CATALOGS[selectedCatalog];
+
+  // Reset line of interest when switching catalog
+  useEffect(() => {
+    setFormData(prev => ({ ...prev, lineOfInterest: "Todas" }));
+  }, [selectedCatalog]);
 
   useEffect(() => {
     if (status === "success" || status === "error") {
@@ -68,15 +129,15 @@ const Catalog = () => {
 
   const triggerDownload = () => {
     const link = document.createElement("a");
-    link.href = PDF_PATH;
-    link.download = "Lista-Precios-Forzes-Water-2026.pdf";
+    link.href = current.pdf;
+    link.download = current.filename;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
     trackEvent({
       category: "cta_click",
       action: "catalog_download_completed",
-      label: formData.lineOfInterest,
+      label: `${current.key.toUpperCase()} - ${formData.lineOfInterest}`,
     });
   };
 
@@ -89,24 +150,24 @@ const Catalog = () => {
 
     setStatus("loading");
     const fullPhone = formData.phone.trim() ? `${formData.countryCode} ${formData.phone}`.trim() : "";
+    const tagged = `[${current.key.toUpperCase()}] ${formData.lineOfInterest}`;
 
     try {
-      // Save lead to Supabase (Lovable Cloud)
       const { error: dbError } = await supabase.from("catalog_downloads").insert({
         name: formData.name.trim(),
         email: formData.email.trim(),
         company: formData.company.trim() || null,
         phone: fullPhone || null,
-        line_of_interest: formData.lineOfInterest,
+        line_of_interest: tagged,
       });
 
-      // Notify the team via Formspree (same endpoint as contact form)
       await fetch("https://formspree.io/f/xblnyzay", {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({
-          _subject: "Nueva descarga de catálogo · Forzes Water",
-          Tipo: "Descarga de Catálogo 2026",
+          _subject: `Nueva descarga de catálogo ${current.key.toUpperCase()} · Forzes Water`,
+          Tipo: `Descarga de Catálogo ${current.key.toUpperCase()}`,
+          Catálogo: current.title,
           Nombre: formData.name,
           "Correo Electrónico": formData.email,
           Empresa: formData.company || "(no proporcionada)",
@@ -121,7 +182,7 @@ const Catalog = () => {
       trackEvent({
         category: "form_submit",
         action: "catalog_download_requested",
-        label: formData.lineOfInterest,
+        label: tagged,
       });
       triggerDownload();
       setFormData({ name: "", email: "", company: "", countryCode: "+52", phone: "", lineOfInterest: "Todas" });
@@ -132,7 +193,7 @@ const Catalog = () => {
       trackEvent({
         category: "form_submit",
         action: "catalog_download_error",
-        label: "Catalog Download",
+        label: `Catalog Download ${current.key.toUpperCase()}`,
       });
     }
   };
@@ -159,32 +220,79 @@ const Catalog = () => {
   return (
     <section id="catalog" className="py-24 bg-background">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
+        <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Catálogo y Lista de Precios 2026
+            Catálogos y Listas de Precios
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Descarga nuestro catálogo completo con la lista oficial de precios de bombas, tanques, paneles y accesorios.
+            Selecciona el catálogo que deseas descargar. Contamos con líneas especializadas para sistemas de bombeo y para piscinas y químicos.
           </p>
         </div>
 
+        {/* Catalog selector cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12 max-w-5xl mx-auto">
+          {(Object.values(CATALOGS) as typeof CATALOGS[CatalogKey][]).map((cat) => {
+            const Icon = cat.icon;
+            const isActive = selectedCatalog === cat.key;
+            return (
+              <button
+                key={cat.key}
+                type="button"
+                onClick={() => {
+                  setSelectedCatalog(cat.key);
+                  trackEvent({ category: "cta_click", action: "catalog_select", label: cat.key.toUpperCase() });
+                }}
+                className={`text-left rounded-xl border-2 p-6 transition-all duration-300 ${
+                  isActive
+                    ? "border-primary shadow-large bg-card -translate-y-1"
+                    : "border-border bg-card hover:border-primary/40 hover:shadow-medium"
+                }`}
+                aria-pressed={isActive}
+              >
+                <div className="flex items-start space-x-4">
+                  <div className={`w-14 h-14 rounded-lg ${cat.gradient} flex items-center justify-center flex-shrink-0`}>
+                    <Icon className="h-7 w-7 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-xl font-bold text-foreground mb-1">{cat.title}</h3>
+                    <p className="text-sm text-muted-foreground mb-3">{cat.subtitle}</p>
+                    <div className="flex flex-wrap gap-2">
+                      <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-primary/10 text-primary">
+                        {cat.pages}
+                      </span>
+                      <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-secondary/10 text-secondary">
+                        PDF · MXN + IVA
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                {isActive && (
+                  <div className="mt-4 text-xs font-semibold text-primary flex items-center">
+                    <CheckCircle className="h-4 w-4 mr-1.5" /> Catálogo seleccionado
+                  </div>
+                )}
+              </button>
+            );
+          })}
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-          {/* Catálogo preview */}
+          {/* Catálogo preview detalle */}
           <Card className="p-8 bg-card border-border hover:shadow-large transition-all duration-300">
             <div className="flex items-start space-x-4 mb-6">
-              <div className="w-16 h-16 rounded-xl bg-gradient-primary flex items-center justify-center flex-shrink-0">
-                <FileText className="h-8 w-8 text-white" />
+              <div className={`w-16 h-16 rounded-xl ${current.gradient} flex items-center justify-center flex-shrink-0`}>
+                <current.icon className="h-8 w-8 text-white" />
               </div>
               <div>
                 <h3 className="text-2xl font-bold text-foreground mb-1">
-                  Lista de Precios SBO
+                  {current.title}
                 </h3>
                 <p className="text-muted-foreground text-sm">
-                  Sistemas de Bombeo · Edición 2026
+                  {current.subtitle}
                 </p>
                 <div className="flex flex-wrap gap-2 mt-3">
                   <span className="text-xs font-semibold px-3 py-1 rounded-full bg-primary/10 text-primary">
-                    40 páginas
+                    {current.pages}
                   </span>
                   <span className="text-xs font-semibold px-3 py-1 rounded-full bg-secondary/10 text-secondary">
                     PDF · Español
@@ -199,7 +307,7 @@ const Catalog = () => {
             <div className="border-t border-border pt-6">
               <h4 className="font-semibold text-foreground mb-3">Líneas incluidas:</h4>
               <div className="flex flex-wrap gap-2">
-                {PRODUCT_LINES.map((line) => (
+                {current.lines.map((line) => (
                   <span
                     key={line}
                     className="text-xs px-3 py-1.5 rounded-md bg-muted text-muted-foreground border border-border"
@@ -226,7 +334,7 @@ const Catalog = () => {
                 Descarga el catálogo
               </h3>
               <p className="text-sm text-muted-foreground">
-                Completa tus datos para acceder a la lista de precios completa.
+                Completa tus datos para acceder a <strong className="text-foreground">{current.title}</strong>.
               </p>
             </div>
 
@@ -320,9 +428,9 @@ const Catalog = () => {
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="bg-card z-50">
+                  <SelectContent className="bg-card z-50 max-h-72">
                     <SelectItem value="Todas">Todas las líneas</SelectItem>
-                    {PRODUCT_LINES.map((line) => (
+                    {current.lines.map((line) => (
                       <SelectItem key={line} value={line}>{line}</SelectItem>
                     ))}
                   </SelectContent>
@@ -343,7 +451,7 @@ const Catalog = () => {
                 ) : (
                   <>
                     <Download className="mr-2 h-4 w-4" />
-                    Descargar Lista de Precios
+                    Descargar {current.title}
                   </>
                 )}
               </Button>
