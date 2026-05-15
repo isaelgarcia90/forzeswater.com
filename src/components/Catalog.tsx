@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { FileText, Download, CheckCircle, XCircle, Loader2, MessageCircle, Phone as PhoneIcon, FileSearch, Droplets } from "lucide-react";
+import { FileText, Download, CheckCircle, XCircle, Loader2, MessageCircle, Phone as PhoneIcon, FileSearch, Droplets, FlaskConical } from "lucide-react";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import { COUNTRY_CODES } from "@/lib/country-codes";
 import { supabase } from "@/integrations/supabase/client";
@@ -13,7 +13,7 @@ type SubmitStatus = "idle" | "loading" | "success" | "error";
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const PHONE_REGEX = /^[\d\s\-()]{6,20}$/;
 
-type CatalogKey = "sbo" | "piq";
+type CatalogKey = "sbo" | "piq" | "tda";
 
 const CATALOGS: Record<CatalogKey, {
   key: CatalogKey;
@@ -78,6 +78,30 @@ const CATALOGS: Record<CatalogKey, {
       "Productos Químicos",
       "Equipos Comerciales",
       "Refacciones",
+    ],
+  },
+  tda: {
+    key: "tda",
+    title: "Lista de Precios TDA",
+    subtitle: "Tratamiento de Agua · Edición 2025",
+    pages: "+50 páginas",
+    edition: "2025",
+    pdf: "/lista-precios-tratamiento-agua-2026.pdf",
+    filename: "Lista-Precios-TDA-Forzes-Water.pdf",
+    icon: FlaskConical,
+    gradient: "bg-gradient-primary",
+    lines: [
+      "Tanques y Componentes",
+      "Materiales Filtrantes y Acondicionadores",
+      "Válvulas y Controles",
+      "Equipos Especializados para OEM",
+      "Equipos de Filtración y Suavización",
+      "Portacartuchos y Cartuchos",
+      "Food Service",
+      "Línea Everpure",
+      "Ósmosis Inversa y Ultrafiltración",
+      "Equipos Desinfectantes",
+      "Refacciones y Accesorios",
     ],
   },
 };
@@ -230,7 +254,7 @@ const Catalog = () => {
         </div>
 
         {/* Catalog selector cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12 max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12 max-w-6xl mx-auto">
           {(Object.values(CATALOGS) as typeof CATALOGS[CatalogKey][]).map((cat) => {
             const Icon = cat.icon;
             const isActive = selectedCatalog === cat.key;
