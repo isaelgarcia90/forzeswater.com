@@ -32,6 +32,10 @@ const Hero = () => {
           src={heroImage}
           alt="Professional water treatment facility"
           className="w-full h-full object-cover"
+          width={1920}
+          height={1080}
+          fetchPriority="high"
+          decoding="async"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-primary/90 via-primary/70 to-transparent"></div>
       </div>
