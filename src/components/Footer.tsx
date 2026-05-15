@@ -87,7 +87,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="border-t border-white/20 pt-8 text-center text-white/60">
+        <div className="border-t border-white/30 pt-8 text-center text-white/90">
           <p>&copy; {new Date().getFullYear()} Forzes Water. Todos los derechos reservados.</p>
         </div>
       </div>
