@@ -6,37 +6,12 @@ import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Mail, Phone, MapPin, CheckCircle, XCircle, Loader2 } from "lucide-react";
 import { useAnalytics } from "@/hooks/useAnalytics";
+import { COUNTRY_CODES } from "@/lib/country-codes";
 
 type SubmitStatus = "idle" | "loading" | "success" | "error";
 
 const PHONE_REGEX = /^[\d\s\-()]{6,20}$/;
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-const COUNTRY_CODES = [
-  { code: "+52", country: "MX", name: "México" },
-  { code: "+1", country: "US", name: "Estados Unidos" },
-  { code: "+1", country: "CA", name: "Canadá" },
-  { code: "+54", country: "AR", name: "Argentina" },
-  { code: "+591", country: "BO", name: "Bolivia" },
-  { code: "+55", country: "BR", name: "Brasil" },
-  { code: "+56", country: "CL", name: "Chile" },
-  { code: "+57", country: "CO", name: "Colombia" },
-  { code: "+506", country: "CR", name: "Costa Rica" },
-  { code: "+53", country: "CU", name: "Cuba" },
-  { code: "+593", country: "EC", name: "Ecuador" },
-  { code: "+503", country: "SV", name: "El Salvador" },
-  { code: "+34", country: "ES", name: "España" },
-  { code: "+502", country: "GT", name: "Guatemala" },
-  { code: "+504", country: "HN", name: "Honduras" },
-  { code: "+505", country: "NI", name: "Nicaragua" },
-  { code: "+507", country: "PA", name: "Panamá" },
-  { code: "+595", country: "PY", name: "Paraguay" },
-  { code: "+51", country: "PE", name: "Perú" },
-  { code: "+1", country: "PR", name: "Puerto Rico" },
-  { code: "+1", country: "DO", name: "Rep. Dominicana" },
-  { code: "+598", country: "UY", name: "Uruguay" },
-  { code: "+58", country: "VE", name: "Venezuela" },
-];
 
 const Contact = () => {
   const [formData, setFormData] = useState({
