@@ -95,7 +95,7 @@ const Contact = () => {
         body: JSON.stringify({
           Nombre: formData.name,
           "Correo Electrónico": formData.email,
-          Teléfono: formData.phone,
+          Teléfono: `${formData.countryCode} ${formData.phone}`.trim(),
           Mensaje: formData.message,
         }),
       });
@@ -103,7 +103,7 @@ const Contact = () => {
       if (response.ok) {
         setStatus("success");
         trackFormSubmit("Contact Form", true);
-        setFormData({ name: "", email: "", phone: "", message: "" });
+        setFormData({ name: "", email: "", countryCode: "+52", phone: "", message: "" });
         setAttempted(false);
         setErrors({});
       } else {
