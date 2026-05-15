@@ -3,10 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Mail, Phone, MapPin, CheckCircle, XCircle, Loader2, MessageSquare, FileText } from "lucide-react";
+import { Mail, Phone, MapPin, CheckCircle, XCircle, Loader2 } from "lucide-react";
 import { useAnalytics } from "@/hooks/useAnalytics";
-import ChatBotInContact from "./ChatBotInContact";
 
 type SubmitStatus = "idle" | "loading" | "success" | "error";
 
