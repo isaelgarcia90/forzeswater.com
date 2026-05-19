@@ -192,7 +192,13 @@ const Contact = () => {
                             </button>
                           </PopoverTrigger>
                           <PopoverContent className="w-[260px] p-0 bg-card z-50" align="start">
-                            <Command>
+                            <Command
+                              filter={(value, search) => {
+                                const normalize = (s: string) =>
+                                  s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+                                return normalize(value).includes(normalize(search)) ? 1 : 0;
+                              }}
+                            >
                               <CommandInput placeholder="Buscar país..." className="text-xs h-9" />
                               <CommandList>
                                 <CommandEmpty>Sin resultados.</CommandEmpty>
