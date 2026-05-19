@@ -62,10 +62,10 @@ const Services = () => {
     <section id="services" className="py-24 bg-background">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4">
             Nuestros Servicios
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+          <p className="text-base sm:text-xl text-muted-foreground max-w-3xl mx-auto">
             Servicios completos de tratamiento de agua desde el diseño hasta el mantenimiento
           </p>
         </div>
@@ -80,8 +80,8 @@ const Services = () => {
               <div className="w-16 h-16 rounded-xl bg-gradient-primary flex items-center justify-center mb-6">
                 <service.icon className="h-8 w-8 text-white" />
               </div>
-              <h3 className="text-2xl font-bold text-foreground mb-3">{service.title}</h3>
-              <p className="text-muted-foreground text-lg leading-relaxed text-justify">{service.description}</p>
+              <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-3">{service.title}</h3>
+              <p className="text-muted-foreground text-base sm:text-lg leading-relaxed text-justify">{service.description}</p>
             </Card>
           ))}
         </div>

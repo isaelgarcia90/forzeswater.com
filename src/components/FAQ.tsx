@@ -66,10 +66,10 @@ const FAQ = () => {
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-primary mb-6">
             <HelpCircle className="h-8 w-8 text-white" />
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4">
             Preguntas Frecuentes
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+          <p className="text-base sm:text-xl text-muted-foreground max-w-3xl mx-auto">
             Encuentra respuestas a las preguntas más comunes sobre nuestros servicios y productos de tratamiento de agua
           </p>
         </div>
