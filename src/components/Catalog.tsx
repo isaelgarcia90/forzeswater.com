@@ -245,10 +245,10 @@ const Catalog = () => {
     <section id="catalog" className="py-24 bg-background">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4">
             Catálogos y Listas de Precios
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+          <p className="text-base sm:text-xl text-muted-foreground max-w-3xl mx-auto">
             Selecciona el catálogo que deseas descargar. Contamos con líneas especializadas para sistemas de bombeo y para piscinas y químicos.
           </p>
         </div>
@@ -308,7 +308,7 @@ const Catalog = () => {
                 <current.icon className="h-8 w-8 text-white" />
               </div>
               <div>
-                <h3 className="text-2xl font-bold text-foreground mb-1">
+                <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-1">
                   {current.title}
                 </h3>
                 <p className="text-muted-foreground text-sm">
@@ -354,7 +354,7 @@ const Catalog = () => {
           {/* Form */}
           <Card className="p-8 bg-card border-border">
             <div className="mb-6">
-              <h3 className="text-2xl font-bold text-foreground mb-2">
+              <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-2">
                 Descarga el catálogo
               </h3>
               <p className="text-sm text-muted-foreground">

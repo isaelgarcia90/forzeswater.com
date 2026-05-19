@@ -128,10 +128,10 @@ const Contact = () => {
     <section id="contact" className="py-24 bg-background">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4">
             Contáctanos
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+          <p className="text-base sm:text-xl text-muted-foreground max-w-3xl mx-auto">
             Solicita una cotización o contáctanos para cualquier consulta sobre nuestras soluciones de tratamiento de agua
           </p>
         </div>
