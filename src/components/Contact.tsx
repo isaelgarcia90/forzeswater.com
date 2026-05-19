@@ -182,10 +182,13 @@ const Contact = () => {
                               type="button"
                               role="combobox"
                               aria-expanded={countryOpen}
-                              className="flex h-10 w-[170px] flex-shrink-0 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-xs ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                              className="flex h-10 w-[90px] sm:w-[170px] flex-shrink-0 items-center justify-between rounded-md border border-input bg-background px-2 sm:px-3 py-2 text-xs ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                             >
-                              <span className="truncate">{selected.name} ({selected.code})</span>
-                              <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                              <span className="truncate">
+                                <span className="sm:hidden">{selected.country} {selected.code}</span>
+                                <span className="hidden sm:inline">{selected.name} ({selected.code})</span>
+                              </span>
+                              <ChevronDown className="ml-1 sm:ml-2 h-4 w-4 shrink-0 opacity-50" />
                             </button>
                           </PopoverTrigger>
                           <PopoverContent className="w-[260px] p-0 bg-card z-50" align="start">
