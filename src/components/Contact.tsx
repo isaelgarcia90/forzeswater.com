@@ -3,8 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Mail, Phone, MapPin, CheckCircle, XCircle, Loader2 } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { Mail, Phone, MapPin, CheckCircle, XCircle, Loader2, ChevronDown, Check } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import { COUNTRY_CODES } from "@/lib/country-codes";
 
