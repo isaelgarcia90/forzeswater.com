@@ -24,7 +24,7 @@ const Contact = () => {
     message: "",
   });
   const [status, setStatus] = useState<SubmitStatus>("idle");
-  const [showPopup, setShowPopup] = useState(false);
+  const [countryOpen, setCountryOpen] = useState(false);
   const [attempted, setAttempted] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const { trackFormSubmit, trackContactClick } = useAnalytics();
