@@ -231,7 +231,12 @@ const Contact = () => {
                       type="tel"
                       name="phone"
                       value={formData.phone}
-                      onChange={handleChange}
+                      onChange={(e) => {
+                        const cleaned = e.target.value.replace(/[^\d\s\-()]/g, "").slice(0, 15);
+                        handleChange({ ...e, target: { ...e.target, name: "phone", value: cleaned } } as React.ChangeEvent<HTMLInputElement>);
+                      }}
+                      maxLength={15}
+                      inputMode="tel"
                       className={`flex-1 ${errors.phone ? "border-red-500" : ""}`}
                       placeholder="55 1807 0867"
                     />
