@@ -49,6 +49,9 @@ const Index = () => {
 
   return (
     <div className="min-h-screen">
+      <Helmet>
+        <link rel="canonical" href="https://forzeswater.lovable.app/" />
+      </Helmet>
       <Header />
       <main>
         <Hero />
