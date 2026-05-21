@@ -17,8 +17,11 @@ import { useAnalytics } from "@/hooks/useAnalytics";
 const Index = () => {
   const { trackScrollDepth } = useAnalytics();
 
-  // Ensure page starts at top
+  // Ensure page starts at top on load/reload
   useEffect(() => {
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
     window.scrollTo(0, 0);
   }, []);
 
