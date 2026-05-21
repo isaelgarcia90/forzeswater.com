@@ -1,4 +1,5 @@
 import { Facebook, Linkedin, Instagram } from "lucide-react";
+import logo from "@/assets/forzes-water-logo.jpeg";
 
 const Footer = () => {
   const scrollToSection = (id: string) => {
