@@ -123,6 +123,7 @@ const Catalog = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [attempted, setAttempted] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [countryOpen, setCountryOpen] = useState(false);
   const { trackEvent, trackContactClick } = useAnalytics();
 
   const current = CATALOGS[selectedCatalog];
