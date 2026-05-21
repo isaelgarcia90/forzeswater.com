@@ -3,7 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { FileText, Download, CheckCircle, XCircle, Loader2, MessageCircle, Phone as PhoneIcon, FileSearch, Droplets, FlaskConical } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { FileText, Download, CheckCircle, XCircle, Loader2, MessageCircle, Phone as PhoneIcon, FileSearch, Droplets, FlaskConical, ChevronDown, Check } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import { COUNTRY_CODES } from "@/lib/country-codes";
 import { supabase } from "@/integrations/supabase/client";
@@ -120,6 +123,7 @@ const Catalog = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [attempted, setAttempted] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [countryOpen, setCountryOpen] = useState(false);
   const { trackEvent, trackContactClick } = useAnalytics();
 
   const current = CATALOGS[selectedCatalog];
@@ -411,29 +415,70 @@ const Catalog = () => {
                   Teléfono <span className="text-muted-foreground font-normal">(opcional)</span>
                 </label>
                 <div className="flex gap-2">
-                  <Select
-                    value={`${formData.countryCode}-${COUNTRY_CODES.find(c => c.code === formData.countryCode)?.country ?? "MX"}`}
-                    onValueChange={(val) => {
-                      const code = val.split("-")[0];
-                      setFormData(prev => ({ ...prev, countryCode: code }));
-                    }}
-                  >
-                    <SelectTrigger className="w-[170px] flex-shrink-0 text-xs">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent className="max-h-72 bg-card z-50">
-                      {COUNTRY_CODES.map((c) => (
-                        <SelectItem key={`${c.code}-${c.country}`} value={`${c.code}-${c.country}`} className="text-xs">
-                          {c.name} ({c.code})
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  {(() => {
+                    const selected = COUNTRY_CODES.find(c => c.code === formData.countryCode) ?? COUNTRY_CODES[0];
+                    return (
+                      <Popover open={countryOpen} onOpenChange={setCountryOpen}>
+                        <PopoverTrigger asChild>
+                          <button
+                            type="button"
+                            role="combobox"
+                            aria-expanded={countryOpen}
+                            className="flex h-10 w-[90px] sm:w-[170px] flex-shrink-0 items-center justify-between rounded-md border border-input bg-background px-2 sm:px-3 py-2 text-xs ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                          >
+                            <span className="truncate">
+                              <span className="sm:hidden">{selected.country} {selected.code}</span>
+                              <span className="hidden sm:inline">{selected.name} ({selected.code})</span>
+                            </span>
+                            <ChevronDown className="ml-1 sm:ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          </button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[260px] p-0 bg-card z-50" align="start">
+                          <Command
+                            filter={(value, search) => {
+                              const normalize = (s: string) =>
+                                s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+                              return normalize(value).includes(normalize(search)) ? 1 : 0;
+                            }}
+                          >
+                            <CommandInput placeholder="Buscar país..." className="text-xs h-9" />
+                            <CommandList>
+                              <CommandEmpty>Sin resultados.</CommandEmpty>
+                              <CommandGroup>
+                                {COUNTRY_CODES.map((c) => {
+                                  const isSelected = c.code === formData.countryCode && c.country === selected.country;
+                                  return (
+                                    <CommandItem
+                                      key={`${c.code}-${c.country}`}
+                                      value={`${c.name} ${c.code} ${c.country}`}
+                                      onSelect={() => {
+                                        setFormData(prev => ({ ...prev, countryCode: c.code }));
+                                        setCountryOpen(false);
+                                      }}
+                                      className="text-xs"
+                                    >
+                                      <Check className={cn("mr-2 h-4 w-4", isSelected ? "opacity-100" : "opacity-0")} />
+                                      {c.name} ({c.code})
+                                    </CommandItem>
+                                  );
+                                })}
+                              </CommandGroup>
+                            </CommandList>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
+                    );
+                  })()}
                   <Input
                     type="tel"
                     name="phone"
                     value={formData.phone}
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      const cleaned = e.target.value.replace(/[^\d\s\-()]/g, "").slice(0, 15);
+                      handleChange({ ...e, target: { ...e.target, name: "phone", value: cleaned } } as React.ChangeEvent<HTMLInputElement>);
+                    }}
+                    maxLength={15}
+                    inputMode="tel"
                     className={`flex-1 ${errors.phone ? "border-red-500" : ""}`}
                     placeholder="55 1807 0867"
                   />
