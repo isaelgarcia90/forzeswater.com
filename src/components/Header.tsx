@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
+import logo from "@/assets/forzes-water-logo.jpeg";
 import { useAnalytics } from "@/hooks/useAnalytics";
 
 const Header = () => {
@@ -49,9 +50,7 @@ const Header = () => {
     >
       <nav className="container mx-auto px-4 py-4 flex items-center justify-between">
         <div className="flex items-center space-x-2">
-          <div className="w-10 h-10 rounded-lg bg-gradient-primary flex items-center justify-center">
-            <span className="text-xl font-bold text-white">FW</span>
-          </div>
+          <img src={logo} alt="Forzes Water" className="w-10 h-10 rounded-lg object-cover" />
           <span className={`text-xl font-bold transition-colors ${
             isScrolled ? "text-foreground" : "text-white"
           }`}>Forzes Water</span>
