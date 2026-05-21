@@ -504,7 +504,7 @@ const Catalog = () => {
           </Card>
 
           <a
-            href="https://wa.me/525539487283?text=Hola%2C%20me%20interesa%20la%20lista%20de%20precios%20de%20Forzes%20Water"
+            href="https://wa.me/525518070867?text=Hola%2C%20me%20interesa%20la%20lista%20de%20precios%20de%20Forzes%20Water"
             target="_blank"
             rel="noopener noreferrer nofollow"
             onClick={() => trackContactClick("WhatsApp - Catalog")}
@@ -521,7 +521,7 @@ const Catalog = () => {
           </a>
 
           <a
-            href="tel:+525539487283"
+            href="tel:+525518070867"
             onClick={() => trackContactClick("Phone - Catalog")}
           >
             <Card className="p-6 bg-card border-border hover:shadow-large hover:-translate-y-1 transition-all duration-300 cursor-pointer h-full">
@@ -530,7 +530,7 @@ const Catalog = () => {
               </div>
               <h4 className="font-bold text-lg text-foreground mb-2">Llamar al asesor</h4>
               <p className="text-sm text-muted-foreground">
-                Habla directamente con nuestro equipo de ventas: +52 55 3948 7283
+                Habla directamente con nuestro equipo de ventas: (+52) 55-1807-0867
               </p>
             </Card>
           </a>

@@ -2,7 +2,7 @@ import { MessageCircle } from "lucide-react";
 import { useAnalytics } from "@/hooks/useAnalytics";
 
 const WhatsAppButton = () => {
-  const phoneNumber = "525539487283";
+  const phoneNumber = "525518070867";
   const message = encodeURIComponent("Hola, me gustaría obtener más información sobre sus servicios de tratamiento de agua.");
   const { trackContactClick } = useAnalytics();
 
