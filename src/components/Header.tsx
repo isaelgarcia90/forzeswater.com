@@ -50,7 +50,7 @@ const Header = () => {
     >
       <nav className="container mx-auto px-4 py-4 flex items-center justify-between">
         <div className="flex items-center space-x-2">
-          <img src={logo} alt="Forzes Water" className="w-10 h-10 rounded-lg object-cover" />
+          <LogoDialog />
           <span className={`text-xl font-bold transition-colors ${
             isScrolled ? "text-foreground" : "text-white"
           }`}>Forzes Water</span>
