@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
-import logo from "@/assets/forzes-water-logo.jpeg";
+import LogoDialog from "@/components/LogoDialog";
 import { useAnalytics } from "@/hooks/useAnalytics";
 
 const Header = () => {
