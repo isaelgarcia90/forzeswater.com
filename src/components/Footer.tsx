@@ -15,7 +15,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           <div>
             <div className="flex items-center space-x-2 mb-4">
-              <img src={logo} alt="Forzes Water" className="w-10 h-10 rounded-lg object-cover bg-white" />
+              <LogoDialog bgWhite />
               <span className="text-xl font-bold">Forzes Water</span>
             </div>
             <p className="text-white/80 mb-4 text-justify">
