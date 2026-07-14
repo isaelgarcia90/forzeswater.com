@@ -12,3 +12,6 @@ Allow: /
 
 User-agent: *
 Allow: /
+
+Sitemap: https://forzeswater.lovable.app/sitemap.xml
+
