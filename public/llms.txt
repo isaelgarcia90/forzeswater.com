@@ -1,0 +1,14 @@
+# Forzes Water
+
+> Sistemas profesionales de tratamiento de agua en México: bombas, filtración, purificación, ósmosis inversa y mantenimiento para industria y comercio.
+
+Forzes Water diseña, vende y da mantenimiento a soluciones de tratamiento de agua para clientes industriales, comerciales y residenciales en México. Ofrecemos catálogos de precios bajo solicitud (bombeo, piscinas y químicos, tratamiento de agua) y atención directa por WhatsApp.
+
+## Pages
+
+- [Inicio](/): Presentación general, soluciones, productos, catálogo, servicios, preguntas frecuentes y contacto.
+
+## Optional
+
+- [Sitemap](/sitemap.xml): Índice de URLs indexables.
+- [Robots](/robots.txt): Reglas para crawlers.
