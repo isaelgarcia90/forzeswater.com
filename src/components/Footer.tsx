@@ -1,4 +1,4 @@
-import { Facebook, Linkedin, Instagram } from "lucide-react";
+import { Facebook, Instagram } from "lucide-react";
 import LogoDialog from "@/components/LogoDialog";
 
 const Footer = () => {
