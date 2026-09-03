@@ -3,6 +3,7 @@ import { useState, useCallback, useRef } from "react";
 type Message = {
   role: "user" | "assistant";
   content: string;
+  type?: "text" | "email_form";
 };
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
@@ -48,6 +49,7 @@ export function useChatBot() {
 
       let assistantSoFar = "";
       let toolCallArgs = "";
+      let toolCallName = "";
       let isToolCall = false;
 
       try {
@@ -112,6 +114,9 @@ export function useChatBot() {
               if (delta?.tool_calls) {
                 isToolCall = true;
                 for (const tc of delta.tool_calls) {
+                  if (tc.function?.name) {
+                    toolCallName = tc.function.name;
+                  }
                   if (tc.function?.arguments) {
                     toolCallArgs += tc.function.arguments;
                   }
@@ -131,7 +136,21 @@ export function useChatBot() {
         }
 
         // Process tool call if detected
-        if (isToolCall && toolCallArgs) {
+        if (isToolCall && toolCallName === "request_email") {
+          let reason = "Déjanos tu correo electrónico para enviarte la información:";
+          try {
+            const args = toolCallArgs ? JSON.parse(toolCallArgs) : {};
+            if (typeof args.reason === "string" && args.reason.trim()) {
+              reason = args.reason.trim();
+            }
+          } catch {
+            // keep default reason
+          }
+          setMessages((prev) => [
+            ...prev,
+            { role: "assistant", content: reason, type: "email_form" },
+          ]);
+        } else if (isToolCall && toolCallArgs) {
           try {
             const args = JSON.parse(toolCallArgs);
             await saveLead(args);
