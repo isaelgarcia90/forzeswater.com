@@ -1,4 +1,4 @@
-import { Facebook, Linkedin, Instagram } from "lucide-react";
+import { Facebook, Instagram } from "lucide-react";
 import LogoDialog from "@/components/LogoDialog";
 
 const Footer = () => {
@@ -22,14 +22,11 @@ const Footer = () => {
               Soluciones profesionales de tratamiento de agua para un futuro más limpio y saludable.
             </p>
             <div className="flex space-x-4">
-              <a href="https://www.facebook.com/forzes.psco" target="_blank" rel="noopener noreferrer nofollow" aria-label="Visitar nuestra página de Facebook" className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
+              <a href="https://www.facebook.com/profile.php?id=61594033080924" target="_blank" rel="noopener noreferrer nofollow" aria-label="Visitar nuestra página de Facebook" className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
                 <Facebook className="h-5 w-5" />
               </a>
-              <a href="#" aria-label="Visitar nuestra página de Instagram" className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
+              <a href="https://www.instagram.com/forzeswater?igsi=MXF5OWsxZXhlYmNqNQ%3D%3D&utm_source=qr" target="_blank" rel="noopener noreferrer nofollow" aria-label="Visitar nuestra página de Instagram" className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
                 <Instagram className="h-5 w-5" />
-              </a>
-              <a href="#" aria-label="Visitar nuestra página de LinkedIn" className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
-                <Linkedin className="h-5 w-5" />
               </a>
             </div>
           </div>
