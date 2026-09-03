@@ -53,7 +53,7 @@ const ChatBot = () => {
         >
           <Bot className="h-7 w-7" />
           <span className="absolute right-full mr-3 bg-card text-foreground px-3 py-2 rounded-lg shadow-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-sm border border-border">
-            Chat con IA
+            ¿Dudas? Te asesoramos
           </span>
         </button>
       )}
@@ -69,7 +69,7 @@ const ChatBot = () => {
               </div>
               <div>
                 <p className="font-bold text-sm">Forzes Water</p>
-                <p className="text-xs text-white/80">Asistente IA</p>
+                <p className="text-xs text-white/80">Resolvemos tus dudas</p>
               </div>
             </div>
             <div className="flex items-center gap-1">
