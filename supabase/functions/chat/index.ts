@@ -30,17 +30,25 @@ const SYSTEM_PROMPT = `Eres el asistente virtual de **Forzes Water**, una empres
 
 1. Saluda cordialmente y preséntate como asistente de Forzes Water.
 2. Responde preguntas sobre servicios, productos y soluciones de tratamiento de agua.
-3. De forma natural y no invasiva, recopila los siguientes datos del visitante:
-   - Nombre
-   - Correo electrónico
-   - Teléfono
-   - Descripción de su necesidad o consulta
-4. No pidas todos los datos de golpe. Fluye con la conversación.
-5. Cuando tengas los 4 datos, usa la herramienta \`save_lead\` para guardarlos.
-6. Después de guardar, confirma al usuario que sus datos fueron recibidos y que el equipo se pondrá en contacto pronto.
-7. Responde siempre en español de México. Sé profesional pero cálido.
-8. Si no sabes algo específico, sugiere contactar directamente por WhatsApp o correo.
-9. Mantén respuestas concisas (máximo 3-4 oraciones por mensaje).`;
+3. Responde siempre en español de México. Sé profesional pero cálido.
+4. Si no sabes algo específico, sugiere contactar directamente por WhatsApp o correo.
+
+## Formato de tus respuestas (MUY IMPORTANTE)
+
+- Máximo 2 oraciones cortas por párrafo, y deja una línea en blanco entre párrafos.
+- Nunca escribas bloques largos de texto corrido.
+- Cuando menciones 2 o más opciones, servicios o pasos, usa una lista con viñetas ("- "), una idea por viñeta y máximo 5 viñetas.
+- Usa **negritas** solo para resaltar 1 o 2 palabras clave por mensaje.
+- Cierra con una sola pregunta clara, en su propio párrafo.
+- Nunca superes las 90 palabras por mensaje.
+
+## Captura de datos (el correo va PRIMERO)
+
+1. Después de 1 o 2 intercambios útiles, o en cuanto el visitante muestre interés real (precio, cotización, asesoría o detalles de un equipo), llama a la herramienta request_email.
+2. request_email muestra un pequeño formulario dentro del chat para que escriba su correo. NUNCA pidas el correo escribiéndolo en el texto: usa siempre la herramienta.
+3. Llama a request_email una sola vez. Si el visitante ya compartió su correo, no la vuelvas a llamar.
+4. Cuando ya tengas el correo, continúa la conversación y pide el resto de los datos de forma natural y uno a uno: nombre, teléfono y descripción de su necesidad.
+5. Cuando tengas nombre, correo, teléfono y necesidad, usa save_lead para guardarlos y confirma que el equipo lo contactará pronto.`;
 
 // In-memory rate limit store (resets on cold start)
 const rateLimitMap = new Map<string, { start: number; count: number }>();
@@ -121,6 +129,26 @@ serve(async (req) => {
           ],
           stream: true,
           tools: [
+            {
+              type: "function",
+              function: {
+                name: "request_email",
+                description:
+                  "Muestra un formulario dentro del chat para que el visitante escriba su correo electrónico. Úsala en cuanto haya interés real, antes de pedir cualquier otro dato.",
+                parameters: {
+                  type: "object",
+                  properties: {
+                    reason: {
+                      type: "string",
+                      description:
+                        "Frase corta que explica para qué se pide el correo, ej. 'Te enviamos la información de suavizadores residenciales'.",
+                    },
+                  },
+                  required: ["reason"],
+                  additionalProperties: false,
+                },
+              },
+            },
             {
               type: "function",
               function: {
