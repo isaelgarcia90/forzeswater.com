@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect } from "react";
-import { X, Send, Loader2 } from "lucide-react";
-import chatbotIconAsset from "@/assets/chatbot-icon.png.asset.json";
+import { X, Send, Loader2, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useChatBot } from "@/hooks/useChatBot";
 import ChatMessages from "./ChatMessages";
+
 
 const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
