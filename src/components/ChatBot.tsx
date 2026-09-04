@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect } from "react";
-import { X, Send, Loader2 } from "lucide-react";
-import chatbotIconAsset from "@/assets/chatbot-icon.png.asset.json";
+import { X, Send, Loader2, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useChatBot } from "@/hooks/useChatBot";
 import ChatMessages from "./ChatMessages";
+
 
 const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -49,19 +49,16 @@ const ChatBot = () => {
       {!isOpen && (
         <button
           onClick={handleOpen}
-          className="fixed bottom-36 right-6 z-50 w-14 h-14 bg-gradient-primary text-white rounded-full shadow-large flex items-center justify-center transition-all duration-300 hover:scale-110 group"
+          className="fixed bottom-36 right-6 z-50 w-14 h-14 bg-white text-primary border-2 border-primary rounded-full shadow-large flex items-center justify-center transition-all duration-300 hover:scale-110 group"
           aria-label="Abrir chat con asistente IA"
         >
-          <img
-            src={chatbotIconAsset.url}
-            alt="Asistente Forzes Water"
-            className="h-8 w-8 object-contain"
-          />
+          <MessageCircle className="h-7 w-7" strokeWidth={2} />
           <span className="absolute right-full mr-3 bg-card text-foreground px-3 py-2 rounded-lg shadow-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-sm border border-border">
             ¿Dudas? Te asesoramos
           </span>
         </button>
       )}
+
 
       {/* Chat Window */}
       {isOpen && (
