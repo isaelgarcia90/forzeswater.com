@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { X, Send, Loader2 } from "lucide-react";
-import chatbotIcon from "@/assets/chatbot-icon.png.asset.json";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useChatBot } from "@/hooks/useChatBot";
@@ -54,7 +54,7 @@ const ChatBot = () => {
           aria-label="Abrir chat con asistente IA"
         >
           <img
-            src={chatbotIcon.url}
+            src="/chatbot-icon.png"
             alt="Ícono de asistente IA"
             className="h-full w-full object-contain"
             loading="eager"
