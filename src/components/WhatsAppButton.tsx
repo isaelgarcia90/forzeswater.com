@@ -20,7 +20,7 @@ const WhatsAppButton = () => {
       aria-label="Contactar por WhatsApp"
     >
       <MessageCircle className="h-7 w-7" />
-      <span className="absolute right-full mr-3 bg-background text-foreground px-3 py-2 rounded-lg shadow-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-sm">
+      <span className="absolute right-full mr-3 bg-background text-foreground px-3 py-2 rounded-lg shadow-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-sm hidden md:block">
         Habla con nosotros
       </span>
     </a>
