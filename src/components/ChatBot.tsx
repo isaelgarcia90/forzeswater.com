@@ -53,9 +53,13 @@ const ChatBot = () => {
           className="fixed bottom-36 right-6 z-50 w-14 h-14 bg-white border-2 border-primary rounded-full shadow-large flex items-center justify-center transition-all duration-300 hover:scale-110 group"
           aria-label="Abrir chat con asistente IA"
         >
-          <div className="w-10 h-10 rounded-xl bg-gradient-primary flex items-center justify-center text-sm font-bold text-white">
-            FW
-          </div>
+          <img
+            src="/chatbot-icon.png"
+            alt="Forzes Water"
+            className="h-8 w-8 object-contain"
+            loading="eager"
+            decoding="async"
+          />
           <span className="absolute right-full mr-3 bg-card text-foreground px-3 py-2 rounded-lg shadow-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-sm border border-border hidden md:block">
             ¿Dudas? Te asesoramos
           </span>
