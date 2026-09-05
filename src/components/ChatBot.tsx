@@ -73,13 +73,15 @@ const ChatBot = () => {
           {/* Header */}
           <div className="bg-gradient-primary text-white px-4 py-3 flex items-center justify-between flex-shrink-0">
             <div className="flex items-center gap-2">
-              <img
-                src="/chatbot-icon.png"
-                alt="Forzes Water"
-                className="h-8 w-8 object-contain rounded-lg bg-white/20"
-                loading="eager"
-                decoding="async"
-              />
+              <div className="w-8 h-8 rounded-full bg-white border-2 border-primary flex items-center justify-center flex-shrink-0">
+                <img
+                  src="/chatbot-icon.png"
+                  alt="Forzes Water"
+                  className="h-5 w-5 object-contain"
+                  loading="eager"
+                  decoding="async"
+                />
+              </div>
               <div>
                 <p className="font-bold text-sm">Forzes Water</p>
                 <p className="text-xs text-white/80">Resolvemos tus dudas</p>
