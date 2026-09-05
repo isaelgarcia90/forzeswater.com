@@ -60,7 +60,7 @@ const ChatBot = () => {
             loading="eager"
             decoding="async"
           />
-          <span className="absolute right-full mr-3 bg-card text-foreground px-3 py-2 rounded-lg shadow-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-sm border border-border">
+          <span className="absolute right-full mr-3 bg-card text-foreground px-3 py-2 rounded-lg shadow-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-sm border border-border hidden md:block">
             ¿Dudas? Te asesoramos
           </span>
         </button>
