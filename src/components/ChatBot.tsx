@@ -56,7 +56,7 @@ const ChatBot = () => {
           <img
             src="/chatbot-icon.png"
             alt="Forzes Water"
-            className="h-8 w-8 object-contain"
+            className="h-9 w-9 object-contain"
             loading="eager"
             decoding="async"
           />
@@ -77,7 +77,7 @@ const ChatBot = () => {
                 <img
                   src="/chatbot-icon.png"
                   alt="Forzes Water"
-                  className="h-5 w-5 object-contain"
+                  className="h-6 w-6 object-contain"
                   loading="eager"
                   decoding="async"
                 />
