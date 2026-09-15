@@ -55,7 +55,12 @@ const ChatBotInContact = () => {
       </div>
 
       {/* Messages */}
-      <ChatMessages messages={messages} isLoading={isLoading} />
+      <ChatMessages
+        messages={messages}
+        isLoading={isLoading}
+        onQuickAction={sendMessage}
+        onEmailSubmit={(email) => sendMessage(`Mi correo electrónico es: ${email}`)}
+      />
 
       {/* Input */}
       <div className="p-3 border-t border-border flex gap-2 flex-shrink-0">

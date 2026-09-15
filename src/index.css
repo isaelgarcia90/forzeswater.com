@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+@import "@fontsource/outfit/600.css";
+@import "@fontsource/outfit/700.css";
+@import "@fontsource-variable/figtree";
+
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
 All colors MUST be HSL.
 */
@@ -93,6 +97,14 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+  }
+
+  .font-chat {
+    font-family: "Figtree Variable", sans-serif;
+  }
+
+  .font-chat-heading {
+    font-family: "Outfit", sans-serif;
   }
 }
 
