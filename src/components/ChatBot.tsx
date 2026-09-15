@@ -1,8 +1,13 @@
 import { useState, useRef, useEffect } from "react";
-import { X, Send, Loader2 } from "lucide-react";
+import { X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import {
+  PromptInput,
+  PromptInputFooter,
+  PromptInputSubmit,
+  PromptInputTextarea,
+} from "@/components/ai-elements/prompt-input";
 import { useChatBot } from "@/hooks/useChatBot";
 import ChatMessages from "./ChatMessages";
 
@@ -11,7 +16,7 @@ const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
   const { messages, isLoading, sendMessage, resetChat } = useChatBot();
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     if (isOpen && inputRef.current) {
@@ -39,9 +44,6 @@ const ChatBot = () => {
 
   const handleOpen = () => {
     setIsOpen(true);
-    if (messages.length === 0) {
-      sendMessage("Hola");
-    }
   };
 
   return (
@@ -69,22 +71,28 @@ const ChatBot = () => {
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-36 right-6 z-50 w-[360px] max-w-[calc(100vw-2rem)] h-[500px] max-h-[calc(100vh-12rem)] bg-card border border-border rounded-2xl shadow-large flex flex-col overflow-hidden animate-scale-in">
+        <section
+          aria-label="Asistente virtual de Forzes Water"
+          className="font-chat fixed inset-x-2 bottom-3 z-50 flex h-[min(660px,calc(100dvh-1.5rem))] flex-col overflow-hidden rounded-lg border border-border bg-card shadow-large animate-scale-in sm:inset-x-auto sm:bottom-24 sm:right-6 sm:h-[620px] sm:w-[400px]"
+        >
           {/* Header */}
-          <div className="bg-gradient-primary text-white px-4 py-3 flex items-center justify-between flex-shrink-0">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-white border-2 border-primary flex items-center justify-center flex-shrink-0">
+          <div className="bg-gradient-primary px-4 py-4 text-primary-foreground flex items-center justify-between flex-shrink-0">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border-2 border-primary bg-card shadow-soft">
                 <img
                   src="/chatbot-icon.png"
                   alt="Forzes Water"
-                  className="h-6 w-6 object-contain"
+                  className="h-8 w-8 object-contain"
                   loading="eager"
                   decoding="async"
                 />
               </div>
               <div>
-                <p className="font-bold text-sm">Forzes Water</p>
-                <p className="text-xs text-white/80">Resolvemos tus dudas</p>
+                <p className="font-chat-heading text-base font-bold leading-tight">Forzes Water</p>
+                <p className="mt-1 flex items-center gap-1.5 text-xs text-primary-foreground/90">
+                  <span className="h-2 w-2 rounded-full bg-accent" aria-hidden="true" />
+                  Asistente virtual
+                </p>
               </div>
             </div>
             <div className="flex items-center gap-1">
@@ -92,7 +100,7 @@ const ChatBot = () => {
                 variant="ghost"
                 size="icon"
                 onClick={() => { resetChat(); handleClose(); }}
-                className="h-8 w-8 text-white hover:bg-white/20"
+                className="h-9 w-9 text-primary-foreground hover:bg-card/15 hover:text-primary-foreground"
                 aria-label="Cerrar chat"
               >
                 <X className="h-4 w-4" />
@@ -101,33 +109,45 @@ const ChatBot = () => {
           </div>
 
           {/* Messages */}
-          <ChatMessages messages={messages} isLoading={isLoading} />
+          <ChatMessages
+            messages={messages}
+            isLoading={isLoading}
+            onQuickAction={sendMessage}
+            onEmailSubmit={(email) => sendMessage(`Mi correo electrónico es: ${email}`)}
+          />
 
           {/* Input */}
-          <div className="p-3 border-t border-border flex gap-2 flex-shrink-0">
-            <Input
+          <div className="flex-shrink-0 border-t border-border bg-card p-3">
+            <PromptInput
+              onSubmit={({ text }) => {
+                const nextMessage = text.trim();
+                if (!nextMessage || isLoading) return;
+                setInput("");
+                sendMessage(nextMessage);
+              }}
+              className="rounded-lg border-border bg-muted/60 shadow-none"
+            >
+              <PromptInputTextarea
               ref={inputRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Escribe tu mensaje..."
-              className="flex-1"
+              className="max-h-28 min-h-12 px-4 py-3 text-sm"
               disabled={isLoading}
-            />
-            <Button
-              onClick={handleSend}
-              disabled={!input.trim() || isLoading}
-              size="icon"
-              className="bg-gradient-primary flex-shrink-0"
-            >
-              {isLoading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Send className="h-4 w-4" />
-              )}
-            </Button>
+              aria-label="Mensaje para el asistente"
+              />
+              <PromptInputFooter className="justify-end px-2 pb-2 pt-0">
+                <PromptInputSubmit
+                  aria-label="Enviar mensaje"
+                  status={isLoading ? "submitted" : "ready"}
+                  disabled={!input.trim() || isLoading}
+                  className="h-9 w-9 rounded-md bg-primary text-primary-foreground hover:bg-primary/90"
+                />
+              </PromptInputFooter>
+            </PromptInput>
           </div>
-        </div>
+        </section>
       )}
     </>
   );
