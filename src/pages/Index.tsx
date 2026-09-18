@@ -10,7 +10,6 @@ import Services from "@/components/Services";
 import FAQ from "@/components/FAQ";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
-import WhatsAppButton from "@/components/WhatsAppButton";
 import ChatBot from "@/components/ChatBot";
 import StickyCTABar from "@/components/StickyCTABar";
 import { useAnalytics } from "@/hooks/useAnalytics";
