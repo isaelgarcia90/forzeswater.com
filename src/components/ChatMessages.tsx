@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Droplets, Mail, MessageCircle, PackageSearch, Send, Wrench } from "lucide-react";
+import { ChevronRight, Droplets, Mail, MessageCircle, PackageSearch, Send, Wrench } from "lucide-react";
 
 import {
   Conversation,
