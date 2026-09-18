@@ -1,10 +1,11 @@
+@import "@fontsource/outfit/600.css";
+@import "@fontsource/outfit/700.css";
+@import "@fontsource-variable/figtree";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import "@fontsource/outfit/600.css";
-@import "@fontsource/outfit/700.css";
-@import "@fontsource-variable/figtree";
 
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
 All colors MUST be HSL.
