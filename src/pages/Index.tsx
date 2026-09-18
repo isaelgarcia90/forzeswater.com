@@ -63,7 +63,6 @@ const Index = () => {
         <Contact />
       </main>
       <Footer />
-      <WhatsAppButton />
       <ChatBot />
       <StickyCTABar />
     </div>
