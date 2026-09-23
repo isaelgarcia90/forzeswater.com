@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { X } from "lucide-react";
+import { RefreshCcw, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -15,7 +15,9 @@ import ChatMessages from "./ChatMessages";
 const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
-  const { messages, isLoading, sendMessage, resetChat } = useChatBot();
+  const { messages, isLoading, sendMessage, resetChat, hasStoredConversation } = useChatBot();
+  const [showReturnPrompt, setShowReturnPrompt] = useState(false);
+  const [returnPromptHandled, setReturnPromptHandled] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
@@ -43,7 +45,21 @@ const ChatBot = () => {
   };
 
   const handleOpen = () => {
+    if (!returnPromptHandled && hasStoredConversation && messages.length > 0) {
+      setShowReturnPrompt(true);
+      setReturnPromptHandled(true);
+    }
     setIsOpen(true);
+  };
+
+  const handleContinueConversation = () => {
+    setShowReturnPrompt(false);
+  };
+
+  const handleStartNewConversation = () => {
+    resetChat(true);
+    setShowReturnPrompt(false);
+    setReturnPromptHandled(true);
   };
 
   return (
@@ -99,7 +115,17 @@ const ChatBot = () => {
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => { resetChat(); handleClose(); }}
+                onClick={handleStartNewConversation}
+                className="h-9 w-9 text-primary-foreground hover:bg-card/15 hover:text-primary-foreground"
+                aria-label="Nueva conversación"
+                title="Nueva conversación"
+              >
+                <RefreshCcw className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleClose}
                 className="h-9 w-9 text-primary-foreground hover:bg-card/15 hover:text-primary-foreground"
                 aria-label="Cerrar chat"
               >
@@ -114,6 +140,9 @@ const ChatBot = () => {
             isLoading={isLoading}
             onQuickAction={sendMessage}
             onEmailSubmit={(email) => sendMessage(`Mi correo electrónico es: ${email}`)}
+            showReturnPrompt={showReturnPrompt}
+            onContinueConversation={handleContinueConversation}
+            onStartNewConversation={handleStartNewConversation}
           />
 
           {/* Input */}
