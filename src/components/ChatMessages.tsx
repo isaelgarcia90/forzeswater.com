@@ -168,7 +168,7 @@ const ChatMessages = ({
           </div>
         )}
 
-        {messages.map((msg, i) => {
+        {!showReturnPrompt && messages.map((msg, i) => {
         if (msg.type === "email_form" && msg.role === "assistant") {
           return (
             <Message key={i} from="assistant" className="max-w-[90%]">
