@@ -45,7 +45,21 @@ const ChatBot = () => {
   };
 
   const handleOpen = () => {
+    if (!returnPromptHandled && hasStoredConversation && messages.length > 0) {
+      setShowReturnPrompt(true);
+      setReturnPromptHandled(true);
+    }
     setIsOpen(true);
+  };
+
+  const handleContinueConversation = () => {
+    setShowReturnPrompt(false);
+  };
+
+  const handleStartNewConversation = () => {
+    resetChat(true);
+    setShowReturnPrompt(false);
+    setReturnPromptHandled(true);
   };
 
   return (
