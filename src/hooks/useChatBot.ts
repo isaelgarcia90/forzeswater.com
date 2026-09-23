@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 
 type Message = {
   role: "user" | "assistant";
@@ -9,11 +9,52 @@ type Message = {
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
 const SAVE_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/save-chat-lead`;
 
+const STORAGE_KEY = "forzes-chat-history";
+const MAX_AGE_MS = 24 * 60 * 60 * 1000;
+
+type StoredChat = {
+  messages: Message[];
+  leadSaved: boolean;
+  timestamp: number;
+};
+
+function loadStoredChat(): StoredChat | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as StoredChat;
+    if (!Array.isArray(parsed?.messages) || typeof parsed?.timestamp !== "number") return null;
+    if (Date.now() - parsed.timestamp > MAX_AGE_MS) {
+      window.localStorage.removeItem(STORAGE_KEY);
+      return null;
+    }
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
 export function useChatBot() {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>(() => loadStoredChat()?.messages ?? []);
   const [isLoading, setIsLoading] = useState(false);
-  const [leadSaved, setLeadSaved] = useState(false);
+  const [leadSaved, setLeadSaved] = useState(() => loadStoredChat()?.leadSaved ?? false);
+  const [hasStoredConversation] = useState(() => (loadStoredChat()?.messages.length ?? 0) > 0);
   const abortRef = useRef<AbortController | null>(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      if (messages.length === 0) {
+        window.localStorage.removeItem(STORAGE_KEY);
+        return;
+      }
+      const payload: StoredChat = { messages, leadSaved, timestamp: Date.now() };
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+    } catch {
+      // ignore storage errors (private mode / quota)
+    }
+  }, [messages, leadSaved]);
 
   const saveLead = useCallback(
     async (args: { name: string; email: string; phone: string; message: string }) => {
