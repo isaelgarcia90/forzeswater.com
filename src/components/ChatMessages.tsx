@@ -25,6 +25,9 @@ interface ChatMessagesProps {
   isLoading: boolean;
   onEmailSubmit?: (email: string) => void;
   onQuickAction?: (message: string) => void;
+  showReturnPrompt?: boolean;
+  onContinueConversation?: () => void;
+  onStartNewConversation?: () => void;
 }
 
 const quickActions = [
