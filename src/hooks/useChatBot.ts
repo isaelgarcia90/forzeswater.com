@@ -225,11 +225,18 @@ export function useChatBot() {
     [messages, saveLead]
   );
 
-  const resetChat = useCallback(() => {
+  const resetChat = useCallback((clearStorage = true) => {
     setMessages([]);
     setLeadSaved(false);
     abortRef.current?.abort();
+    if (clearStorage && typeof window !== "undefined") {
+      try {
+        window.localStorage.removeItem(STORAGE_KEY);
+      } catch {
+        // ignore
+      }
+    }
   }, []);
 
-  return { messages, isLoading, leadSaved, sendMessage, resetChat };
+  return { messages, isLoading, leadSaved, sendMessage, resetChat, hasStoredConversation };
 }
