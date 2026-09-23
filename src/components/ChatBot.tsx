@@ -115,7 +115,17 @@ const ChatBot = () => {
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => { resetChat(); handleClose(); }}
+                onClick={handleStartNewConversation}
+                className="h-9 w-9 text-primary-foreground hover:bg-card/15 hover:text-primary-foreground"
+                aria-label="Nueva conversación"
+                title="Nueva conversación"
+              >
+                <RefreshCcw className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleClose}
                 className="h-9 w-9 text-primary-foreground hover:bg-card/15 hover:text-primary-foreground"
                 aria-label="Cerrar chat"
               >
@@ -130,6 +140,9 @@ const ChatBot = () => {
             isLoading={isLoading}
             onQuickAction={sendMessage}
             onEmailSubmit={(email) => sendMessage(`Mi correo electrónico es: ${email}`)}
+            showReturnPrompt={showReturnPrompt}
+            onContinueConversation={handleContinueConversation}
+            onStartNewConversation={handleStartNewConversation}
           />
 
           {/* Input */}
