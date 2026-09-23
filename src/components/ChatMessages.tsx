@@ -78,13 +78,50 @@ const EmailFormCard = ({ reason, onSubmit, disabled }: { reason: string; onSubmi
   );
 };
 
-const ChatMessages = ({ messages, isLoading, onEmailSubmit, onQuickAction }: ChatMessagesProps) => {
+const ChatMessages = ({
+  messages,
+  isLoading,
+  onEmailSubmit,
+  onQuickAction,
+  showReturnPrompt = false,
+  onContinueConversation,
+  onStartNewConversation,
+}: ChatMessagesProps) => {
   const lastEmailFormIndex = messages.map((m) => m.type === "email_form").lastIndexOf(true);
-  const showWelcome = messages.length === 0;
+  const showWelcome = messages.length === 0 && !showReturnPrompt;
 
   return (
     <Conversation className="bg-muted/45">
       <ConversationContent className="gap-4 p-4">
+        {showReturnPrompt && (
+          <div className="space-y-3 animate-fade-in">
+            <Message from="assistant" className="max-w-[88%]">
+              <MessageContent className="rounded-lg border border-border bg-card px-4 py-3 shadow-soft">
+                <p className="text-sm leading-relaxed">
+                  ¡Gracias por regresar! Tienes una conversación reciente. ¿Deseas continuar donde la dejaste?
+                </p>
+              </MessageContent>
+            </Message>
+            <div className="flex flex-wrap gap-2">
+              <Button
+                type="button"
+                onClick={() => onContinueConversation?.()}
+                className="rounded-lg bg-primary text-primary-foreground hover:bg-primary/90"
+              >
+                Sí, continuar
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => onStartNewConversation?.()}
+                className="rounded-lg border-border bg-card text-foreground hover:border-primary hover:bg-muted"
+              >
+                No, nueva conversación
+              </Button>
+            </div>
+          </div>
+        )}
+
         {showWelcome && (
           <div className="space-y-4 animate-fade-in">
             <Message from="assistant" className="max-w-[88%]">
