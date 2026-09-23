@@ -15,7 +15,9 @@ import ChatMessages from "./ChatMessages";
 const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
-  const { messages, isLoading, sendMessage, resetChat } = useChatBot();
+  const { messages, isLoading, sendMessage, resetChat, hasStoredConversation } = useChatBot();
+  const [showReturnPrompt, setShowReturnPrompt] = useState(false);
+  const [returnPromptHandled, setReturnPromptHandled] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
