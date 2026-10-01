@@ -4,7 +4,30 @@ type Message = {
   role: "user" | "assistant";
   content: string;
   type?: "text" | "email_form";
+  options?: string[];
 };
+
+const OPTIONS_RE = /\[\[\s*OPCIONES\s*:([\s\S]*?)\]\]/i;
+
+/** Splits visible text from the trailing [[OPCIONES: a | b]] marker (also hides partial markers while streaming). */
+function parseOptions(raw: string): { text: string; options?: string[] } {
+  const match = raw.match(OPTIONS_RE);
+  let text = raw;
+  let options: string[] | undefined;
+  if (match) {
+    options = match[1]
+      .split("|")
+      .map((o) => o.trim())
+      .filter(Boolean)
+      .slice(0, 6);
+    text = raw.replace(OPTIONS_RE, "");
+  } else {
+    const idx = raw.lastIndexOf("[[");
+    if (idx !== -1) text = raw.slice(0, idx);
+    else if (raw.endsWith("[")) text = raw.slice(0, -1);
+  }
+  return { text: text.trim(), options: options?.length ? options : undefined };
+}
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
 const SAVE_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/save-chat-lead`;
@@ -116,14 +139,15 @@ export function useChatBot() {
 
         const upsertAssistant = (text: string) => {
           assistantSoFar = text;
+          const { text: visible, options } = parseOptions(assistantSoFar);
           setMessages((prev) => {
             const last = prev[prev.length - 1];
-            if (last?.role === "assistant") {
+            if (last?.role === "assistant" && last.type !== "email_form") {
               return prev.map((m, i) =>
-                i === prev.length - 1 ? { ...m, content: assistantSoFar } : m
+                i === prev.length - 1 ? { ...m, content: visible, options } : m
               );
             }
-            return [...prev, { role: "assistant", content: assistantSoFar }];
+            return [...prev, { role: "assistant", content: visible, options }];
           });
         };
 

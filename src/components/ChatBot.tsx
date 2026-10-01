@@ -138,6 +138,7 @@ const ChatBot = () => {
             showReturnPrompt={showReturnPrompt}
             onContinueConversation={handleContinueConversation}
             onStartNewConversation={handleStartNewConversation}
+            onOtherQuestion={() => inputRef.current?.focus()}
           />
 
           {/* Input */}
