@@ -15,9 +15,8 @@ import ChatMessages from "./ChatMessages";
 const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
-  const { messages, isLoading, sendMessage, resetChat, hasStoredConversation } = useChatBot();
+  const { messages, isLoading, sendMessage, resetChat } = useChatBot();
   const [showReturnPrompt, setShowReturnPrompt] = useState(false);
-  const [returnPromptHandled, setReturnPromptHandled] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
@@ -45,10 +44,7 @@ const ChatBot = () => {
   };
 
   const handleOpen = () => {
-    if (!returnPromptHandled && hasStoredConversation && messages.length > 0) {
-      setShowReturnPrompt(true);
-      setReturnPromptHandled(true);
-    }
+    setShowReturnPrompt(messages.length > 0);
     setIsOpen(true);
   };
 
@@ -59,7 +55,6 @@ const ChatBot = () => {
   const handleStartNewConversation = () => {
     resetChat(true);
     setShowReturnPrompt(false);
-    setReturnPromptHandled(true);
   };
 
   return (
