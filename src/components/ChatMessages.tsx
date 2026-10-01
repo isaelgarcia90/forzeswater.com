@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronRight, Droplets, Mail, MessageCircle, PackageSearch, Send, Wrench } from "lucide-react";
+import { ChevronRight, Droplets, Home, Mail, MessageCircle, PackageSearch, PenLine, Wrench } from "lucide-react";
 
 import {
   Conversation,
@@ -18,6 +18,7 @@ type Message = {
   role: "user" | "assistant";
   content: string;
   type?: "text" | "email_form";
+  options?: string[];
 };
 
 interface ChatMessagesProps {
@@ -28,6 +29,7 @@ interface ChatMessagesProps {
   showReturnPrompt?: boolean;
   onContinueConversation?: () => void;
   onStartNewConversation?: () => void;
+  onOtherQuestion?: () => void;
 }
 
 const quickActions = [
@@ -78,6 +80,9 @@ const EmailFormCard = ({ reason, onSubmit, disabled }: { reason: string; onSubmi
   );
 };
 
+const WHATSAPP_URL =
+  "https://wa.me/525518070867?text=Hola%2C%20me%20gustar%C3%ADa%20recibir%20asesor%C3%ADa%20de%20Forzes%20Water.";
+
 const ChatMessages = ({
   messages,
   isLoading,
@@ -86,9 +91,18 @@ const ChatMessages = ({
   showReturnPrompt = false,
   onContinueConversation,
   onStartNewConversation,
+  onOtherQuestion,
 }: ChatMessagesProps) => {
+  const [showMenu, setShowMenu] = useState(false);
   const lastEmailFormIndex = messages.map((m) => m.type === "email_form").lastIndexOf(true);
   const showWelcome = messages.length === 0 && !showReturnPrompt;
+  const lastMsg = messages[messages.length - 1];
+  const showOptions =
+    !showReturnPrompt && !isLoading && lastMsg?.role === "assistant" && lastMsg.type !== "email_form";
+  const pick = (text: string) => {
+    setShowMenu(false);
+    onQuickAction?.(text);
+  };
 
   return (
     <Conversation className="bg-muted/45">
@@ -201,6 +215,48 @@ const ChatMessages = ({
           </Message>
         );
       })}
+
+      {showOptions && (
+        <div className="w-full space-y-2 animate-fade-in">
+          {lastMsg.options && lastMsg.options.length > 0 && (
+            <div className="overflow-hidden rounded-lg border border-border bg-card shadow-soft" aria-label="Opciones sugeridas">
+              {lastMsg.options.map((opt) => (
+                <button
+                  key={opt}
+                  type="button"
+                  onClick={() => pick(opt)}
+                  className="flex min-h-11 w-full items-center justify-between gap-2 border-b border-border px-4 py-2.5 text-left text-sm font-medium text-primary transition-colors last:border-b-0 hover:bg-muted focus-visible:bg-muted focus-visible:outline-none"
+                >
+                  <span>{opt}</span>
+                  <ChevronRight className="h-4 w-4 shrink-0 opacity-60" />
+                </button>
+              ))}
+            </div>
+          )}
+          <div className="flex flex-wrap gap-2">
+            <Button type="button" variant="outline" size="sm" onClick={() => { setShowMenu(false); onOtherQuestion?.(); }} className="h-8 rounded-full border-border bg-card text-xs">
+              <PenLine className="h-3.5 w-3.5" /> Tengo otra duda
+            </Button>
+            <Button type="button" variant="outline" size="sm" onClick={() => setShowMenu((v) => !v)} className="h-8 rounded-full border-border bg-card text-xs">
+              <Home className="h-3.5 w-3.5" /> Menú principal
+            </Button>
+            <Button type="button" variant="outline" size="sm" asChild className="h-8 rounded-full border-border bg-card text-xs">
+              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer nofollow">
+                <MessageCircle className="h-3.5 w-3.5" /> WhatsApp
+              </a>
+            </Button>
+          </div>
+          {showMenu && (
+            <div className="grid grid-cols-1 gap-2 animate-fade-in">
+              {quickActions.map(({ label, message, icon: Icon }) => (
+                <Button key={label} type="button" variant="outline" onClick={() => pick(message)} className="h-10 justify-start gap-2 rounded-lg border-border bg-card text-sm text-foreground hover:border-primary hover:bg-muted">
+                  <Icon className="h-4 w-4 text-primary" /> {label}
+                </Button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {isLoading && messages[messages.length - 1]?.role !== "assistant" && (
         <Message from="assistant">
