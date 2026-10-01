@@ -139,14 +139,15 @@ export function useChatBot() {
 
         const upsertAssistant = (text: string) => {
           assistantSoFar = text;
+          const { text: visible, options } = parseOptions(assistantSoFar);
           setMessages((prev) => {
             const last = prev[prev.length - 1];
-            if (last?.role === "assistant") {
+            if (last?.role === "assistant" && last.type !== "email_form") {
               return prev.map((m, i) =>
-                i === prev.length - 1 ? { ...m, content: assistantSoFar } : m
+                i === prev.length - 1 ? { ...m, content: visible, options } : m
               );
             }
-            return [...prev, { role: "assistant", content: assistantSoFar }];
+            return [...prev, { role: "assistant", content: visible, options }];
           });
         };
 
