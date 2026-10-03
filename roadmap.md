@@ -6,3 +6,4 @@
 - [x] Mejorar legibilidad de mensajes del chatbot (párrafos breves y separación clara)
 - [x] Cambiar captura de datos: pedir primero el correo con un mini-formulario dentro del chat
 - [x] Rediseñar el chatbot con bienvenida y accesos rápidos adaptables a móvil
+- [x] Chatbot guiado con opciones para hacer clic
