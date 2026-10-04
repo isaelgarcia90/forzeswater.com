@@ -15,7 +15,7 @@ import ChatMessages from "./ChatMessages";
 const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
-  const { messages, isLoading, sendMessage, resetChat } = useChatBot();
+  const { messages, isLoading, sendMessage, resetChat, submitContact, leadSaved } = useChatBot();
   const [showReturnPrompt, setShowReturnPrompt] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 

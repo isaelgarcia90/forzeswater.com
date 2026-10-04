@@ -8,7 +8,7 @@ import ChatMessages from "./ChatMessages";
 
 const ChatBotInContact = () => {
   const [input, setInput] = useState("");
-  const { messages, isLoading, sendMessage } = useChatBot();
+  const { messages, isLoading, sendMessage, submitContact, leadSaved } = useChatBot();
   const inputRef = useRef<HTMLInputElement>(null);
   const initialized = useRef(false);
   const hasInteracted = useRef(false);
@@ -59,7 +59,8 @@ const ChatBotInContact = () => {
         messages={messages}
         isLoading={isLoading}
         onQuickAction={sendMessage}
-        onEmailSubmit={(email) => sendMessage(`Mi correo electrónico es: ${email}`)}
+        onContactSubmit={submitContact}
+        contactSaved={leadSaved}
       />
 
       {/* Input */}
