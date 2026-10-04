@@ -15,7 +15,9 @@ serve(async (req) => {
   try {
     const { name, email, phone, message, conversation_history } = await req.json();
 
-    if (!name || !email || !phone || !message) {
+    const str = (v: unknown, max: number) => (typeof v === "string" ? v.trim().slice(0, max) : "");
+    const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(str(email, 255));
+    if (str(name, 100).length < 2 || !validEmail || !str(message, 1000)) {
       return new Response(
         JSON.stringify({ error: "Faltan campos obligatorios" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -28,15 +30,18 @@ serve(async (req) => {
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     const { error: dbError } = await supabase.from("chat_leads").insert({
-      name,
-      email,
-      phone,
-      message,
+      name: str(name, 100),
+      email: str(email, 255),
+      phone: str(phone, 25) || null,
+      message: str(message, 1000),
       conversation_history: conversation_history || [],
     });
 
     if (dbError) {
       console.error("DB insert error:", dbError);
+      return new Response(JSON.stringify({ error: "No se pudo guardar" }), {
+        status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
     // Send to Formspree
@@ -50,7 +55,7 @@ serve(async (req) => {
         body: JSON.stringify({
           Nombre: name,
           "Correo Electrónico": email,
-          Teléfono: phone,
+          Teléfono: str(phone, 25) || "No proporcionado",
           Mensaje: `[Chatbot IA] ${message}`,
         }),
       });
