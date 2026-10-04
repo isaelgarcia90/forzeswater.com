@@ -15,7 +15,7 @@ import ChatMessages from "./ChatMessages";
 const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
-  const { messages, isLoading, sendMessage, resetChat } = useChatBot();
+  const { messages, isLoading, sendMessage, resetChat, submitContact, leadSaved } = useChatBot();
   const [showReturnPrompt, setShowReturnPrompt] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -134,7 +134,8 @@ const ChatBot = () => {
             messages={messages}
             isLoading={isLoading}
             onQuickAction={sendMessage}
-            onEmailSubmit={(email) => sendMessage(`Mi correo electrónico es: ${email}`)}
+            onContactSubmit={submitContact}
+            contactSaved={leadSaved}
             showReturnPrompt={showReturnPrompt}
             onContinueConversation={handleContinueConversation}
             onStartNewConversation={handleStartNewConversation}

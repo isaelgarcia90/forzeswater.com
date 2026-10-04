@@ -80,25 +80,49 @@ export function useChatBot() {
   }, [messages, leadSaved]);
 
   const saveLead = useCallback(
-    async (args: { name: string; email: string; phone: string; message: string }) => {
+    async (args: { name: string; email: string; phone: string; message: string }): Promise<boolean> => {
       try {
-        await fetch(SAVE_URL, {
+        const resp = await fetch(SAVE_URL, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
           },
-          body: JSON.stringify({
-            ...args,
-            conversation_history: messages,
-          }),
+          body: JSON.stringify({ ...args, conversation_history: messages }),
         });
+        if (!resp.ok) return false;
         setLeadSaved(true);
+        return true;
       } catch (e) {
         console.error("Error saving lead:", e);
+        return false;
       }
     },
     [messages]
+  );
+
+  const submitContact = useCallback(
+    async (data: { name: string; email: string; phone: string }): Promise<boolean> => {
+      const need = messages
+        .filter((m) => m.role === "user")
+        .map((m) => m.content)
+        .join(" | ")
+        .slice(0, 1000) || "Solicitud desde el chat";
+      const ok = await saveLead({ ...data, message: need });
+      if (!ok) return false;
+      const first = data.name.split(" ")[0];
+      setMessages((prev) => [
+        ...prev,
+        { role: "user", content: "Envié mis datos de contacto." },
+        {
+          role: "assistant",
+          content: `¡Gracias, ${first}! Recibimos tus datos. Un asesor de Forzes Water te contactará pronto${data.phone ? " por teléfono o correo" : " por correo"}. ¿Hay algo más en lo que pueda ayudarte?`,
+          options: ["Tengo otra duda", "Es todo, gracias"],
+        },
+      ]);
+      return true;
+    },
+    [messages, saveLead]
   );
 
   const sendMessage = useCallback(
@@ -262,5 +286,5 @@ export function useChatBot() {
     }
   }, []);
 
-  return { messages, isLoading, leadSaved, sendMessage, resetChat, hasStoredConversation };
+  return { messages, isLoading, leadSaved, sendMessage, submitContact, resetChat, hasStoredConversation };
 }

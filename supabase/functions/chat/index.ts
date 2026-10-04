@@ -55,16 +55,13 @@ Al final de CADA respuesta agrega, en su propia línea, las opciones que el visi
   - Productos: Bombas | Filtros | Plantas de tratamiento | Tableros y control | Químicos para piscina
   - Servicio: Instalación | Mantenimiento | Reparación | Análisis de agua
   - Urgencia: Lo antes posible | Este mes | Solo estoy cotizando
-- Cuando pidas nombre o teléfono (texto libre), omite la línea de opciones.
 - Si el visitante elige "Tengo otra duda", invítalo a escribirla.
 
-## Captura de datos (el correo va PRIMERO)
+## Captura de datos (un solo formulario)
 
 1. Después de 1 o 2 intercambios útiles, o en cuanto el visitante muestre interés real (precio, cotización, asesoría o detalles de un equipo), llama a la herramienta request_email.
-2. request_email muestra un pequeño formulario dentro del chat para que escriba su correo. NUNCA pidas el correo escribiéndolo en el texto: usa siempre la herramienta.
-3. Llama a request_email una sola vez. Si el visitante ya compartió su correo, no la vuelvas a llamar.
-4. Cuando ya tengas el correo, continúa la conversación y pide el resto de los datos de forma natural y uno a uno: nombre, teléfono y descripción de su necesidad.
-5. Cuando tengas nombre, correo, teléfono y necesidad, usa save_lead para guardarlos y confirma que el equipo lo contactará pronto.`;
+2. request_email muestra UN formulario dentro del chat con correo, nombre y teléfono opcional. NUNCA pidas correo, nombre ni teléfono escribiéndolos en el texto: usa siempre la herramienta.
+3. Llama a request_email una sola vez. Cuando el visitante diga "Envié mis datos de contacto.", ya están guardados: no los vuelvas a pedir y sigue ayudando.`;
 
 // In-memory rate limit store (resets on cold start)
 const rateLimitMap = new Map<string, { start: number; count: number }>();
