@@ -38,44 +38,106 @@ const quickActions = [
   { label: "Solicitar servicio", message: "Necesito solicitar un servicio", icon: Wrench },
 ];
 
-const EmailFormCard = ({ reason, onSubmit, disabled }: { reason: string; onSubmit: (email: string) => void; disabled: boolean }) => {
+export type ContactData = { name: string; email: string; phone: string };
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+const ContactFormCard = ({
+  reason,
+  onSubmit,
+  disabled,
+}: {
+  reason: string;
+  onSubmit: (data: ContactData) => Promise<boolean>;
+  disabled: boolean;
+}) => {
   const [email, setEmail] = useState("");
-  const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+  const [name, setName] = useState("");
+  const [lada, setLada] = useState("+52|MX");
+  const [phone, setPhone] = useState("");
+  const [tried, setTried] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [failed, setFailed] = useState(false);
+
+  const digits = phone.replace(/\D/g, "");
+  const errors = {
+    email: !email.trim() ? "Escribe tu correo" : !EMAIL_RE.test(email.trim()) ? "Revisa el formato del correo" : "",
+    name: name.trim().length < 2 ? "Escribe tu nombre" : "",
+    phone: digits.length > 0 && (digits.length < 8 || digits.length > 15) ? "Revisa el número (8 a 15 dígitos)" : "",
+  };
+  const hasErrors = Boolean(errors.email || errors.name || errors.phone);
+  const locked = disabled || sending;
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setTried(true);
+    if (hasErrors || locked) return;
+    setSending(true);
+    setFailed(false);
+    const ok = await onSubmit({
+      name: name.trim(),
+      email: email.trim(),
+      phone: digits ? `${lada.split("|")[0]} ${phone.trim()}` : "",
+    });
+    setSending(false);
+    if (!ok) setFailed(true);
+  };
+
+  const field =
+    "w-full min-w-0 rounded-md border bg-card px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring disabled:opacity-60";
+  const err = (msg: string) => tried && msg ? <p className="mt-1 text-xs text-destructive">{msg}</p> : null;
 
   return (
     <div className="w-full space-y-3 rounded-lg border border-border bg-card px-4 py-3 shadow-soft">
-      <p className="text-sm leading-relaxed">{reason}</p>
-      <div className="space-y-2 rounded-md bg-muted p-3">
-        <div className="flex items-center gap-2 text-muted-foreground">
-          <Mail className="h-4 w-4" />
-          <span className="text-xs font-medium">Te podemos avisar por correo electrónico</span>
-        </div>
-        <form
-          className="flex gap-2"
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (valid && !disabled) onSubmit(email.trim());
-          }}
-        >
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="email@ejemplo.com"
-            disabled={disabled}
-            className="min-w-0 flex-1 rounded-md border border-input bg-card px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring disabled:opacity-60"
-          />
-          <Button
-            type="submit"
-            disabled={!valid || disabled}
-            size="icon"
-            className="h-9 w-9 shrink-0"
-            aria-label="Enviar correo"
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </form>
+      <div className="flex items-start gap-2">
+        <Mail className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+        <p className="text-sm leading-relaxed">{reason}</p>
       </div>
+      <form className="space-y-3 rounded-md bg-muted p-3" onSubmit={submit} noValidate aria-label="Datos de contacto">
+        <div>
+          <label htmlFor="chat-email" className="mb-1 block text-xs font-medium text-foreground">
+            Correo electrónico <span className="text-destructive">*</span>
+          </label>
+          <input id="chat-email" type="email" autoComplete="email" maxLength={255} value={email}
+            onChange={(e) => setEmail(e.target.value)} placeholder="email@ejemplo.com" disabled={locked}
+            className={`${field} ${tried && errors.email ? "border-destructive" : "border-input"}`} />
+          {err(errors.email)}
+        </div>
+        <div>
+          <label htmlFor="chat-name" className="mb-1 block text-xs font-medium text-foreground">
+            Nombre <span className="text-destructive">*</span>
+          </label>
+          <input id="chat-name" type="text" autoComplete="name" maxLength={100} value={name}
+            onChange={(e) => setName(e.target.value)} placeholder="Tu nombre" disabled={locked}
+            className={`${field} ${tried && errors.name ? "border-destructive" : "border-input"}`} />
+          {err(errors.name)}
+        </div>
+        <div>
+          <label htmlFor="chat-phone" className="mb-1 block text-xs font-medium text-foreground">
+            Teléfono <span className="font-normal text-muted-foreground">(opcional)</span>
+          </label>
+          <div className="flex gap-2">
+            <select aria-label="Lada" value={lada} onChange={(e) => setLada(e.target.value)} disabled={locked}
+              className="w-[84px] shrink-0 rounded-md border border-input bg-card px-1 py-2 text-sm outline-none focus:ring-2 focus:ring-ring">
+              {COUNTRY_CODES.map((c) => (
+                <option key={`${c.code}|${c.country}`} value={`${c.code}|${c.country}`}>
+                  {c.country} {c.code}
+                </option>
+              ))}
+            </select>
+            <input id="chat-phone" type="tel" inputMode="tel" autoComplete="tel-national" maxLength={15} value={phone}
+              onChange={(e) => setPhone(e.target.value.replace(/[^\d\s()-]/g, ""))} placeholder="55 1234 5678" disabled={locked}
+              className={`${field} ${tried && errors.phone ? "border-destructive" : "border-input"}`} />
+          </div>
+          {err(errors.phone)}
+        </div>
+        {failed && (
+          <p className="text-xs text-destructive">No pudimos guardar tus datos. Intenta de nuevo o escríbenos por WhatsApp.</p>
+        )}
+        <Button type="submit" disabled={locked} className="w-full bg-gradient-primary">
+          {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : disabled ? "Datos enviados" : "Enviar mis datos"}
+        </Button>
+      </form>
     </div>
   );
 };

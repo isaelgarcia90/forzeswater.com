@@ -134,7 +134,8 @@ const ChatBot = () => {
             messages={messages}
             isLoading={isLoading}
             onQuickAction={sendMessage}
-            onEmailSubmit={(email) => sendMessage(`Mi correo electrónico es: ${email}`)}
+            onContactSubmit={submitContact}
+            contactSaved={leadSaved}
             showReturnPrompt={showReturnPrompt}
             onContinueConversation={handleContinueConversation}
             onStartNewConversation={handleStartNewConversation}
