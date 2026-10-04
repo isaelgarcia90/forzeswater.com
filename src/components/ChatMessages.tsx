@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { ChevronRight, Droplets, Home, Mail, MessageCircle, PackageSearch, PenLine, Wrench } from "lucide-react";
+import { COUNTRY_CODES } from "@/lib/country-codes";
+import { ChevronRight, Droplets, Home, Loader2, Mail, MessageCircle, PackageSearch, PenLine, Wrench } from "lucide-react";
 
 import {
   Conversation,
@@ -24,7 +25,8 @@ type Message = {
 interface ChatMessagesProps {
   messages: Message[];
   isLoading: boolean;
-  onEmailSubmit?: (email: string) => void;
+  onContactSubmit?: (data: ContactData) => Promise<boolean>;
+  contactSaved?: boolean;
   onQuickAction?: (message: string) => void;
   showReturnPrompt?: boolean;
   onContinueConversation?: () => void;
@@ -148,7 +150,8 @@ const WHATSAPP_URL =
 const ChatMessages = ({
   messages,
   isLoading,
-  onEmailSubmit,
+  onContactSubmit,
+  contactSaved = false,
   onQuickAction,
   showReturnPrompt = false,
   onContinueConversation,
@@ -249,10 +252,10 @@ const ChatMessages = ({
           return (
             <Message key={i} from="assistant" className="max-w-[90%]">
               <MessageContent className="w-full">
-                <EmailFormCard
+                <ContactFormCard
                   reason={msg.content}
-                  disabled={i !== lastEmailFormIndex}
-                  onSubmit={(email) => onEmailSubmit?.(email)}
+                  disabled={i !== lastEmailFormIndex || contactSaved}
+                  onSubmit={(data) => onContactSubmit?.(data) ?? Promise.resolve(false)}
                 />
               </MessageContent>
             </Message>
