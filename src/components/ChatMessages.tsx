@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useStickToBottomContext } from "use-stick-to-bottom";
 import { COUNTRY_CODES } from "@/lib/country-codes";
 import { ChevronRight, Droplets, Home, Loader2, Mail, MessageCircle, PackageSearch, PenLine, Wrench } from "lucide-react";
 
@@ -147,6 +148,52 @@ const ContactFormCard = ({
 const WHATSAPP_URL =
   "https://wa.me/525518070867?text=Hola%2C%20me%20gustar%C3%ADa%20recibir%20asesor%C3%ADa%20de%20Forzes%20Water.";
 
+const PositionLatestAssistantMessage = ({
+  isLoading,
+  showReturnPrompt,
+}: {
+  isLoading: boolean;
+  showReturnPrompt: boolean;
+}) => {
+  const { scrollRef, stopScroll } = useStickToBottomContext();
+  const previousLoading = useRef(isLoading);
+  const previousReturnPrompt = useRef(showReturnPrompt);
+
+  useEffect(() => {
+    const responseFinished = previousLoading.current && !isLoading;
+    const conversationRestored = previousReturnPrompt.current && !showReturnPrompt;
+    previousLoading.current = isLoading;
+    previousReturnPrompt.current = showReturnPrompt;
+
+    if (!responseFinished && !conversationRestored) return;
+
+    const frame = requestAnimationFrame(() => {
+      const secondFrame = requestAnimationFrame(() => {
+        const scroller = scrollRef.current;
+        const latestAssistant = scroller?.querySelector<HTMLElement>(
+          '[data-latest-assistant="true"]'
+        );
+        if (!scroller || !latestAssistant) return;
+
+        stopScroll();
+        const top =
+          latestAssistant.getBoundingClientRect().top -
+          scroller.getBoundingClientRect().top +
+          scroller.scrollTop -
+          8;
+        const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        scroller.scrollTo({ top: Math.max(0, top), behavior: reduceMotion ? "auto" : "smooth" });
+      });
+
+      return () => cancelAnimationFrame(secondFrame);
+    });
+
+    return () => cancelAnimationFrame(frame);
+  }, [isLoading, scrollRef, showReturnPrompt, stopScroll]);
+
+  return null;
+};
+
 const ChatMessages = ({
   messages,
   isLoading,
@@ -160,6 +207,7 @@ const ChatMessages = ({
 }: ChatMessagesProps) => {
   const [showMenu, setShowMenu] = useState(false);
   const lastEmailFormIndex = messages.map((m) => m.type === "email_form").lastIndexOf(true);
+  const lastAssistantIndex = messages.map((m) => m.role === "assistant").lastIndexOf(true);
   const showWelcome = messages.length === 0 && !showReturnPrompt;
   const lastMsg = messages[messages.length - 1];
   const showOptions =
@@ -172,6 +220,7 @@ const ChatMessages = ({
   return (
     <Conversation className="bg-muted/45">
       <ConversationContent className="gap-4 p-4">
+        <PositionLatestAssistantMessage isLoading={isLoading} showReturnPrompt={showReturnPrompt} />
         {showReturnPrompt && (
           <div className="space-y-3 animate-fade-in">
             <Message from="assistant" className="max-w-[88%]">
@@ -250,7 +299,12 @@ const ChatMessages = ({
         {!showReturnPrompt && messages.map((msg, i) => {
         if (msg.type === "email_form" && msg.role === "assistant") {
           return (
-            <Message key={i} from="assistant" className="max-w-[90%]">
+            <Message
+              key={i}
+              from="assistant"
+              className="max-w-[90%]"
+              data-latest-assistant={i === lastAssistantIndex ? "true" : undefined}
+            >
               <MessageContent className="w-full">
                 <ContactFormCard
                   reason={msg.content}
@@ -263,7 +317,12 @@ const ChatMessages = ({
         }
 
         return (
-          <Message key={i} from={msg.role} className="max-w-[88%]">
+          <Message
+            key={i}
+            from={msg.role}
+            className="max-w-[88%]"
+            data-latest-assistant={msg.role === "assistant" && i === lastAssistantIndex ? "true" : undefined}
+          >
             <MessageContent
               className={msg.role === "user"
                 ? "rounded-lg rounded-br-sm bg-primary px-4 py-3 text-primary-foreground shadow-soft"
