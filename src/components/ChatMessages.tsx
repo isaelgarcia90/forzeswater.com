@@ -155,7 +155,7 @@ const PositionLatestAssistantMessage = ({
   isLoading: boolean;
   showReturnPrompt: boolean;
 }) => {
-  const { scrollRef, stopScroll } = useStickToBottomContext();
+  const { contentRef, scrollRef, stopScroll } = useStickToBottomContext();
   const previousLoading = useRef(isLoading);
   const previousReturnPrompt = useRef(showReturnPrompt);
 
@@ -165,10 +165,16 @@ const PositionLatestAssistantMessage = ({
     previousLoading.current = isLoading;
     previousReturnPrompt.current = showReturnPrompt;
 
+    const content = contentRef.current;
+    if (isLoading) {
+      content?.style.removeProperty("padding-bottom");
+      return;
+    }
+
     if (!responseFinished && !conversationRestored) return;
 
     const frame = requestAnimationFrame(() => {
-      const secondFrame = requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
         const scroller = scrollRef.current;
         const latestAssistant = scroller?.querySelector<HTMLElement>(
           '[data-latest-assistant="true"]'
@@ -176,20 +182,27 @@ const PositionLatestAssistantMessage = ({
         if (!scroller || !latestAssistant) return;
 
         stopScroll();
-        const top =
+        const targetTop =
           latestAssistant.getBoundingClientRect().top -
           scroller.getBoundingClientRect().top +
           scroller.scrollTop -
           8;
+        const contentElement = contentRef.current;
+        if (contentElement) {
+          contentElement.style.removeProperty("padding-bottom");
+          const maximumScrollTop = Math.max(0, scroller.scrollHeight - scroller.clientHeight);
+          const missingSpace = Math.max(0, targetTop - maximumScrollTop);
+          if (missingSpace > 0) {
+            contentElement.style.paddingBottom = `${missingSpace + 16}px`;
+          }
+        }
         const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        scroller.scrollTo({ top: Math.max(0, top), behavior: reduceMotion ? "auto" : "smooth" });
+        scroller.scrollTo({ top: Math.max(0, targetTop), behavior: reduceMotion ? "auto" : "smooth" });
       });
-
-      return () => cancelAnimationFrame(secondFrame);
     });
 
     return () => cancelAnimationFrame(frame);
-  }, [isLoading, scrollRef, showReturnPrompt, stopScroll]);
+  }, [contentRef, isLoading, scrollRef, showReturnPrompt, stopScroll]);
 
   return null;
 };
