@@ -7,6 +7,109 @@ type Message = {
   options?: string[];
 };
 
+const SECTOR_OPTIONS = ["Residencial", "Comercial", "Industrial"];
+const PRODUCT_OPTIONS = [
+  "Bombas",
+  "Filtros",
+  "Plantas de tratamiento",
+  "Tableros y control",
+  "Químicos para piscina",
+];
+const SYSTEM_OPTIONS = [
+  "Planta potabilizadora",
+  "Ósmosis inversa",
+  "Suavizador o filtros",
+  "Aguas residuales",
+  "No estoy seguro",
+];
+const SERVICE_OPTIONS = ["Instalación", "Mantenimiento", "Reparación", "Análisis de agua"];
+const URGENCY_OPTIONS = ["Lo antes posible", "Este mes", "Solo estoy cotizando"];
+
+const sameOptions = (current: string[] | undefined, expected: string[]) =>
+  Boolean(current && current.length === expected.length && current.every((option, index) => option === expected[index]));
+
+function getLatestGuidedIntent(messages: Message[]): "products" | "quote" | "service" | null {
+  for (let index = messages.length - 1; index >= 0; index -= 1) {
+    const content = messages[index]?.content;
+    if (content === "Quiero conocer sus productos") return "products";
+    if (content === "Quiero cotizar un sistema de tratamiento de agua") return "quote";
+    if (content === "Necesito solicitar un servicio") return "service";
+  }
+  return null;
+}
+
+function getGuidedResponse(input: string, messages: Message[]): Message | null {
+  if (input === "Quiero conocer sus productos") {
+    return {
+      role: "assistant",
+      content: "¿Para qué sector necesitas productos o equipos de tratamiento de agua?",
+      options: SECTOR_OPTIONS,
+    };
+  }
+
+  if (input === "Quiero cotizar un sistema de tratamiento de agua") {
+    return {
+      role: "assistant",
+      content: "¿Para qué sector necesitas cotizar un sistema de tratamiento de agua?",
+      options: SECTOR_OPTIONS,
+    };
+  }
+
+  if (input === "Necesito solicitar un servicio") {
+    return {
+      role: "assistant",
+      content: "¿Qué servicio necesitas para tu sistema de tratamiento de agua?",
+      options: SERVICE_OPTIONS,
+    };
+  }
+
+  const latestAssistant = [...messages].reverse().find((message) => message.role === "assistant");
+  const intent = getLatestGuidedIntent(messages);
+
+  if (sameOptions(latestAssistant?.options, SECTOR_OPTIONS)) {
+    if (intent === "products") {
+      return {
+        role: "assistant",
+        content: `¿Qué tipo de producto necesitas para el sector ${input.toLowerCase()}?`,
+        options: PRODUCT_OPTIONS,
+      };
+    }
+    if (intent === "quote") {
+      return {
+        role: "assistant",
+        content: `¿Qué sistema necesitas cotizar para el sector ${input.toLowerCase()}?`,
+        options: SYSTEM_OPTIONS,
+      };
+    }
+  }
+
+  if (sameOptions(latestAssistant?.options, PRODUCT_OPTIONS)) {
+    return {
+      role: "assistant",
+      type: "email_form",
+      content: `Déjanos tus datos para brindarte información sobre ${input.toLowerCase()}.`,
+    };
+  }
+
+  if (sameOptions(latestAssistant?.options, SYSTEM_OPTIONS) || sameOptions(latestAssistant?.options, SERVICE_OPTIONS)) {
+    return {
+      role: "assistant",
+      content: "¿Cuándo necesitas recibir atención?",
+      options: URGENCY_OPTIONS,
+    };
+  }
+
+  if (sameOptions(latestAssistant?.options, URGENCY_OPTIONS)) {
+    return {
+      role: "assistant",
+      type: "email_form",
+      content: "Déjanos tus datos para preparar la atención de tu solicitud.",
+    };
+  }
+
+  return null;
+}
+
 const OPTIONS_RE = /\[\[\s*OPCIONES\s*:([\s\S]*?)\]\]/i;
 
 /** Splits visible text from the trailing [[OPCIONES: a | b]] marker (also hides partial markers while streaming). */
@@ -131,6 +234,14 @@ export function useChatBot() {
       const allMessages = [...messages, userMsg];
       setMessages(allMessages);
       setIsLoading(true);
+
+      const guidedResponse = getGuidedResponse(input, messages);
+      if (guidedResponse) {
+        await new Promise((resolve) => window.setTimeout(resolve, 120));
+        setMessages([...allMessages, guidedResponse]);
+        setIsLoading(false);
+        return;
+      }
 
       const controller = new AbortController();
       abortRef.current = controller;
