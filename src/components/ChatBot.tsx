@@ -73,6 +73,10 @@ const ChatBot = () => {
             loading="eager"
             decoding="async"
           />
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute -right-1 -top-1 h-3.5 w-3.5 rounded-full bg-destructive"
+          />
           <span className="absolute right-full mr-3 bg-card text-foreground px-3 py-2 rounded-lg shadow-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-sm border border-border hidden md:block">
             ¿Dudas? Te asesoramos
           </span>
