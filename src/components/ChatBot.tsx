@@ -63,25 +63,26 @@ const ChatBot = () => {
       {!isOpen && (
         <button
           onClick={handleOpen}
-          className="fixed bottom-36 right-6 z-50 w-14 h-14 bg-white border-2 border-primary rounded-full shadow-large flex items-center justify-center transition-all duration-300 hover:scale-110 group"
-          aria-label="Abrir chat con asistente IA"
+          className="fixed bottom-36 right-4 z-50 flex items-center gap-2.5 rounded-full border-2 border-primary bg-white py-2 pl-2 pr-4 shadow-large transition-all duration-300 hover:scale-105 sm:right-6 sm:gap-3 sm:py-2.5 sm:pl-2.5 sm:pr-5"
+          aria-label="Abrir el Asistente Virtual de Forzes Water"
         >
           <img
             src="/chatbot-icon.png"
             alt="Forzes Water"
-            className="h-9 w-9 object-contain"
+            className="h-8 w-8 flex-shrink-0 object-contain sm:h-9 sm:w-9"
             loading="eager"
             decoding="async"
           />
+          <span className="font-chat-heading whitespace-nowrap text-sm font-semibold text-primary sm:text-base">
+            Asistente Virtual
+          </span>
           <span
             aria-hidden="true"
             className="pointer-events-none absolute -right-1 -top-1 h-3.5 w-3.5 rounded-full bg-destructive"
           />
-          <span className="absolute right-full mr-3 bg-card text-foreground px-3 py-2 rounded-lg shadow-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-sm border border-border hidden md:block">
-            ¿Dudas? Te asesoramos
-          </span>
         </button>
       )}
+
 
 
       {/* Chat Window */}
