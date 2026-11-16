@@ -72,7 +72,7 @@ const ChatBot = () => {
           <img
             src="/forzecito-icon.png"
             alt="Forzecito"
-            className="h-16 w-16 flex-shrink-0 object-contain drop-shadow-lg transition-transform duration-300 group-hover:scale-105 sm:h-20 sm:w-20"
+            className="h-16 w-16 flex-shrink-0 rounded-full object-contain drop-shadow-lg transition-transform duration-300 group-hover:scale-105 sm:h-20 sm:w-20"
             loading="eager"
             decoding="async"
           />
