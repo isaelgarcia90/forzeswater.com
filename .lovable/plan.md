@@ -9,9 +9,9 @@
 - **Memoria:** la conversación se conserva 24 horas en el navegador; al reabrir pregunta si quieres continuar o empezar de nuevo.
 
 ## Cambios propuestos (estilo "Soy Clarito, de Llantera El Rayo")
-1. **Saludo inicial:** "¡Hola! Soy Forzecito, de Forzes Water. ¿En qué podemos ayudarte hoy?"
+1. **Saludo inicial:** "¡Hola! Soy Forzecito. ¿En qué podemos ayudarte hoy?"
 2. **Encabezado de la ventana:** el nombre principal pasa a "Forzecito" y debajo "Asistente virtual de Forzes Water".
-3. **Botón flotante:** se conserva "Asistente Virtual" (es más claro para quien no conoce los chatbots); la descripción para lectores de pantalla dirá "Abrir a Forzecito, asistente virtual de Forzes Water".
+3. **Botón flotante:** se conserva "Asistente Virtual" (es más claro para quien no conoce los chatbots); la descripción para lectores de pantalla dirá "Abrir Forzecito, asistente virtual de Forzes Water".
 4. **Respuestas con IA:** la IA se presentará como Forzecito, solo cuando salude o le pregunten quién es (sin repetir el nombre en cada mensaje).
 5. **Mensaje al regresar:** "¡Gracias por regresar! Soy Forzecito. Tienes una conversación reciente…"
 6. Se guarda "Forzecito" como nombre oficial del asistente en la memoria del proyecto.
