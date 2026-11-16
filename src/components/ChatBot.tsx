@@ -63,13 +63,13 @@ const ChatBot = () => {
       {!isOpen && (
         <button
           onClick={handleOpen}
-          className="fixed bottom-36 right-4 z-50 flex items-center gap-2.5 rounded-full border-2 border-primary bg-white py-2 pl-2 pr-4 shadow-large transition-all duration-300 hover:scale-105 sm:right-6 sm:gap-3 sm:py-2.5 sm:pl-2.5 sm:pr-5"
+          className="fixed bottom-36 right-4 z-50 flex items-center gap-2.5 rounded-full border-2 border-primary bg-white py-1.5 pl-1.5 pr-4 shadow-large transition-all duration-300 hover:scale-105 sm:right-6 sm:gap-3 sm:py-1.5 sm:pl-1.5 sm:pr-5"
           aria-label="Abrir Forzecito, asistente virtual de Forzes Water"
         >
           <img
-            src="/chatbot-icon.png"
-            alt="Forzes Water"
-            className="h-8 w-8 flex-shrink-0 object-contain sm:h-9 sm:w-9"
+            src="/forzecito-avatar.jpg"
+            alt="Forzecito"
+            className="h-10 w-10 flex-shrink-0 rounded-full object-cover sm:h-11 sm:w-11"
             loading="eager"
             decoding="async"
           />
@@ -94,11 +94,11 @@ const ChatBot = () => {
           {/* Header */}
           <div className="bg-gradient-primary px-4 py-4 text-primary-foreground flex items-center justify-between flex-shrink-0">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border-2 border-primary bg-card shadow-soft">
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-card bg-card shadow-soft">
                 <img
-                  src="/chatbot-icon.png"
-                  alt="Forzes Water"
-                  className="h-8 w-8 object-contain"
+                  src="/forzecito-avatar.jpg"
+                  alt="Forzecito"
+                  className="h-full w-full rounded-full object-cover"
                   loading="eager"
                   decoding="async"
                 />
