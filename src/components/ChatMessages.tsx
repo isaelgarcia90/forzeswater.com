@@ -239,7 +239,7 @@ const ChatMessages = ({
             <Message from="assistant" className="max-w-[88%]">
               <MessageContent className="rounded-lg border border-border bg-card px-4 py-3 shadow-soft">
                 <p className="text-sm leading-relaxed">
-                  ¡Gracias por regresar! Tienes una conversación reciente. ¿Deseas continuar donde la dejaste?
+                  ¡Gracias por regresar! Soy Forzecito. Tienes una conversación reciente. ¿Deseas continuar donde la dejaste?
                 </p>
               </MessageContent>
             </Message>
@@ -268,7 +268,7 @@ const ChatMessages = ({
             <Message from="assistant" className="max-w-[88%]">
               <MessageContent className="rounded-lg border border-border bg-card px-4 py-3 shadow-soft">
                 <p className="text-sm leading-relaxed">
-                  Hola, soy el asistente de Forzes Water. ¿En qué podemos ayudarte hoy?
+                  ¡Hola! Soy Forzecito. ¿En qué podemos ayudarte hoy?
                 </p>
               </MessageContent>
             </Message>
