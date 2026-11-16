@@ -63,22 +63,18 @@ const ChatBot = () => {
       {!isOpen && (
         <button
           onClick={handleOpen}
-          className="fixed bottom-36 right-4 z-50 flex items-center gap-2.5 rounded-full border-2 border-primary bg-white py-1.5 pl-1.5 pr-4 shadow-large transition-all duration-300 hover:scale-105 sm:right-6 sm:gap-3 sm:py-1.5 sm:pl-1.5 sm:pr-5"
+          className="group fixed bottom-36 right-4 z-50 flex items-center gap-3 sm:right-6"
           aria-label="Abrir Forzecito, asistente virtual de Forzes Water"
         >
+          <span className="font-chat-heading max-w-[60vw] rounded-2xl border border-border bg-card px-4 py-2.5 text-left text-sm font-semibold text-primary shadow-large sm:text-base">
+            Hola, soy Forzecito. ¿Te ayudo con tus dudas?
+          </span>
           <img
-            src="/forzecito-avatar.jpg"
+            src="/forzecito-icon.png"
             alt="Forzecito"
-            className="h-10 w-10 flex-shrink-0 rounded-full object-cover sm:h-11 sm:w-11"
+            className="h-16 w-16 flex-shrink-0 object-contain drop-shadow-lg transition-transform duration-300 group-hover:scale-105 sm:h-20 sm:w-20"
             loading="eager"
             decoding="async"
-          />
-          <span className="font-chat-heading whitespace-nowrap text-sm font-semibold text-primary sm:text-base">
-            Asistente Virtual
-          </span>
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute -right-1 -top-1 h-3.5 w-3.5 rounded-full bg-destructive"
           />
         </button>
       )}
