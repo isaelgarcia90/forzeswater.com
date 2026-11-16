@@ -67,7 +67,7 @@ const ChatBot = () => {
           aria-label="Abrir Forzecito, asistente virtual de Forzes Water"
         >
           <img
-            src="/chatbot-icon.png"
+            src="/forzecito-avatar.jpg"
             alt="Forzes Water"
             className="h-8 w-8 flex-shrink-0 object-contain sm:h-9 sm:w-9"
             loading="eager"
@@ -96,7 +96,7 @@ const ChatBot = () => {
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border-2 border-primary bg-card shadow-soft">
                 <img
-                  src="/chatbot-icon.png"
+                  src="/forzecito-avatar.jpg"
                   alt="Forzes Water"
                   className="h-8 w-8 object-contain"
                   loading="eager"
