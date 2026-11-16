@@ -64,7 +64,7 @@ const ChatBot = () => {
         <button
           onClick={handleOpen}
           className="fixed bottom-36 right-4 z-50 flex items-center gap-2.5 rounded-full border-2 border-primary bg-white py-2 pl-2 pr-4 shadow-large transition-all duration-300 hover:scale-105 sm:right-6 sm:gap-3 sm:py-2.5 sm:pl-2.5 sm:pr-5"
-          aria-label="Abrir el Asistente Virtual de Forzes Water"
+          aria-label="Abrir Forzecito, asistente virtual de Forzes Water"
         >
           <img
             src="/chatbot-icon.png"
@@ -88,7 +88,7 @@ const ChatBot = () => {
       {/* Chat Window */}
       {isOpen && (
         <section
-          aria-label="Asistente virtual de Forzes Water"
+          aria-label="Forzecito, asistente virtual de Forzes Water"
           className="font-chat fixed inset-x-2 bottom-3 z-50 flex h-[min(660px,calc(100dvh-1.5rem))] flex-col overflow-hidden rounded-lg border border-border bg-card shadow-large animate-scale-in sm:inset-x-auto sm:bottom-24 sm:right-6 sm:h-[620px] sm:w-[400px]"
         >
           {/* Header */}
@@ -104,10 +104,10 @@ const ChatBot = () => {
                 />
               </div>
               <div>
-                <p className="font-chat-heading text-base font-bold leading-tight">Forzes Water</p>
+                <p className="font-chat-heading text-base font-bold leading-tight">Forzecito</p>
                 <p className="mt-1 flex items-center gap-1.5 text-xs text-primary-foreground/90">
                   <span className="h-2 w-2 rounded-full bg-accent" aria-hidden="true" />
-                  Asistente virtual
+                  Asistente virtual de Forzes Water
                 </p>
               </div>
             </div>
