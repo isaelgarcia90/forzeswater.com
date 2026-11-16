@@ -10,8 +10,6 @@ import {
 } from "@/components/ai-elements/prompt-input";
 import { useChatBot } from "@/hooks/useChatBot";
 import ChatMessages from "./ChatMessages";
-import forzecitoIcon from "@/assets/forzecito-icon.png.asset.json";
-import forzecitoIconNoDot from "@/assets/forzecito-icon-no-dot.png.asset.json";
 
 
 const ChatBot = () => {
@@ -72,7 +70,7 @@ const ChatBot = () => {
             Hola, soy Forzecito. ¿Te ayudo con tus dudas?
           </span>
           <img
-            src={forzecitoIcon.url}
+            src="/forzecito-icon.png"
             alt="Forzecito"
             className="h-16 w-16 flex-shrink-0 rounded-full object-contain drop-shadow-lg transition-transform duration-300 group-hover:scale-105 sm:h-20 sm:w-20"
             loading="eager"
@@ -93,7 +91,7 @@ const ChatBot = () => {
           <div className="bg-gradient-primary px-4 py-4 text-primary-foreground flex items-center justify-between flex-shrink-0">
             <div className="flex items-center gap-3">
               <img
-                src={forzecitoIconNoDot.url}
+                src="/forzecito-icon-no-dot.png"
                 alt="Forzecito"
                 className="h-10 w-10 flex-shrink-0 rounded-full object-contain drop-shadow-soft"
                 loading="eager"
