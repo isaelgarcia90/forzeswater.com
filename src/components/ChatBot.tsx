@@ -90,15 +90,13 @@ const ChatBot = () => {
           {/* Header */}
           <div className="bg-gradient-primary px-4 py-4 text-primary-foreground flex items-center justify-between flex-shrink-0">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-card bg-card shadow-soft">
-                <img
-                  src="/forzecito-avatar.jpg"
-                  alt="Forzecito"
-                  className="h-full w-full rounded-full object-cover"
-                  loading="eager"
-                  decoding="async"
-                />
-              </div>
+              <img
+                src="/forzecito-icon-no-dot.png"
+                alt="Forzecito"
+                className="h-10 w-10 flex-shrink-0 rounded-full object-contain drop-shadow-soft"
+                loading="eager"
+                decoding="async"
+              />
               <div>
                 <p className="font-chat-heading text-base font-bold leading-tight">Forzecito</p>
                 <p className="mt-1 flex items-center gap-1.5 text-xs text-primary-foreground/90">
