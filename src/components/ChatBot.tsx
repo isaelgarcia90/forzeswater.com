@@ -19,7 +19,17 @@ const ChatBot = () => {
   const [showReturnPrompt, setShowReturnPrompt] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [showGreeting, setShowGreeting] = useState(false);
+  const [greetingDismissed, setGreetingDismissed] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    if (!showGreeting || greetingDismissed) return;
+    if (!window.matchMedia("(max-width: 639px)").matches) return;
+    const timer = window.setTimeout(() => setGreetingDismissed(true), 6000);
+    return () => window.clearTimeout(timer);
+  }, [showGreeting, greetingDismissed]);
+
+  const greetingVisible = showGreeting && !greetingDismissed;
 
   useEffect(() => {
     let animationFrame = 0;
@@ -103,15 +113,16 @@ const ChatBot = () => {
           tabIndex={isVisible ? 0 : -1}
         >
           <span
-            aria-hidden={!showGreeting}
+            aria-hidden={!greetingVisible}
             className={`overflow-hidden transition-all duration-500 ease-out motion-reduce:transition-none ${
-              showGreeting
+              greetingVisible
                 ? "mr-3 max-w-[calc(100vw-7rem)] opacity-100 sm:max-w-[22rem]"
                 : "mr-0 max-w-0 opacity-0"
             }`}
           >
-            <span className="font-chat-heading block w-[calc(100vw-7rem)] rounded-2xl border border-border bg-card px-4 py-2.5 text-left text-sm font-semibold text-primary shadow-large sm:w-[22rem] sm:text-base">
-              Hola, soy Forzecito. ¿Tienes dudas?
+            <span className="font-chat-heading block w-max rounded-2xl border border-border bg-card px-4 py-2.5 text-left text-sm font-semibold text-primary shadow-large sm:text-base">
+              <span className="block whitespace-nowrap">Hola, soy Forzecito.</span>
+              <span className="block whitespace-nowrap">¿Tienes dudas?</span>
             </span>
           </span>
           <img
