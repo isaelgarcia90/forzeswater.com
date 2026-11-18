@@ -17,7 +17,37 @@ const ChatBot = () => {
   const [input, setInput] = useState("");
   const { messages, isLoading, sendMessage, resetChat, submitContact, leadSaved } = useChatBot();
   const [showReturnPrompt, setShowReturnPrompt] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [showGreeting, setShowGreeting] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    let animationFrame = 0;
+
+    const updateLauncher = () => {
+      animationFrame = 0;
+      const aboutSection = document.getElementById("about");
+      if (!aboutSection) return;
+
+      const aboutTop = aboutSection.getBoundingClientRect().top;
+      setIsVisible(aboutTop <= window.innerHeight);
+      setShowGreeting(aboutTop <= window.innerHeight * 0.7);
+    };
+
+    const scheduleUpdate = () => {
+      if (!animationFrame) animationFrame = window.requestAnimationFrame(updateLauncher);
+    };
+
+    updateLauncher();
+    window.addEventListener("scroll", scheduleUpdate, { passive: true });
+    window.addEventListener("resize", scheduleUpdate);
+
+    return () => {
+      window.removeEventListener("scroll", scheduleUpdate);
+      window.removeEventListener("resize", scheduleUpdate);
+      if (animationFrame) window.cancelAnimationFrame(animationFrame);
+    };
+  }, []);
 
   useEffect(() => {
     if (isOpen && inputRef.current) {
@@ -63,16 +93,31 @@ const ChatBot = () => {
       {!isOpen && (
         <button
           onClick={handleOpen}
-          className="group fixed bottom-36 right-4 z-50 flex items-center gap-3 sm:right-6"
+          className={`group fixed bottom-24 right-4 z-50 flex items-center transition-all duration-500 ease-out motion-reduce:transition-none sm:right-6 ${
+            isVisible
+              ? "translate-y-0 opacity-100"
+              : "pointer-events-none invisible translate-y-4 opacity-0"
+          }`}
           aria-label="Abrir Forzecito, asistente virtual de Forzes Water"
+          aria-hidden={!isVisible}
+          tabIndex={isVisible ? 0 : -1}
         >
-          <span className="font-chat-heading max-w-[60vw] rounded-2xl border border-border bg-card px-4 py-2.5 text-left text-sm font-semibold text-primary shadow-large sm:text-base">
-            Hola, soy Forzecito. ¿Te ayudo con tus dudas?
+          <span
+            aria-hidden={!showGreeting}
+            className={`overflow-hidden transition-all duration-500 ease-out motion-reduce:transition-none ${
+              showGreeting
+                ? "mr-3 max-w-[calc(100vw-7rem)] opacity-100 sm:max-w-[22rem]"
+                : "mr-0 max-w-0 opacity-0"
+            }`}
+          >
+            <span className="font-chat-heading block w-[calc(100vw-7rem)] rounded-2xl border border-border bg-card px-4 py-2.5 text-left text-sm font-semibold text-primary shadow-large sm:w-[22rem] sm:text-base">
+              Hola, soy Forzecito. ¿Tienes dudas?
+            </span>
           </span>
           <img
             src="/forzecito-icon.png"
             alt="Forzecito"
-            className="h-16 w-16 flex-shrink-0 object-contain drop-shadow-lg transition-transform duration-300 group-hover:scale-105 sm:h-20 sm:w-20"
+            className="h-16 w-16 flex-shrink-0 object-contain drop-shadow-lg transition-transform duration-300 group-hover:scale-105 motion-reduce:transition-none sm:h-20 sm:w-20"
             loading="eager"
             decoding="async"
           />

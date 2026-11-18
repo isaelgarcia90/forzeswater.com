@@ -1,5 +1,6 @@
 # Roadmap
 
+- [x] Mostrar Forzecito desde Acerca de Forzes Water y desplegar su saludo al avanzar
 - [x] Reemplazar la portada por la historia horizontal reutilizable de cuatro capítulos
 
 - [x] Tooltip WhatsApp: "Habla con nosotros"
