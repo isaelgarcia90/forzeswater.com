@@ -35,11 +35,18 @@ const ChatBot = () => {
   useEffect(() => {
     const st = greetingState.current;
     if (!showGreeting || st.introduced) return;
-    st.introduced = true;
-    st.shownAt = Date.now();
-    setGreetingOn(true);
-    const t = window.setTimeout(() => setGreetingOn(false), 6000);
-    return () => window.clearTimeout(t);
+    let hide = 0;
+    // Espera 3 s tras salir de la portada antes de saludar
+    const show = window.setTimeout(() => {
+      st.introduced = true;
+      st.shownAt = Date.now();
+      setGreetingOn(true);
+      hide = window.setTimeout(() => setGreetingOn(false), 6000);
+    }, 3000);
+    return () => {
+      window.clearTimeout(show);
+      window.clearTimeout(hide);
+    };
   }, [showGreeting]);
 
   // Oculta al desplazarse y reaparece tras ~4 s de pausa (máx. 3 veces)
@@ -79,8 +86,10 @@ const ChatBot = () => {
       if (!aboutSection) return;
 
       const aboutTop = aboutSection.getBoundingClientRect().top;
-      setIsVisible(aboutTop <= window.innerHeight);
-      setShowGreeting(aboutTop <= window.innerHeight * 0.7);
+      // Solo cuando la portada ya salió por completo de la pantalla
+      const outOfHero = aboutTop <= 80;
+      setIsVisible(outOfHero);
+      setShowGreeting(outOfHero);
     };
 
     const scheduleUpdate = () => {
