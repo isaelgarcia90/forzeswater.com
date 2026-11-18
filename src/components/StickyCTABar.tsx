@@ -4,7 +4,7 @@ import { X, MessageCircle, ArrowRight } from "lucide-react";
 import { useAnalytics } from "@/hooks/useAnalytics";
 
 const StickyCTABar = () => {
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const [isDismissed, setIsDismissed] = useState(false);
   const [isInContactSection, setIsInContactSection] = useState(false);
   const { trackCTAClick } = useAnalytics();
@@ -21,7 +21,7 @@ const StickyCTABar = () => {
       const contactSection = document.getElementById("contact");
       
       // Show after scrolling 300px
-      setIsVisible(scrollY > 300);
+      setIsVisible(true);
 
       // Hide when in contact section
       if (contactSection) {

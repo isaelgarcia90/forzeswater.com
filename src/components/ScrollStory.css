@@ -334,7 +334,7 @@
 .scroll-story__status {
   position: absolute;
   z-index: 5;
-  bottom: 84px;
+  bottom: calc(var(--cta-bar-h, 72px) + env(safe-area-inset-bottom, 0px) + 14px);
   left: 50%;
   display: flex;
   align-items: center;
@@ -510,10 +510,10 @@
   .scroll-story__panel,
   .scroll-story__panel--reversed {
     grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: 36vh minmax(0, 1fr);
+    grid-template-rows: 26svh minmax(0, 1fr);
     align-items: stretch;
-    gap: 8px;
-    padding: 92px 26px 70px;
+    gap: 14px;
+    padding: 96px 26px 150px;
   }
 
   .scroll-story__visual,
@@ -521,7 +521,7 @@
     grid-column: 1;
     grid-row: 1;
     min-height: 0;
-    place-items: start center;
+    place-items: center;
   }
 
   .scroll-story__content,
@@ -530,22 +530,22 @@
     grid-row: 2;
     align-self: start;
     max-width: 100%;
-    margin-top: -85px;
+    margin-top: 0;
     text-align: center;
   }
 
   .scroll-story__blob {
-    width: min(52vw, 200px);
+    width: min(40vw, 22svh, 160px);
   }
 
   .scroll-story__icon-box {
-    width: 120px;
-    height: 120px;
+    width: min(22vw, 12svh, 88px);
+    height: min(22vw, 12svh, 88px);
   }
 
   .scroll-story__icon {
-    width: 56px;
-    height: 56px;
+    width: 44%;
+    height: 44%;
   }
 
   .scroll-story__mini-card {
@@ -632,13 +632,9 @@
 
   .scroll-story__panel,
   .scroll-story__panel--reversed {
-    grid-template-rows: 30vh minmax(0, 1fr);
-    padding-top: 80px;
-  }
-
-  .scroll-story__icon-box {
-    width: 96px;
-    height: 96px;
+    grid-template-rows: 22svh minmax(0, 1fr);
+    padding-top: 84px;
+    padding-bottom: 130px;
   }
 
   .scroll-story__title {
@@ -658,9 +654,6 @@
     margin-top: 12px;
   }
 
-  .scroll-story__status {
-    bottom: 70px;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
