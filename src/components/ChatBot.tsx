@@ -19,17 +19,56 @@ const ChatBot = () => {
   const [showReturnPrompt, setShowReturnPrompt] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [showGreeting, setShowGreeting] = useState(false);
-  const [greetingDismissed, setGreetingDismissed] = useState(false);
+  const [greetingOn, setGreetingOn] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const greetingState = useRef({ introduced: false, repeats: 0, shownAt: 0 });
 
+  // Reinicia el saludo cuando Forzecito se oculta (regreso a la portada)
   useEffect(() => {
-    if (!showGreeting || greetingDismissed) return;
-    if (!window.matchMedia("(max-width: 639px)").matches) return;
-    const timer = window.setTimeout(() => setGreetingDismissed(true), 6000);
-    return () => window.clearTimeout(timer);
-  }, [showGreeting, greetingDismissed]);
+    if (!isVisible) {
+      greetingState.current = { introduced: false, repeats: 0, shownAt: 0 };
+      setGreetingOn(false);
+    }
+  }, [isVisible]);
 
-  const greetingVisible = showGreeting && !greetingDismissed;
+  // Primera aparición al entrar en la zona del saludo; se esconde a los 6 s
+  useEffect(() => {
+    const st = greetingState.current;
+    if (!showGreeting || st.introduced) return;
+    st.introduced = true;
+    st.shownAt = Date.now();
+    setGreetingOn(true);
+    const t = window.setTimeout(() => setGreetingOn(false), 6000);
+    return () => window.clearTimeout(t);
+  }, [showGreeting]);
+
+  // Oculta al desplazarse y reaparece tras ~4 s de pausa (máx. 3 veces)
+  useEffect(() => {
+    if (!showGreeting) return;
+    let idle = 0;
+    let hide = 0;
+    const onScroll = () => {
+      const st = greetingState.current;
+      if (Date.now() - st.shownAt > 800) setGreetingOn(false);
+      window.clearTimeout(idle);
+      window.clearTimeout(hide);
+      idle = window.setTimeout(() => {
+        if (st.repeats >= 3) return;
+        st.repeats += 1;
+        st.shownAt = Date.now();
+        setGreetingOn(true);
+        hide = window.setTimeout(() => setGreetingOn(false), 5000);
+      }, 4000);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.clearTimeout(idle);
+      window.clearTimeout(hide);
+    };
+  }, [showGreeting]);
+
+  const greetingVisible = showGreeting && greetingOn;
 
   useEffect(() => {
     let animationFrame = 0;
