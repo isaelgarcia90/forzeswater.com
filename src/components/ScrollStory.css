@@ -70,15 +70,15 @@
 }
 
 .scroll-story__panel--design {
-  --story-blob: var(--story-blob-design);
+  --story-blob: var(--story-blob-analysis);
 }
 
 .scroll-story__panel--installation {
-  --story-blob: var(--story-blob-installation);
+  --story-blob: var(--story-blob-analysis);
 }
 
 .scroll-story__panel--maintenance {
-  --story-blob: var(--story-blob-maintenance);
+  --story-blob: var(--story-blob-analysis);
 }
 
 .scroll-story__panel--reversed {
