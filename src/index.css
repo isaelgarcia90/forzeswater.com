@@ -58,6 +58,27 @@ All colors MUST be HSL.
     --shadow-large: 0 8px 32px -8px hsl(199 89% 32% / 0.2);
     
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Scroll Story dark hero */
+    --story-background: 216 12.2% 8%;
+    --story-foreground: 210 40% 96.1%;
+    --story-muted: 215 20.2% 65.1%;
+    --story-accent: 187.9 85.7% 53.3%;
+    --story-brand-start: 200.4 98% 39.4%;
+    --story-brand-end: 172.5 66% 50.4%;
+    --story-card: 214.3 11.5% 12%;
+    --story-card-border: 215 12.5% 18.8%;
+    --story-blob-analysis: 192.9 82.3% 31%;
+    --story-blob-design: 201 90% 27.5%;
+    --story-blob-installation: 175.3 77.4% 26.1%;
+    --story-blob-maintenance: 224.4 64.3% 32.9%;
+    --story-gradient-brand: linear-gradient(135deg, hsl(var(--story-brand-start)) 0%, hsl(var(--story-brand-end)) 100%);
+    --story-gradient-stage:
+      radial-gradient(circle at 8% 4%, hsl(var(--story-accent) / 0.18) 0%, transparent 42%),
+      radial-gradient(circle at 94% 94%, hsl(var(--story-brand-start) / 0.22) 0%, transparent 46%);
+    --story-shadow-icon: 0 24px 70px -18px hsl(var(--story-accent) / 0.48);
+    --story-shadow-card: 0 14px 38px hsl(var(--story-background) / 0.48);
+    --story-shadow-button: 0 12px 34px -12px hsl(var(--story-brand-start) / 0.6);
   }
 
   .dark {

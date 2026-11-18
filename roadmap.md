@@ -1,5 +1,7 @@
 # Roadmap
 
+- [x] Reemplazar la portada por la historia horizontal reutilizable de cuatro capítulos
+
 - [x] Tooltip WhatsApp: "Habla con nosotros"
 - [x] Tooltip chatbot flotante: "¿Dudas? Te asesoramos"
 - [x] Subtítulo del header del chatbot: "Resolvemos tus dudas"

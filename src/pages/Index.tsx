@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import Header from "@/components/Header";
-import Hero from "@/components/Hero";
+import ScrollStory from "@/components/ScrollStory";
 import About from "@/components/About";
 import Solutions from "@/components/Solutions";
 import Products from "@/components/Products";
@@ -53,7 +53,7 @@ const Index = () => {
       </Helmet>
       <Header />
       <main>
-        <Hero />
+        <ScrollStory />
         <About />
         <Solutions />
         <Products />
