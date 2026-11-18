@@ -2,7 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import {
   ArrowDown,
   ArrowRight,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  ChevronUp,
   Factory,
+  Pointer,
   FlaskConical,
   Ruler,
   Wrench,
@@ -185,10 +190,39 @@ const ScrollStory = () => {
     });
   };
 
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
+
+  const handleTouchStart = (event: React.TouchEvent) => {
+    if (reducedMotion) return;
+    const t = event.touches[0];
+    touchStart.current = { x: t.clientX, y: t.clientY };
+  };
+
+  const handleTouchEnd = (event: React.TouchEvent) => {
+    const start = touchStart.current;
+    touchStart.current = null;
+    if (!start || reducedMotion) return;
+    const t = event.changedTouches[0];
+    const dx = t.clientX - start.x;
+    const dy = t.clientY - start.y;
+    if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+    if (dx < 0) {
+      if (activeChapter >= chapters.length - 1) {
+        document.getElementById("about")?.scrollIntoView({ behavior: "smooth" });
+      } else {
+        scrollToChapter(activeChapter + 1);
+      }
+    } else if (activeChapter > 0) {
+      scrollToChapter(activeChapter - 1);
+    }
+  };
+
+  const isLastChapter = activeChapter === chapters.length - 1;
+
   return (
     <section id="hero" ref={sectionRef} className="scroll-story" aria-label="Cómo trabajamos">
       <h1 className="sr-only">Soluciones Profesionales de Tratamiento de Agua</h1>
-      <div className="scroll-story__stage">
+      <div className="scroll-story__stage" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
         <div className="scroll-story__background" aria-hidden="true">
           <img
             src={heroImage}
@@ -299,14 +333,25 @@ const ScrollStory = () => {
             <span className="scroll-story__counter" aria-label={`Capítulo ${activeChapter + 1} de ${chapters.length}`}>
               {String(activeChapter + 1).padStart(2, "0")} / {String(chapters.length).padStart(2, "0")}
             </span>
-            {(
-              <span className="scroll-story__scroll-hint">
-                <span className="scroll-story__mouse" aria-hidden="true">
-                  <span />
-                </span>
-                {activeChapter === chapters.length - 1 ? "Sigue bajando" : "Desliza"}
+            <span
+              className="scroll-story__scroll-hint"
+              role="img"
+              aria-label={isLastChapter ? "Sigue bajando" : "Desliza hacia los lados o hacia abajo"}
+            >
+              <span className="scroll-story__mouse" aria-hidden="true">
+                <span />
               </span>
-            )}
+              <span
+                className={`scroll-story__swipe${isLastChapter ? " is-last" : ""}`}
+                aria-hidden="true"
+              >
+                <ChevronUp className="scroll-story__swipe-arrow scroll-story__swipe-arrow--up" />
+                <ChevronDown className="scroll-story__swipe-arrow scroll-story__swipe-arrow--down" />
+                <ChevronLeft className="scroll-story__swipe-arrow scroll-story__swipe-arrow--left" />
+                <ChevronRight className="scroll-story__swipe-arrow scroll-story__swipe-arrow--right" />
+                <Pointer className="scroll-story__swipe-hand" />
+              </span>
+            </span>
           </div>
         )}
       </div>

@@ -384,6 +384,70 @@
   animation: story-mouse-scroll 1.6s ease-in-out infinite;
 }
 
+/* Ícono táctil: deslizar en ambos sentidos */
+.scroll-story__stage {
+  touch-action: pan-y;
+}
+
+.scroll-story__swipe {
+  position: relative;
+  display: none;
+  width: 40px;
+  height: 40px;
+  color: hsl(var(--story-muted));
+}
+
+.scroll-story__swipe-arrow {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  opacity: 0.7;
+}
+
+.scroll-story__swipe-arrow--up { top: 0; left: 14px; }
+.scroll-story__swipe-arrow--down { bottom: 0; left: 14px; }
+.scroll-story__swipe-arrow--left { left: 0; top: 14px; }
+.scroll-story__swipe-arrow--right { right: 0; top: 14px; }
+
+.scroll-story__swipe-hand {
+  position: absolute;
+  top: 11px;
+  left: 11px;
+  width: 18px;
+  height: 18px;
+  color: hsl(var(--story-accent));
+  animation: story-swipe-l 3.2s ease-in-out infinite;
+}
+
+.scroll-story__swipe.is-last .scroll-story__swipe-arrow--up,
+.scroll-story__swipe.is-last .scroll-story__swipe-arrow--left,
+.scroll-story__swipe.is-last .scroll-story__swipe-arrow--right {
+  opacity: 0;
+}
+
+.scroll-story__swipe.is-last .scroll-story__swipe-hand {
+  animation-name: story-swipe-down;
+}
+
+@keyframes story-swipe-l {
+  0%, 10% { transform: translate(0, 0); }
+  30%, 40% { transform: translate(-7px, 0); }
+  50% { transform: translate(0, 0); }
+  70%, 80% { transform: translate(0, 7px); }
+  100% { transform: translate(0, 0); }
+}
+
+@keyframes story-swipe-down {
+  0%, 20% { transform: translate(0, -3px); }
+  60%, 80% { transform: translate(0, 6px); }
+  100% { transform: translate(0, -3px); }
+}
+
+@media (pointer: coarse) {
+  .scroll-story__mouse { display: none; }
+  .scroll-story__swipe { display: block; }
+}
+
 @keyframes story-blob-morph {
   0%,
   100% {
@@ -629,6 +693,7 @@
   .scroll-story__icon-box,
   .scroll-story__mini-card,
   .scroll-story__mouse span,
+  .scroll-story__swipe-hand,
   .scroll-story__scroll-hint {
     animation: none;
   }
