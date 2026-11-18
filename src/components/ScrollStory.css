@@ -96,6 +96,7 @@
 }
 
 .scroll-story__visual {
+  --blob-size: min(35vw, 420px);
   position: relative;
   display: grid;
   place-items: center;
@@ -105,7 +106,7 @@
 
 .scroll-story__blob {
   position: absolute;
-  width: min(35vw, 420px);
+  width: var(--blob-size);
   aspect-ratio: 1;
   border-radius: 42% 58% 61% 39% / 45% 39% 61% 55%;
   background: hsl(var(--story-blob) / 0.4);
@@ -145,13 +146,13 @@
 }
 
 .scroll-story__mini-card--1 {
-  top: 9%;
-  left: 0;
+  top: calc(50% - var(--blob-size) / 2 - 40px);
+  left: calc(50% - var(--blob-size) / 2 - 16px);
 }
 
 .scroll-story__mini-card--2 {
-  right: 0;
-  bottom: 8%;
+  right: calc(50% - var(--blob-size) / 2 - 16px);
+  bottom: calc(50% - var(--blob-size) / 2 - 40px);
   animation-delay: -2s;
 }
 
