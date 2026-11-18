@@ -107,7 +107,6 @@ const ScrollStory = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const [activeChapter, setActiveChapter] = useState(0);
-  const [showScrollHint, setShowScrollHint] = useState(true);
   const [reducedMotion, setReducedMotion] = useState(false);
   const { trackCTAClick } = useAnalytics();
 
@@ -142,7 +141,6 @@ const ScrollStory = () => {
 
       track.style.transform = `translate3d(${-trackPosition * 100}vw, 0, 0)`;
       setActiveChapter((current) => (current === nextActiveChapter ? current : nextActiveChapter));
-      setShowScrollHint(window.scrollY <= sectionStart + 4);
     };
 
     const scheduleRender = () => {
@@ -190,7 +188,7 @@ const ScrollStory = () => {
   return (
     <section id="hero" ref={sectionRef} className="scroll-story" aria-label="Cómo trabajamos">
       <h1 className="sr-only">Soluciones Profesionales de Tratamiento de Agua</h1>
-      <div className={`scroll-story__stage${showScrollHint ? "" : " is-scrolled"}`}>
+      <div className="scroll-story__stage">
         <div className="scroll-story__background" aria-hidden="true">
           <img
             src={heroImage}
@@ -301,12 +299,12 @@ const ScrollStory = () => {
             <span className="scroll-story__counter" aria-label={`Capítulo ${activeChapter + 1} de ${chapters.length}`}>
               {String(activeChapter + 1).padStart(2, "0")} / {String(chapters.length).padStart(2, "0")}
             </span>
-            {showScrollHint && (
+            {(
               <span className="scroll-story__scroll-hint">
                 <span className="scroll-story__mouse" aria-hidden="true">
                   <span />
                 </span>
-                Desliza
+                {activeChapter === chapters.length - 1 ? "Sigue bajando" : "Desliza"}
               </span>
             )}
           </div>

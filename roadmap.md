@@ -1,5 +1,6 @@
 # Roadmap
 
+- [x] Portada: "Desliza" en todos los capítulos, sin traslapes ni brincos en móvil, tema oscuro en todo el sitio
 - [x] Mostrar Forzecito desde Acerca de Forzes Water y desplegar su saludo al avanzar
 - [x] Reemplazar la portada por la historia horizontal reutilizable de cuatro capítulos
 
