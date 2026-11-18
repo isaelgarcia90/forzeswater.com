@@ -4,39 +4,47 @@ import { X, MessageCircle, ArrowRight } from "lucide-react";
 import { useAnalytics } from "@/hooks/useAnalytics";
 
 const StickyCTABar = () => {
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
   const [isDismissed, setIsDismissed] = useState(false);
   const [isInContactSection, setIsInContactSection] = useState(false);
   const { trackCTAClick } = useAnalytics();
 
   useEffect(() => {
-    // Check if user already dismissed in this session
-    const dismissed = sessionStorage.getItem("stickyCTADismissed");
-    if (dismissed) {
-      setIsDismissed(true);
-    }
+    const reveal = () => {
+      if (window.scrollY > 4) setIsVisible(true);
+    };
 
     const handleScroll = () => {
-      const scrollY = window.scrollY;
-      const contactSection = document.getElementById("contact");
-      
-      // Show after scrolling 300px
-      setIsVisible(true);
+      // Back at the very top: reset so the bar re-enters on the next gesture
+      if (window.scrollY <= 4) {
+        setIsVisible(false);
+        setIsDismissed(false);
+      } else {
+        setIsVisible(true);
+      }
 
-      // Hide when in contact section
+      const contactSection = document.getElementById("contact");
       if (contactSection) {
         const contactRect = contactSection.getBoundingClientRect();
         setIsInContactSection(contactRect.top < window.innerHeight && contactRect.bottom > 0);
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("touchmove", reveal, { passive: true });
+    window.addEventListener("wheel", reveal, { passive: true });
+    window.addEventListener("keydown", reveal);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("touchmove", reveal);
+      window.removeEventListener("wheel", reveal);
+      window.removeEventListener("keydown", reveal);
+    };
   }, []);
 
   const handleDismiss = () => {
     setIsDismissed(true);
-    sessionStorage.setItem("stickyCTADismissed", "true");
   };
 
   const scrollToContact = () => {
