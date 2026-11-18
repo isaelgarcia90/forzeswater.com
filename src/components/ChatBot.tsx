@@ -41,7 +41,7 @@ const ChatBot = () => {
       st.introduced = true;
       st.shownAt = Date.now();
       setGreetingOn(true);
-      hide = window.setTimeout(() => setGreetingOn(false), 6000);
+      hide = window.setTimeout(() => setGreetingOn(false), 5000);
     }, 3000);
     return () => {
       window.clearTimeout(show);
@@ -49,18 +49,16 @@ const ChatBot = () => {
     };
   }, [showGreeting]);
 
-  // Oculta al desplazarse y reaparece tras ~4 s de pausa (máx. 3 veces)
+  // Cada saludo dura 5 s; reaparece tras ~4 s de pausa (máx. 3 veces)
   useEffect(() => {
     if (!showGreeting) return;
     let idle = 0;
     let hide = 0;
     const onScroll = () => {
       const st = greetingState.current;
-      if (Date.now() - st.shownAt > 800) setGreetingOn(false);
       window.clearTimeout(idle);
-      window.clearTimeout(hide);
       idle = window.setTimeout(() => {
-        if (st.repeats >= 3) return;
+        if (st.repeats >= 3 || Date.now() - st.shownAt < 5000) return;
         st.repeats += 1;
         st.shownAt = Date.now();
         setGreetingOn(true);
