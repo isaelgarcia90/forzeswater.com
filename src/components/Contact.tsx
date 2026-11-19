@@ -55,7 +55,7 @@ const Contact = () => {
           </Card>
 
           <Card className="p-8 bg-card border-border flex flex-col">
-            <img src="/forzecito-icon-no-dot.png" alt="Forzecito" className="w-14 h-14 rounded-full object-cover mb-5" />
+            <img src="/forzecito-icon-no-dot.webp" alt="Forzecito" className="w-14 h-14 rounded-full object-cover mb-5" />
             <h3 className="text-2xl font-bold text-foreground mb-2">Forzecito</h3>
             <p className="text-muted-foreground mb-6">Resuelve tus dudas al instante y te ayuda a encontrar el sistema correcto.</p>
             <Button

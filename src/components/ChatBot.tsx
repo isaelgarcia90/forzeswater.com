@@ -21,6 +21,18 @@ const ChatBot = () => {
   const [showGreeting, setShowGreeting] = useState(false);
   const [greetingOn, setGreetingOn] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const launcherRef = useRef<HTMLButtonElement>(null);
+  // Evita que el saludo tape botones o enlaces de la página
+  const greetingWouldCover = () => {
+    const btn = launcherRef.current?.getBoundingClientRect();
+    if (!btn) return false;
+    const zone = { left: btn.right - 200, right: btn.right, top: btn.top - 80, bottom: btn.top + 8 };
+    return Array.from(document.querySelectorAll("main button, main a, section button, section a")).some((el) => {
+      if (launcherRef.current?.contains(el)) return false;
+      const r = el.getBoundingClientRect();
+      return r.width > 0 && r.left < zone.right && r.right > zone.left && r.top < zone.bottom && r.bottom > zone.top;
+    });
+  };
   const greetingState = useRef({ introduced: false, repeats: 0, shownAt: 0 });
 
   // Reinicia el saludo cuando Forzecito se oculta (regreso a la portada)
@@ -40,6 +52,7 @@ const ChatBot = () => {
     const show = window.setTimeout(() => {
       st.introduced = true;
       st.shownAt = Date.now();
+      if (greetingWouldCover()) return;
       setGreetingOn(true);
       hide = window.setTimeout(() => setGreetingOn(false), 5000);
     }, 3000);
@@ -58,7 +71,7 @@ const ChatBot = () => {
       const st = greetingState.current;
       window.clearTimeout(idle);
       idle = window.setTimeout(() => {
-        if (st.repeats >= 3 || Date.now() - st.shownAt < 5000) return;
+        if (st.repeats >= 3 || Date.now() - st.shownAt < 5000 || greetingWouldCover()) return;
         st.repeats += 1;
         st.shownAt = Date.now();
         setGreetingOn(true);
@@ -159,8 +172,9 @@ const ChatBot = () => {
       {/* Floating Button */}
       {!isOpen && (
         <button
+          ref={launcherRef}
           onClick={handleOpen}
-          className={`group fixed bottom-24 right-4 z-50 flex items-center transition-all duration-500 ease-out motion-reduce:transition-none sm:right-6 ${
+          className={`group fixed bottom-24 right-4 z-50 flex flex-col items-end transition-all duration-500 ease-out motion-reduce:transition-none sm:right-6 ${
             isVisible
               ? "translate-y-0 opacity-100"
               : "pointer-events-none invisible translate-y-4 opacity-0"
@@ -173,19 +187,21 @@ const ChatBot = () => {
             aria-hidden={!greetingVisible}
             className={`overflow-hidden transition-all duration-500 ease-out motion-reduce:transition-none ${
               greetingVisible
-                ? "mr-3 max-w-[calc(100vw-7rem)] opacity-100 sm:max-w-[22rem]"
-                : "mr-0 max-w-0 opacity-0"
+                ? "mb-2 max-h-24 opacity-100"
+                : "mb-0 max-h-0 opacity-0"
             }`}
           >
-            <span className="font-chat-heading block w-max rounded-2xl border border-border bg-card px-4 py-2.5 text-left text-sm font-semibold text-story-accent shadow-large sm:text-base">
+            <span className="font-chat-heading block w-max rounded-xl rounded-br-sm border border-border bg-card px-3 py-2 text-left text-xs font-semibold text-story-accent shadow-large sm:text-sm">
               <span className="block whitespace-nowrap">Hola, soy Forzecito.</span>
               <span className="block whitespace-nowrap">¿Tienes dudas?</span>
             </span>
           </span>
           <img
-            src="/forzecito-icon.png"
+            src="/forzecito-icon.webp"
+            width={80}
+            height={80}
             alt="Forzecito"
-            className="h-16 w-16 flex-shrink-0 object-contain drop-shadow-lg transition-transform duration-300 group-hover:scale-105 motion-reduce:transition-none sm:h-20 sm:w-20"
+            className="h-14 w-14 flex-shrink-0 object-contain drop-shadow-lg transition-transform duration-300 group-hover:scale-105 motion-reduce:transition-none sm:h-16 sm:w-16"
             loading="eager"
             decoding="async"
           />
@@ -204,7 +220,9 @@ const ChatBot = () => {
           <div className="bg-gradient-primary px-4 py-4 text-primary-foreground flex items-center justify-between flex-shrink-0">
             <div className="flex items-center gap-3">
               <img
-                src="/forzecito-icon-no-dot.png"
+                src="/forzecito-icon-no-dot.webp"
+                width={40}
+                height={40}
                 alt="Forzecito"
                 className="h-10 w-10 flex-shrink-0 object-contain drop-shadow-soft"
                 loading="eager"
