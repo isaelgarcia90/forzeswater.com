@@ -21,4 +21,4 @@
 - [x] Paso 3A: catálogo interactivo con buscador, filtros y lista de equipos para cotizar, sin precios públicos
 - [x] Nosotros: lectura breve, cifras clave y detalles resumidos en ventanas emergentes
 - [ ] Paso 3B: administración centralizada e integración de inventario y prospectos con HubSpot (pendiente de decisión)
-- [ ] Agregar horario de atención a Contacto (pendiente del horario oficial)
+- [x] Agregar horario de atención a Contacto

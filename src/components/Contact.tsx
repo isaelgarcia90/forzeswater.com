@@ -1,4 +1,4 @@
-import { MessageCircle, Phone, Mail, MapPin, Bot, ArrowRight } from "lucide-react";
+import { Clock, MessageCircle, Phone, Mail, MapPin, Bot, ArrowRight } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useAnalytics } from "@/hooks/useAnalytics";
@@ -21,6 +21,7 @@ const Contact = () => {
       href: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(ADDRESS)}`,
       type: "Map",
     },
+    { icon: Clock, label: "Horario", value: "Lunes a Viernes, 9:00 a 18:00 hrs", href: undefined, type: "Hours" },
   ];
 
   return (
@@ -67,14 +68,16 @@ const Contact = () => {
           </Card>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
-          {details.map((d) => (
-            <a
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-4xl mx-auto">
+          {details.map((d) => {
+            const Tag = d.href ? "a" : "div";
+            return (
+            <Tag
               key={d.label}
               href={d.href}
               target={d.type === "Map" ? "_blank" : undefined}
               rel={d.type === "Map" ? "noopener noreferrer" : undefined}
-              onClick={() => trackContactClick(d.type)}
+              onClick={d.href ? () => trackContactClick(d.type) : undefined}
               className="flex items-start gap-3 rounded-lg border border-border bg-card p-4 transition-all duration-300 hover:shadow-large hover:-translate-y-0.5"
             >
               <div className="w-10 h-10 shrink-0 rounded-lg bg-gradient-primary flex items-center justify-center">
@@ -84,8 +87,9 @@ const Contact = () => {
                 <p className="text-sm font-medium text-muted-foreground">{d.label}</p>
                 <p className="text-sm font-semibold text-foreground break-words">{d.value}</p>
               </div>
-            </a>
-          ))}
+            </Tag>
+            );
+          })}
         </div>
       </div>
     </section>
