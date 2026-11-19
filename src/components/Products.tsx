@@ -8,6 +8,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { MessageCircle, Bot, FileDown } from "lucide-react";
 
 // Import product images
 import bombaSumergible from "@/assets/products/bomba-sumergible.jpg";
@@ -19,43 +21,14 @@ import panelAutomatizacion from "@/assets/products/panel-automatizacion.jpg";
 import filtroArena from "@/assets/products/filtro-arena.jpg";
 import filtroCarbon from "@/assets/products/filtro-carbon.jpg";
 import filtroCartucho from "@/assets/products/filtro-cartucho.jpg";
-import plantaOsmosis from "@/assets/products/planta-osmosis.jpg";
-import plantaResiduales from "@/assets/products/planta-residuales.jpg";
-import plantaPotable from "@/assets/products/planta-potable.jpg";
 
 const Products = () => {
   const [selectedProduct, setSelectedProduct] = useState<{categoryId: string, productIndex: number} | null>(null);
   
   const productCategories = [
     {
-      id: "plants",
-      label: "Plantas de Tratamiento",
-      products: [
-        {
-          title: "Plantas de Ósmosis Inversa",
-          description: "Sistemas completos de purificación de agua por ósmosis inversa",
-          specs: "Capacidad de 100 LPH a 100,000 LPH",
-          details: "Plantas de ósmosis inversa completas llave en mano. Incluyen pretratamiento con filtros multimedia y carbón activado, dosificación de antiincrustante, filtros de cartucho 5 micras, bombas de alta presión en acero inoxidable, membranas de última generación (Dow, Hydranautics o Toray), portamembranas en fibra de vidrio, instrumentación digital (TDS, pH, flujo, presión), sistema CIP de limpieza química, panel de control con PLC y HMI. Recuperación de 50-75%. Rechazo de sales >98%. Incluye skid estructural, tubería CPVC/acero inoxidable, válvulas y accesorios.",
-          image: plantaOsmosis,
-        },
-        {
-          title: "Tratamiento de Aguas Residuales",
-          description: "Tratamiento de aguas residuales industriales y municipales",
-          specs: "Tratamiento biológico y químico",
-          details: "Plantas de tratamiento de aguas residuales (PTAR) diseñadas según características del efluente y normativa aplicable. Procesos disponibles: tratamiento primario (cribado, desarenado, sedimentación), secundario biológico (lodos activados, SBR, MBBR, filtros percoladores), terciario (filtración, desinfección UV/cloro). Tratamiento físico-químico para efluentes industriales. Manejo de lodos con espesamiento y deshidratación. Sistemas compactos prefabricados o construcción en sitio. Cumplimiento de NOM-001-SEMARNAT, NOM-002 y NOM-003. Capacidades de 1 a 500 m³/día.",
-          image: plantaResiduales,
-        },
-        {
-          title: "Plantas de Agua Potable",
-          description: "Instalaciones llave en mano para producción de agua potable",
-          specs: "Cumplimiento con estándares de la OMS",
-          details: "Plantas potabilizadoras completas para producción de agua de consumo humano. Tren de tratamiento personalizado según análisis de agua cruda: coagulación-floculación, sedimentación, filtración multimedia, desinfección (cloro, UV, ozono), ajuste de pH, fluoruración. Sistemas de dosificación automática de químicos. Tanques de contacto de cloro. Instrumentación y control automático. Almacenamiento de agua tratada. Sistema de distribución. Cumplimiento total con NOM-127-SSA1 y estándares OMS para agua potable. Desde 5 hasta 500 m³/h. Incluye laboratorio de análisis básico.",
-          image: plantaPotable,
-        },
-      ],
-    },
-    {
       id: "pumps",
+      catalog: "sbo",
       label: "Bombas de Agua",
       products: [
         {
@@ -83,6 +56,7 @@ const Products = () => {
     },
     {
       id: "panels",
+      catalog: "sbo",
       label: "Paneles de Control",
       products: [
         {
@@ -110,6 +84,7 @@ const Products = () => {
     },
     {
       id: "filters",
+      catalog: "tda",
       label: "Filtros",
       products: [
         {
@@ -138,21 +113,21 @@ const Products = () => {
   ];
 
   return (
-    <section id="products" className="py-24 bg-muted">
+    <section id="products" className="pt-24 pb-8 bg-muted">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Nuestros Productos
+            Catálogo de equipos
           </h2>
           <p className="text-base sm:text-xl text-muted-foreground max-w-3xl mx-auto">
-            Equipos y sistemas de tratamiento de agua de alta calidad
+            Bombas, automatización y filtración. Abre cualquier equipo para cotizarlo o descarga la lista de precios.
           </p>
         </div>
 
-        <Tabs defaultValue="plants" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 mb-12">
+        <Tabs defaultValue="pumps" className="w-full">
+          <TabsList className="grid w-full grid-cols-3 mb-12 h-auto">
             {productCategories.map((category) => (
-              <TabsTrigger key={category.id} value={category.id} className="text-base">
+              <TabsTrigger key={category.id} value={category.id} className="text-xs sm:text-base whitespace-normal py-2">
                 {category.label}
               </TabsTrigger>
             ))}
@@ -176,7 +151,7 @@ const Products = () => {
                     </div>
                     <div className="p-6">
                       <h3 className="text-xl font-bold text-foreground mb-2">{product.title}</h3>
-                      <p className="text-muted-foreground mb-3 text-justify">{product.description}</p>
+                      <p className="text-muted-foreground mb-3">{product.description}</p>
                       <p className="text-sm text-primary font-semibold">{product.specs}</p>
                     </div>
                   </Card>
@@ -202,7 +177,7 @@ const Products = () => {
                       />
                     </div>
                     <DialogTitle className="text-2xl">{product.title}</DialogTitle>
-                    <DialogDescription className="text-base">
+                    <DialogDescription className="text-xs sm:text-base whitespace-normal py-2">
                       {product.description}
                     </DialogDescription>
                   </DialogHeader>
@@ -213,10 +188,27 @@ const Products = () => {
                     </div>
                     <div>
                       <h4 className="font-semibold text-foreground mb-2">Detalles:</h4>
-                      <p className="text-muted-foreground leading-relaxed text-justify">
+                      <p className="text-muted-foreground leading-relaxed">
                         {product.details}
                       </p>
                     </div>
+                  </div>
+                  <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                    <Button asChild className="flex-1 bg-gradient-primary">
+                      <a href={`https://wa.me/525518070867?text=${encodeURIComponent(`Hola, quiero cotizar: ${product.title}`)}`} target="_blank" rel="noopener noreferrer">
+                        <MessageCircle className="h-4 w-4 mr-2" /> Cotizar por WhatsApp
+                      </a>
+                    </Button>
+                    <Button variant="outline" className="flex-1" onClick={() => { setSelectedProduct(null); window.dispatchEvent(new Event("open-forzecito")); }}>
+                      <Bot className="h-4 w-4 mr-2" /> Preguntar a Forzecito
+                    </Button>
+                    <Button variant="outline" className="flex-1" onClick={() => {
+                      setSelectedProduct(null);
+                      window.dispatchEvent(new CustomEvent("select-catalog", { detail: category?.catalog }));
+                      document.getElementById("catalog")?.scrollIntoView({ behavior: "smooth" });
+                    }}>
+                      <FileDown className="h-4 w-4 mr-2" /> Ver precios
+                    </Button>
                   </div>
                 </>
               ) : null;

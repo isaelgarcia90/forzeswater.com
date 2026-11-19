@@ -128,6 +128,15 @@ const Catalog = () => {
 
   const current = CATALOGS[selectedCatalog];
 
+  useEffect(() => {
+    const onSelect = (e: Event) => {
+      const key = (e as CustomEvent).detail as CatalogKey | undefined;
+      if (key && key in CATALOGS) setSelectedCatalog(key);
+    };
+    window.addEventListener("select-catalog", onSelect);
+    return () => window.removeEventListener("select-catalog", onSelect);
+  }, []);
+
   // Reset line of interest when switching catalog
   useEffect(() => {
     setFormData(prev => ({ ...prev, lineOfInterest: "Todas" }));
@@ -246,14 +255,14 @@ const Catalog = () => {
   };
 
   return (
-    <section id="catalog" className="py-24 bg-background">
+    <section id="catalog" className="pt-8 pb-24 bg-muted scroll-mt-20">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Catálogos y Listas de Precios
-          </h2>
-          <p className="text-base sm:text-xl text-muted-foreground max-w-3xl mx-auto">
-            Selecciona el catálogo que deseas descargar. Contamos con líneas especializadas para sistemas de bombeo y para piscinas y químicos.
+          <h3 className="text-2xl sm:text-3xl font-bold text-foreground mb-3">
+            Listas de precios
+          </h3>
+          <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto">
+            Elige una lista y recíbela al instante dejando tus datos.
           </p>
         </div>
 
