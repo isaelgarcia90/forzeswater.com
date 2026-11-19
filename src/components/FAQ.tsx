@@ -4,54 +4,45 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { HelpCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { HelpCircle, MessageCircle } from "lucide-react";
 import { useAnalytics } from "@/hooks/useAnalytics";
 
 const faqItems = [
   {
-    question: "¿Qué tipos de sistemas de tratamiento de agua ofrecen?",
+    question: "¿Cuánto tiempo toma la instalación?",
     answer:
-      "Ofrecemos una amplia gama de sistemas incluyendo plantas de ósmosis inversa, filtros de arena y carbón activado, sistemas de ablandamiento, plantas potabilizadoras, tratamiento de aguas residuales, y sistemas de purificación para aplicaciones industriales, comerciales y residenciales.",
-  },
-  {
-    question: "¿Cuánto tiempo toma la instalación de un sistema?",
-    answer:
-      "El tiempo de instalación varía según el tipo y tamaño del sistema. Los sistemas residenciales pueden instalarse en 1-3 días, mientras que los sistemas industriales pueden tomar de 1-4 semanas. Durante la cotización, proporcionamos un cronograma detallado del proyecto.",
+      "En proyectos residenciales suele tomar de 1 a 3 días; en industriales, de 1 a 4 semanas. Confirmamos el cronograma al cotizar.",
   },
   {
     question: "¿Ofrecen mantenimiento después de la instalación?",
     answer:
-      "Sí, ofrecemos planes de mantenimiento preventivo y correctivo para todos nuestros sistemas. Incluimos revisiones periódicas, reemplazo de consumibles, análisis de calidad de agua, y soporte técnico 24/7 para emergencias.",
+      "Sí. Damos mantenimiento preventivo y correctivo, revisiones, cambio de consumibles y análisis del agua según las necesidades de tu sistema.",
   },
   {
-    question: "¿Qué garantía tienen sus equipos?",
+    question: "¿Qué garantía tienen los equipos?",
     answer:
-      "Todos nuestros equipos cuentan con garantía de fábrica que varía de 1 a 5 años según el producto. Además, ofrecemos garantía extendida en nuestros servicios de instalación y mano de obra por 12 meses.",
+      "La garantía de fábrica varía de 1 a 5 años según el producto. La instalación y mano de obra cuentan con 12 meses de garantía.",
   },
   {
-    question: "¿Trabajan con proyectos residenciales e industriales?",
+    question: "¿Cómo solicito una cotización?",
     answer:
-      "Sí, atendemos proyectos de todos los tamaños. Desde sistemas de filtración para hogares hasta plantas completas de tratamiento para industrias, hoteles, hospitales, plantas de alimentos y bebidas, y municipios.",
-  },
-  {
-    question: "¿Cómo puedo solicitar una cotización?",
-    answer:
-      "Puedes solicitar una cotización de tres formas: escribiéndole a Forzecito, nuestro asistente en la página, llamando al +52 55 1807 0867, o enviándonos un mensaje por WhatsApp. Responderemos en menos de 24 horas hábiles.",
+      "Escríbenos por WhatsApp o a Forzecito. Cuéntanos el uso, la capacidad que necesitas y las características de tu agua para orientarte.",
   },
   {
     question: "¿Realizan análisis de agua gratuitos?",
     answer:
-      "Sí, ofrecemos análisis básicos de agua sin costo como parte de nuestro proceso de cotización para proyectos mayores. Esto nos permite recomendar la solución más adecuada para las características específicas de tu agua.",
+      "Sí, el análisis básico no tiene costo dentro de la cotización de proyectos mayores. Los resultados nos ayudan a definir el tratamiento adecuado.",
   },
   {
-    question: "¿Cuáles son sus áreas de cobertura?",
+    question: "¿Dónde tienen cobertura?",
     answer:
-      "Tenemos cobertura en toda la República Mexicana, con presencia principal en la Zona Metropolitana del Valle de México. Para proyectos fuera de CDMX, contamos con una red de instaladores certificados.",
+      "Atendemos proyectos en toda la República Mexicana, principalmente en CDMX y zona metropolitana. Para otras ubicaciones, confirmamos la cobertura al revisar tu proyecto.",
   },
 ];
 
 const FAQ = () => {
-  const { trackModalOpen } = useAnalytics();
+  const { trackModalOpen, trackCTAClick } = useAnalytics();
 
   const handleAccordionChange = (value: string) => {
     if (value) {
@@ -59,61 +50,66 @@ const FAQ = () => {
     }
   };
 
+  const openForzecito = (question: string) => {
+    trackCTAClick("Preguntar a Forzecito", `FAQ: ${question}`);
+    window.dispatchEvent(new Event("open-forzecito"));
+  };
+
   return (
-    <section id="faq" className="py-24 bg-muted/30">
+    <section id="faq" className="py-20 bg-muted/30">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-primary mb-6">
-            <HelpCircle className="h-8 w-8 text-white" />
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm font-medium text-primary mb-5">
+            <HelpCircle className="h-4 w-4" />
+            Respuestas rápidas
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Preguntas Frecuentes
+            Preguntas frecuentes
           </h2>
-          <p className="text-base sm:text-xl text-muted-foreground max-w-3xl mx-auto">
-            Encuentra respuestas a las preguntas más comunes sobre nuestros servicios y productos de tratamiento de agua
+          <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
+            Lo esencial antes de elegir tu sistema. Para revisar tu caso, pregunta a Forzecito.
           </p>
         </div>
 
         <div className="max-w-3xl mx-auto">
-          <Accordion 
-            type="single" 
-            collapsible 
-            className="space-y-4"
+          <Accordion
+            type="single"
+            collapsible
+            className="space-y-3"
             onValueChange={handleAccordionChange}
           >
             {faqItems.map((item, index) => (
               <AccordionItem
-                key={index}
+                key={item.question}
                 value={`item-${index}`}
-                className="bg-card border border-border rounded-lg px-6 data-[state=open]:shadow-medium transition-shadow"
+                className="bg-card border border-border rounded-lg px-5 sm:px-6 data-[state=open]:shadow-medium transition-shadow"
               >
                 <AccordionTrigger className="text-left text-foreground hover:text-primary hover:no-underline py-5">
                   <span className="font-semibold pr-4">{item.question}</span>
                 </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground pb-5 leading-relaxed text-justify">
-                  {item.answer}
+                <AccordionContent className="text-muted-foreground pb-5 leading-relaxed">
+                  <p>{item.answer}</p>
+                  <Button
+                    variant="link"
+                    size="sm"
+                    className="mt-3 h-auto px-0"
+                    onClick={() => openForzecito(item.question)}
+                  >
+                    <MessageCircle className="h-4 w-4" />
+                    Preguntar a Forzecito
+                  </Button>
                 </AccordionContent>
               </AccordionItem>
             ))}
           </Accordion>
         </div>
 
-        {/* CTA after FAQ */}
-        <div className="text-center mt-12">
-          <p className="text-muted-foreground mb-4">
-            ¿No encontraste la respuesta que buscabas?
-          </p>
-          <a
-            href="#contact"
-            className="inline-flex items-center text-primary font-medium hover:underline"
-            onClick={(e) => {
-              e.preventDefault();
-              document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
-            }}
-          >
-            Contáctanos directamente
-            <span className="ml-2">→</span>
-          </a>
+        <div className="text-center mt-10">
+          <p className="text-muted-foreground mb-4">¿Tienes otra duda?</p>
+          <Button onClick={() => openForzecito("Duda adicional")}>
+            <MessageCircle className="h-4 w-4" />
+            Hablar con Forzecito
+          </Button>
         </div>
       </div>
     </section>
