@@ -47,6 +47,9 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        story: {
+          accent: "hsl(var(--story-accent))",
+        },
       },
       backgroundImage: {
         'gradient-primary': 'var(--gradient-primary)',
