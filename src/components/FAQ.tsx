@@ -36,7 +36,7 @@ const faqItems = [
   {
     question: "¿Cómo puedo solicitar una cotización?",
     answer:
-      "Puedes solicitar una cotización de tres formas: llenando el formulario de contacto en nuestra página, llamando al +52 55 1807 0867, o enviándonos un mensaje por WhatsApp. Responderemos en menos de 24 horas hábiles.",
+      "Puedes solicitar una cotización de tres formas: escribiéndole a Forzecito, nuestro asistente en la página, llamando al +52 55 1807 0867, o enviándonos un mensaje por WhatsApp. Responderemos en menos de 24 horas hábiles.",
   },
   {
     question: "¿Realizan análisis de agua gratuitos?",

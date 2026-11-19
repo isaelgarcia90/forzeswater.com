@@ -37,7 +37,7 @@ const Footer = () => {
               {[
                 { label: "Inicio", id: "hero" },
                 { label: "Nosotros", id: "about" },
-                { label: "Soluciones", id: "solutions" },
+                { label: "Sistemas y proyectos", id: "solutions" },
                 { label: "Productos", id: "products" }
               ].map((item) => (
                 <li key={item.id}>
@@ -56,7 +56,8 @@ const Footer = () => {
             <h3 className="text-lg font-bold mb-4">Servicios</h3>
             <ul className="space-y-2">
               {[
-                { label: "Servicios", id: "services" },
+                { label: "Catálogo", id: "catalog" },
+                { label: "Preguntas frecuentes", id: "faq" },
                 { label: "Contacto", id: "contact" }
               ].map((item) => (
                 <li key={item.id}>

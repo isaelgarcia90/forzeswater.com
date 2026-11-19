@@ -1,5 +1,20 @@
-import { Droplets, Filter, Gauge, Waves, Factory, Cpu } from "lucide-react";
+import { useState } from "react";
+import {
+  Waves,
+  Factory,
+  Filter,
+  Droplets,
+  Cpu,
+  Package,
+  FlaskConical,
+  Ruler,
+  Construction,
+  Wrench,
+  ArrowRight,
+  MessageCircle,
+} from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -7,98 +22,158 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useState } from "react";
+
+const WHATSAPP = "525518070867";
+
+const steps = [
+  { icon: FlaskConical, label: "Análisis" },
+  { icon: Ruler, label: "Diseño" },
+  { icon: Construction, label: "Instalación" },
+  { icon: Wrench, label: "Mantenimiento" },
+];
+
+const systems = [
+  {
+    icon: Waves,
+    title: "Ósmosis inversa y purificación",
+    summary: "Agua pura para consumo, procesos y farmacéutica.",
+    highlights: ["100 a 100,000 LPH", "Hasta 99.7% de rechazo de sales", "Limpieza CIP automática"],
+    details:
+      "Plantas completas con pretratamiento, bombas de alta presión en acero inoxidable, membranas de última generación e instrumentación digital.",
+  },
+  {
+    icon: Factory,
+    title: "Plantas de tratamiento (PTAR y potable)",
+    summary: "Plantas llave en mano que cumplen la norma.",
+    highlights: ["Potabilizadoras", "Aguas residuales e industriales", "Cumplimiento NOM"],
+    details:
+      "Pretratamiento, tratamiento primario, secundario y terciario, desinfección y manejo de lodos. Sistemas compactos o construidos en sitio.",
+  },
+  {
+    icon: Filter,
+    title: "Filtración y ablandamiento",
+    summary: "Quitamos sarro, sólidos, cloro, olores y sabores.",
+    highlights: ["Arena, carbón y microfiltración", "Suavizadores simples o dúplex", "Retrolavado automático"],
+    details:
+      "Sistemas multietapa de 1 a 500 m³/h y suavizadores por intercambio iónico con regeneración automática.",
+  },
+  {
+    icon: Droplets,
+    title: "Bombeo y presurización",
+    summary: "Agua con presión constante, del hogar a la industria.",
+    highlights: ["1 a 500 HP", "Sumergibles y centrífugas", "Variadores para ahorrar energía"],
+    details:
+      "Bombas de marcas reconocidas con protección contra marcha en seco, arranque suave y monitoreo remoto opcional.",
+  },
+  {
+    icon: Cpu,
+    title: "Automatización y control",
+    summary: "Controla y monitorea tu sistema desde tu celular.",
+    highlights: ["Tableros con PLC y pantalla táctil", "Alarmas por SMS o correo", "Integración SCADA"],
+    details:
+      "Tableros a la medida con marcas líderes (Siemens, Allen-Bradley, Schneider), cumpliendo NOM-001-SEDE.",
+  },
+  {
+    icon: Package,
+    title: "Refacciones e insumos",
+    summary: "Todo para mantener tu equipo funcionando.",
+    highlights: ["Membranas, resinas y cartuchos", "Válvulas, tanques y bombas", "Fleck, Clack, Pentair, Dow y más"],
+    details:
+      "Cartuchería, resinas, zeolita, carbón activado, arena filtrante, sal en pellet, dosificadoras, tarjetas electrónicas, tableros e insumos químicos.",
+  },
+];
 
 const Solutions = () => {
-  const [selectedSolution, setSelectedSolution] = useState<number | null>(null);
-  
-  const solutions = [
-    {
-      icon: Droplets,
-      title: "Sistemas de Bombeo de Agua",
-      description: "Bombas de alta eficiencia para todas las necesidades de distribución de agua",
-      details: "Ofrecemos una amplia gama de sistemas de bombeo incluyendo bombas sumergibles, centrífugas y presurizadoras de las marcas más reconocidas. Nuestras soluciones están diseñadas para aplicaciones residenciales, comerciales e industriales, con capacidades desde 1 HP hasta 500 HP. Todos los sistemas incluyen protección contra marcha en seco, arranque suave, variadores de frecuencia para ahorro de energía y monitoreo remoto opcional.",
-    },
-    {
-      icon: Filter,
-      title: "Filtración y Sedimentación",
-      description: "Filtración avanzada de múltiples etapas para agua limpia",
-      details: "Nuestros sistemas de filtración multi-etapa combinan sedimentación, filtración de arena, carbón activado y microfiltración para eliminar sólidos suspendidos, cloro, sabores, olores y contaminantes orgánicos. Diseñamos sistemas desde 1 hasta 500 m³/h con retrolavado automático programable, válvulas de control electrónicas y tanques en fibra de vidrio o acero inoxidable según la aplicación.",
-    },
-    {
-      icon: Waves,
-      title: "Sistemas de Ósmosis Inversa",
-      description: "Tecnología RO de última generación para agua pura",
-      details: "Suministramos e instalamos plantas de ósmosis inversa desde 100 litros por hora hasta 100,000 litros por hora. Utilizamos membranas de última generación con hasta 99.7% de rechazo de sales. Los sistemas incluyen pretratamiento completo, bombas de alta presión en acero inoxidable, instrumentación digital, limpieza CIP automática, y recuperación de energía en sistemas grandes. Ideal para agua potable, procesos industriales y aplicaciones farmacéuticas.",
-    },
-    {
-      icon: Gauge,
-      title: "Ablandamiento de Agua",
-      description: "Sistemas completos de ablandamiento y desalinización de agua",
-      details: "Diseñamos sistemas de ablandamiento por intercambio iónico para eliminar dureza (calcio y magnesio) del agua. Nuestros equipos utilizan resinas de alta calidad con regeneración automática eficiente. Disponibles en configuraciones simples, dúplex o triples para operación continua. Incluyen válvulas de control automáticas, tanques de salmuera, dosificadores de químicos y bypass de dureza residual programable. Capacidades desde 1 hasta 200 m³/h.",
-    },
-    {
-      icon: Factory,
-      title: "Plantas de Tratamiento",
-      description: "Instalaciones de tratamiento de agua industrial y comercial",
-      details: "Diseñamos, fabricamos e instalamos plantas de tratamiento completas llave en mano incluyendo: plantas potabilizadoras, tratamiento de aguas residuales (sistemas aerobios y anaerobios), tratamiento de efluentes industriales, y sistemas de reciclaje de agua. Cada planta incluye todos los procesos necesarios: pretratamiento, tratamiento primario, secundario y terciario, desinfección, y manejo de lodos. Cumplimos con todas las normas mexicanas (NOM) y estándares internacionales.",
-    },
-    {
-      icon: Cpu,
-      title: "Automatización y Control",
-      description: "Paneles de control inteligentes e integración PLC",
-      details: "Fabricamos tableros de control y automatización personalizados con PLC de marcas líderes (Siemens, Allen-Bradley, Schneider). Incluyen pantallas HMI touch screen, variadores de frecuencia, arrancadores suaves, protecciones eléctricas y comunicación industrial. Ofrecemos integración con SCADA, monitoreo remoto vía internet, registro de datos históricos, alarmas por SMS/email y control desde smartphone. Todos los tableros cumplen con NOM-001-SEDE y certificaciones UL.",
-    },
-  ];
+  const [selected, setSelected] = useState<number | null>(null);
+  const current = selected !== null ? systems[selected] : null;
+
+  const quote = (title: string) => {
+    const text = encodeURIComponent(`Hola, me interesa una cotización de: ${title}`);
+    window.open(`https://wa.me/${WHATSAPP}?text=${text}`, "_blank", "noopener,noreferrer");
+  };
 
   return (
     <section id="solutions" className="py-24 bg-background">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
+        <div className="text-center mb-12">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Nuestras Soluciones
+            Sistemas y proyectos
           </h2>
           <p className="text-base sm:text-xl text-muted-foreground max-w-3xl mx-auto">
-            Soluciones integrales de tratamiento de agua adaptadas a sus necesidades específicas
+            Elige lo que necesitas. Nosotros nos encargamos de todo el proceso.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {solutions.map((solution, index) => (
+        <ol className="flex flex-wrap justify-center items-center gap-2 sm:gap-3 mb-14" aria-label="Qué incluye cada proyecto">
+          {steps.map((step, i) => (
+            <li key={step.label} className="flex items-center gap-2 sm:gap-3">
+              <span className="flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1.5 text-sm font-semibold text-foreground">
+                <step.icon className="h-4 w-4 text-secondary" />
+                {step.label}
+              </span>
+              {i < steps.length - 1 && <ArrowRight className="h-4 w-4 text-muted-foreground" aria-hidden />}
+            </li>
+          ))}
+        </ol>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {systems.map((system, index) => (
             <Card
-              key={index}
-              className="p-8 hover:shadow-large transition-all duration-300 hover:-translate-y-1 bg-card border-border group cursor-pointer"
-              onClick={() => setSelectedSolution(index)}
+              key={system.title}
+              className="group p-6 bg-card border-border cursor-pointer transition-all duration-300 hover:shadow-large hover:-translate-y-1 flex flex-col"
+              onClick={() => setSelected(index)}
             >
-              <div className="w-16 h-16 rounded-xl bg-gradient-accent flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <solution.icon className="h-8 w-8 text-white" />
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-14 h-14 shrink-0 rounded-lg bg-gradient-accent flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <system.icon className="h-7 w-7 text-white" />
+                </div>
+                <h3 className="text-lg sm:text-xl font-bold text-foreground leading-tight">{system.title}</h3>
               </div>
-              <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-3">{solution.title}</h3>
-              <p className="text-muted-foreground text-base sm:text-lg text-justify">{solution.description}</p>
+              <p className="text-muted-foreground mb-4">{system.summary}</p>
+              <span className="mt-auto inline-flex items-center gap-1 text-sm font-semibold text-secondary">
+                Ver detalles <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </span>
             </Card>
           ))}
         </div>
 
-        <Dialog open={selectedSolution !== null} onOpenChange={() => setSelectedSolution(null)}>
+        <Dialog open={current !== null} onOpenChange={() => setSelected(null)}>
           <DialogContent className="max-w-2xl">
-            {selectedSolution !== null && (
+            {current && (
               <>
                 <DialogHeader>
                   <div className="w-16 h-16 rounded-xl bg-gradient-accent flex items-center justify-center mb-4">
-                    {(() => {
-                      const SolutionIcon = solutions[selectedSolution].icon;
-                      return <SolutionIcon className="h-8 w-8 text-white" />;
-                    })()}
+                    <current.icon className="h-8 w-8 text-white" />
                   </div>
-                  <DialogTitle className="text-2xl">{solutions[selectedSolution].title}</DialogTitle>
-                  <DialogDescription className="text-base">
-                    {solutions[selectedSolution].description}
-                  </DialogDescription>
+                  <DialogTitle className="text-2xl">{current.title}</DialogTitle>
+                  <DialogDescription className="text-base">{current.summary}</DialogDescription>
                 </DialogHeader>
-                <div className="mt-4">
-                  <p className="text-muted-foreground leading-relaxed text-justify">
-                    {solutions[selectedSolution].details}
-                  </p>
+                <ul className="space-y-2 mt-2">
+                  {current.highlights.map((h) => (
+                    <li key={h} className="flex items-start gap-2 text-foreground">
+                      <span className="mt-2 h-1.5 w-1.5 rounded-full bg-accent shrink-0" />
+                      {h}
+                    </li>
+                  ))}
+                </ul>
+                <p className="text-muted-foreground leading-relaxed">{current.details}</p>
+                <p className="text-sm text-muted-foreground">
+                  Incluye análisis, diseño, instalación y mantenimiento.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                  <Button className="bg-gradient-primary flex-1" onClick={() => quote(current.title)}>
+                    <MessageCircle className="h-4 w-4" /> Cotizar por WhatsApp
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="flex-1"
+                    onClick={() => {
+                      setSelected(null);
+                      window.dispatchEvent(new Event("open-forzecito"));
+                    }}
+                  >
+                    Preguntar a Forzecito
+                  </Button>
                 </div>
               </>
             )}

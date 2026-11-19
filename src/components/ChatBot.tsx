@@ -134,6 +134,15 @@ const ChatBot = () => {
     setIsOpen(true);
   };
 
+  useEffect(() => {
+    const onOpenRequest = () => {
+      setShowReturnPrompt(messages.length > 0);
+      setIsOpen(true);
+    };
+    window.addEventListener("open-forzecito", onOpenRequest);
+    return () => window.removeEventListener("open-forzecito", onOpenRequest);
+  }, [messages.length]);
+
   const handleContinueConversation = () => {
     setShowReturnPrompt(false);
   };

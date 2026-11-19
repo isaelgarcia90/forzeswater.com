@@ -300,9 +300,9 @@ const ScrollStory = () => {
                       <button
                         type="button"
                         className="scroll-story__button scroll-story__button--outline"
-                        onClick={() => scrollToSection("solutions", "Ver soluciones")}
+                        onClick={() => scrollToSection("solutions", "Ver sistemas")}
                       >
-                        Ver soluciones
+                        Ver sistemas
                         <ArrowDown aria-hidden="true" />
                       </button>
                     </div>
