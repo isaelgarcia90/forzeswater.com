@@ -18,5 +18,6 @@
 - [x] Paso 1: unificar Soluciones y Servicios; convertir Contacto en un centro de atención directo
 - [x] Paso 2A: unificar Productos y Catálogo con categorías, cotización y descargas conectadas
 - [x] Paso 2B: simplificar FAQ a dudas esenciales y conectar cada tema con Forzecito
-- [ ] Paso 3: catálogo interactivo con buscador, filtros y lista de equipos para cotizar, sin precios públicos
+- [x] Paso 3A: catálogo interactivo con buscador, filtros y lista de equipos para cotizar, sin precios públicos
+- [ ] Paso 3B: administración centralizada e integración de inventario y prospectos con HubSpot (pendiente de decisión)
 - [ ] Agregar horario de atención a Contacto (pendiente del horario oficial)

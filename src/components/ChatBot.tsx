@@ -135,8 +135,10 @@ const ChatBot = () => {
   };
 
   useEffect(() => {
-    const onOpenRequest = () => {
-      setShowReturnPrompt(messages.length > 0);
+    const onOpenRequest = (event: Event) => {
+      const message = (event as CustomEvent<{ message?: string }>).detail?.message?.trim();
+      setShowReturnPrompt(message ? false : messages.length > 0);
+      if (message) setInput(message);
       setIsOpen(true);
     };
     window.addEventListener("open-forzecito", onOpenRequest);
