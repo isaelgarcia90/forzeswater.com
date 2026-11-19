@@ -13,3 +13,10 @@
 - [x] Chatbot guiado con opciones para hacer clic
 - [x] Respuestas guiadas breves y desplazamiento al inicio de cada respuesta
 - [x] Burbuja flotante en forma de píldora con logo + texto "Asistente Virtual"
+
+## Mejora de experiencia y organización
+- [x] Paso 1: unificar Soluciones y Servicios; convertir Contacto en un centro de atención directo
+- [x] Paso 2A: unificar Productos y Catálogo con categorías, cotización y descargas conectadas
+- [ ] Paso 2B: simplificar FAQ a dudas esenciales y conectar cada tema con Forzecito
+- [ ] Paso 3: catálogo interactivo con buscador, filtros y lista de equipos para cotizar, sin precios públicos
+- [ ] Agregar horario de atención a Contacto (pendiente del horario oficial)
