@@ -1,359 +1,195 @@
 import { useEffect, useRef, useState } from "react";
-import {
-  ArrowDown,
-  ArrowRight,
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  ChevronUp,
-  Factory,
-  Pointer,
-  FlaskConical,
-  Ruler,
-  Wrench,
-  type LucideIcon,
-} from "lucide-react";
-import heroImage from "@/assets/hero-water-treatment.webp";
-import { useAnalytics } from "@/hooks/useAnalytics";
-import "./ScrollStory.css";
+import { ArrowRight } from "lucide-react";
+import heroImg from "@/assets/hero-water-treatment.webp";
+import { CHAPTERS } from "@/data/landing";
+import { Marks } from "./fw";
+import { cn } from "@/lib/utils";
 
-type StoryCard = {
-  title: string;
-  detail?: string;
-  emoji?: string;
-};
+const HEADER_H = 68;
 
-type StoryChapter = {
-  label: string;
-  titleStart: string;
-  titleAccent: string;
-  titleEnd: string;
-  description: string;
-  icon: LucideIcon;
-  panelClassName: string;
-  cards: [StoryCard, StoryCard];
-  chips?: string[];
-};
-
-const chapters: StoryChapter[] = [
-  {
-    label: "Analiza",
-    titleStart: "Primero, conocemos ",
-    titleAccent: "tu agua",
-    titleEnd: ".",
-    description: "Pruebas de calidad y consultoría para saber exactamente qué necesita tu sistema.",
-    icon: FlaskConical,
-    panelClassName: "scroll-story__panel--analysis",
-    cards: [
-      { title: "Análisis de agua", emoji: "🔬" },
-      { title: "Consultoría especializada" },
-    ],
-  },
-  {
-    label: "Diseña",
-    titleStart: "Ingeniería ",
-    titleAccent: "a tu medida",
-    titleEnd: ".",
-    description: "Diseñamos y fabricamos sistemas de alta eficiencia para industria, comercio y casa.",
-    icon: Ruler,
-    panelClassName: "scroll-story__panel--design",
-    cards: [
-      { title: "Capacidad", detail: "100 a 100,000 LPH" },
-      { title: "Proyectos llave en mano" },
-    ],
-  },
-  {
-    label: "Instala",
-    titleStart: "Plantas y equipos ",
-    titleAccent: "listos para operar",
-    titleEnd: ".",
-    description:
-      "Ósmosis inversa, filtración, ablandamiento, bombeo y plantas de agua potable o residual.",
-    icon: Factory,
-    panelClassName: "scroll-story__panel--installation",
-    cards: [
-      { title: "Cumple estándares de la OMS" },
-      { title: "Técnicos certificados" },
-    ],
-    chips: ["Ósmosis inversa", "Filtración", "Bombeo", "Ablandamiento", "Automatización PLC"],
-  },
-  {
-    label: "Mantén",
-    titleStart: "Siempre ",
-    titleAccent: "funcionando",
-    titleEnd: ".",
-    description: "Mantenimiento preventivo, refacciones e insumos, y soporte técnico en sitio.",
-    icon: Wrench,
-    panelClassName: "scroll-story__panel--maintenance",
-    cards: [
-      { title: "Soporte 24/7", emoji: "📞" },
-      { title: "Refacciones de las mejores marcas" },
-    ],
-  },
-];
-
-const clamp = (value: number, min = 0, max = 1) => Math.min(Math.max(value, min), max);
-
-const getTrackPosition = (progress: number) => {
-  const lastChapterIndex = chapters.length - 1;
-  const scaledProgress = clamp(progress) * lastChapterIndex;
-  const baseChapter = Math.min(Math.floor(scaledProgress), lastChapterIndex - 1);
-  const localProgress = scaledProgress - baseChapter;
-
-  if (localProgress <= 0.25) return baseChapter;
-  if (localProgress >= 0.75) return baseChapter + 1;
-
-  const transitionProgress = (localProgress - 0.25) / 0.5;
-  const smoothstep = transitionProgress * transitionProgress * (3 - 2 * transitionProgress);
-  return baseChapter + smoothstep;
-};
-
+/** Hero "scroll story": 4 capítulos que avanzan con el scroll dentro de una sección de 420vh. */
 const ScrollStory = () => {
   const sectionRef = useRef<HTMLElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
-  const [activeChapter, setActiveChapter] = useState(0);
-  const [reducedMotion, setReducedMotion] = useState(false);
-  const { trackCTAClick } = useAnalytics();
+  const [progress, setProgress] = useState(0);
+  const progressRef = useRef(0);
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const updateMotionPreference = () => setReducedMotion(mediaQuery.matches);
-
-    updateMotionPreference();
-    mediaQuery.addEventListener("change", updateMotionPreference);
-    return () => mediaQuery.removeEventListener("change", updateMotionPreference);
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const el = sectionRef.current;
+      if (!el) return;
+      // El bloque fijo queda debajo del header: recorre de (top - 68) a (top + alto - innerHeight)
+      const start = el.getBoundingClientRect().top + window.scrollY - HEADER_H;
+      const dist = Math.max(1, el.offsetHeight - window.innerHeight + HEADER_H);
+      const p = Math.min(1, Math.max(0, (window.scrollY - start) / dist));
+      if (Math.abs(p - progressRef.current) > 0.002 || p === 0 || p === 1) {
+        progressRef.current = p;
+        setProgress(p);
+      }
+    };
+    const schedule = () => {
+      if (!raf) raf = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    return () => {
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      if (raf) cancelAnimationFrame(raf);
+    };
   }, []);
 
-  useEffect(() => {
-    const section = sectionRef.current;
-    const track = trackRef.current;
-    if (!section || !track) return;
+  const active = Math.min(3, Math.max(0, Math.round(progress * 3)));
+  const current = CHAPTERS[active];
+  const Icon = current.icon;
 
-    if (reducedMotion) {
-      track.style.transform = "none";
-      return;
-    }
-
-    let animationFrame = 0;
-    let sectionStart = 0;
-    let scrollableDistance = 1;
-
-    const render = () => {
-      animationFrame = 0;
-      const progress = clamp((window.scrollY - sectionStart) / scrollableDistance);
-      const trackPosition = getTrackPosition(progress);
-      const nextActiveChapter = clamp(Math.round(trackPosition), 0, chapters.length - 1);
-
-      track.style.transform = `translate3d(${-trackPosition * 100}vw, 0, 0)`;
-      setActiveChapter((current) => (current === nextActiveChapter ? current : nextActiveChapter));
-    };
-
-    const scheduleRender = () => {
-      if (!animationFrame) animationFrame = window.requestAnimationFrame(render);
-    };
-
-    const measure = () => {
-      sectionStart = section.getBoundingClientRect().top + window.scrollY;
-      scrollableDistance = Math.max(1, section.offsetHeight - window.innerHeight);
-      scheduleRender();
-    };
-
-    measure();
-    window.addEventListener("scroll", scheduleRender, { passive: true });
-    window.addEventListener("resize", measure);
-
-    return () => {
-      window.removeEventListener("scroll", scheduleRender);
-      window.removeEventListener("resize", measure);
-      if (animationFrame) window.cancelAnimationFrame(animationFrame);
-    };
-  }, [reducedMotion]);
-
-  const scrollToChapter = (chapterIndex: number) => {
-    const section = sectionRef.current;
-    if (!section) return;
-
-    const sectionStart = section.getBoundingClientRect().top + window.scrollY;
-    const scrollableDistance = Math.max(1, section.offsetHeight - window.innerHeight);
-    const targetProgress = chapterIndex / (chapters.length - 1);
-
-    window.scrollTo({
-      top: sectionStart + scrollableDistance * targetProgress,
-      behavior: reducedMotion ? "auto" : "smooth",
-    });
+  const goChapter = (i: number) => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const start = el.getBoundingClientRect().top + window.scrollY - HEADER_H;
+    const dist = el.offsetHeight - window.innerHeight + HEADER_H;
+    window.scrollTo({ top: start + dist * (i / 3) + 2, behavior: "smooth" });
   };
-
-  const scrollToSection = (sectionId: string, ctaName: string) => {
-    trackCTAClick(ctaName, "Scroll Story");
-    document.getElementById(sectionId)?.scrollIntoView({
-      behavior: reducedMotion ? "auto" : "smooth",
-    });
-  };
-
-  const touchStart = useRef<{ x: number; y: number } | null>(null);
-
-  const handleTouchStart = (event: React.TouchEvent) => {
-    if (reducedMotion) return;
-    const t = event.touches[0];
-    touchStart.current = { x: t.clientX, y: t.clientY };
-  };
-
-  const handleTouchEnd = (event: React.TouchEvent) => {
-    const start = touchStart.current;
-    touchStart.current = null;
-    if (!start || reducedMotion) return;
-    const t = event.changedTouches[0];
-    const dx = t.clientX - start.x;
-    const dy = t.clientY - start.y;
-    if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
-    if (dx < 0) {
-      if (activeChapter >= chapters.length - 1) {
-        document.getElementById("about")?.scrollIntoView({ behavior: "smooth" });
-      } else {
-        scrollToChapter(activeChapter + 1);
-      }
-    } else if (activeChapter > 0) {
-      scrollToChapter(activeChapter - 1);
-    }
-  };
-
-  const isLastChapter = activeChapter === chapters.length - 1;
 
   return (
-    <section id="hero" ref={sectionRef} className="scroll-story" aria-label="Cómo trabajamos">
-      <h1 className="sr-only">Soluciones Profesionales de Tratamiento de Agua</h1>
-      <div className="scroll-story__stage" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
-        <div className="scroll-story__background" aria-hidden="true">
+    <section id="inicio" ref={sectionRef} aria-label="Nuestro proceso" className="relative h-[420vh]">
+      {/* Se fija debajo del header (68px) para que el rail de progreso quede visible desde el inicio */}
+      <div className="sticky top-[68px] flex h-[calc(100svh-68px)] min-h-0 flex-col overflow-hidden">
+        {/* Fondo */}
+        <div aria-hidden className="absolute inset-0 overflow-hidden">
           <img
-            src={heroImage}
+            src={heroImg}
             alt=""
-            width={1920}
-            height={1080}
-            decoding="async"
+            className="absolute -inset-[4%] h-[108%] w-[108%] max-w-none object-cover opacity-[.32] [filter:grayscale(1)_brightness(.55)_contrast(1.15)]"
+            style={{ transform: `translate3d(${(-progress * 3).toFixed(2)}%,0,0) scale(1.04)` }}
           />
+          <div className="absolute inset-0 bg-fw-deep opacity-90 mix-blend-color" />
+          <div className="absolute inset-0 [background:linear-gradient(90deg,#111a22_0%,rgba(17,26,34,.92)_38%,rgba(17,26,34,.55)_100%),linear-gradient(0deg,#111a22_0%,rgba(17,26,34,0)_30%)]" />
+          <div className="absolute inset-0 [background:radial-gradient(circle_at_78%_42%,hsl(188_94%_43%/.20)_0%,transparent_42%),radial-gradient(circle_at_6%_100%,hsl(199_89%_32%/.35)_0%,transparent_46%)]" />
+          <div className="absolute inset-0 [background-image:linear-gradient(rgba(148,190,220,.06)_1px,transparent_1px),linear-gradient(90deg,rgba(148,190,220,.06)_1px,transparent_1px)] [background-size:64px_64px] [mask-image:linear-gradient(90deg,transparent_0%,#000_45%,#000_100%)]" />
         </div>
-        <div className="scroll-story__overlay" aria-hidden="true" />
-        <div className="scroll-story__glow" aria-hidden="true" />
 
-        <div ref={trackRef} className="scroll-story__track">
-          {chapters.map((chapter, index) => {
-            const Icon = chapter.icon;
-            const isLastChapter = index === chapters.length - 1;
+        <div className="fw-container relative grid min-h-0 flex-1 grid-cols-[minmax(0,1fr)] items-center gap-[clamp(20px,4vw,64px)] pt-[clamp(12px,4vh,56px)] md:grid-cols-[minmax(0,1.1fr)_minmax(0,.9fr)]">
+          <div className="flex flex-col gap-[clamp(10px,2.4vh,22px)]">
+            <h1 className="m-0 flex items-center gap-3 text-xs font-semibold uppercase leading-none tracking-[.2em] text-fw-ter">
+              <span aria-hidden className="h-px w-7 bg-fw-cyan" />
+              Ingeniería en tratamiento de agua · CDMX
+            </h1>
 
-            return (
-              <article
-                key={chapter.label}
-                id={`story-chapter-${index + 1}`}
-                className={`scroll-story__panel ${chapter.panelClassName}${
-                  index % 2 === 1 ? " scroll-story__panel--reversed" : ""
-                }`}
-                aria-labelledby={`story-title-${index + 1}`}
-              >
-                <div className="scroll-story__visual">
-                  <div className="scroll-story__blob" aria-hidden="true" />
-                  <div className="scroll-story__icon-box" aria-hidden="true">
-                    <Icon className="scroll-story__icon" strokeWidth={1.75} />
-                  </div>
-                  {chapter.cards.map((card, cardIndex) => (
-                    <div
-                      key={card.title}
-                      className={`scroll-story__mini-card scroll-story__mini-card--${cardIndex + 1}`}
-                    >
-                      <p className="scroll-story__mini-card-title">
-                        {card.emoji && <span aria-hidden="true">{card.emoji} </span>}
-                        {card.title}
-                      </p>
-                      {card.detail && <p className="scroll-story__mini-card-detail">{card.detail}</p>}
-                    </div>
-                  ))}
-                </div>
-
-                <div className="scroll-story__content">
-                  <p className="scroll-story__eyebrow">
-                    {String(index + 1).padStart(2, "0")} · {chapter.label}
+            <div className="relative min-h-[clamp(250px,44vh,330px)] md:min-h-[clamp(200px,40vh,330px)]">
+              {CHAPTERS.map((ch, i) => (
+                <article
+                  key={ch.n}
+                  aria-hidden={i !== active}
+                  className={cn(
+                    "absolute inset-0 flex flex-col gap-[18px] motion-reduce:!transition-none",
+                    i === active ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
+                  )}
+                  style={{
+                    transform: `translateY(${(i - active) * 28}px)`,
+                    transition: "opacity .55s ease, transform .7s cubic-bezier(.2,.7,.2,1)",
+                  }}
+                >
+                  <p className="m-0 text-[13px] font-semibold uppercase leading-none tracking-[.18em] text-fw-aqua">
+                    {ch.n} / 04 · {ch.label}
                   </p>
-                  <h2 id={`story-title-${index + 1}`} className="scroll-story__title">
-                    {chapter.titleStart}
-                    <em>{chapter.titleAccent}</em>
-                    {chapter.titleEnd}
+                  <h2 className="m-0 font-display text-[clamp(32px,min(6.2vw,8.5vh),84px)] font-semibold leading-[.95] tracking-[-.015em] [text-wrap:balance]">
+                    {ch.t1}
+                    <span className="bg-[linear-gradient(100deg,hsl(188_94%_43%),hsl(174_72%_56%))] bg-clip-text text-transparent">{ch.acc}</span>
+                    {ch.t2}
                   </h2>
-                  <p className="scroll-story__description">{chapter.description}</p>
-
-                  {chapter.chips && (
-                    <ul className="scroll-story__chips" aria-label="Soluciones de instalación">
-                      {chapter.chips.map((chip) => (
-                        <li key={chip}>{chip}</li>
+                  <p className="m-0 max-w-[480px] text-[clamp(15px,2.4vh,18px)] leading-normal text-fw-sec [text-wrap:pretty]">{ch.desc}</p>
+                  {ch.chips.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {ch.chips.map((chip) => (
+                        <span key={chip} className="border border-[hsl(188_94%_43%/.35)] bg-[hsl(188_94%_43%/.08)] px-2.5 py-1.5 text-[13px] font-medium leading-none text-[#d9f5f8]">
+                          {chip}
+                        </span>
                       ))}
-                    </ul>
-                  )}
-
-                  {isLastChapter && (
-                    <div className="scroll-story__actions">
-                      <button
-                        type="button"
-                        className="scroll-story__button scroll-story__button--primary"
-                        onClick={() => scrollToSection("contact", "Cotiza tu proyecto")}
-                      >
-                        Cotiza tu proyecto
-                        <ArrowRight aria-hidden="true" />
-                      </button>
-                      <button
-                        type="button"
-                        className="scroll-story__button scroll-story__button--outline"
-                        onClick={() => scrollToSection("solutions", "Ver sistemas")}
-                      >
-                        Ver sistemas
-                        <ArrowDown aria-hidden="true" />
-                      </button>
                     </div>
                   )}
+                </article>
+              ))}
+            </div>
+
+            {/* Mini-tarjetas en móvil */}
+            <div className="grid grid-cols-2 gap-2 md:hidden">
+              {current.cards.map((c) => (
+                <div key={c.k} className="flex flex-col gap-[5px] border border-[rgba(148,190,220,.18)] bg-[rgba(13,21,29,.82)] px-3 py-2.5">
+                  <span className="text-[10px] font-semibold uppercase leading-none tracking-[.18em] text-fw-label">{c.k}</span>
+                  <span className="font-display text-[15px] font-semibold leading-[1.15] text-fw-text">{c.v}</span>
                 </div>
-              </article>
-            );
-          })}
+              ))}
+            </div>
+
+            <div className="flex flex-wrap gap-2.5">
+              <a href="#contacto" className="fw-btn-cyan relative h-[clamp(44px,6.5vh,52px)] flex-[1_1_140px] gap-2.5 px-6 text-base duration-[250ms] hover:shadow-cta-hover md:flex-none">
+                <Marks corners="diagonal" />
+                Cotiza tu proyecto
+                <ArrowRight className="h-[18px] w-[18px]" strokeWidth={1.5} />
+              </a>
+              <a href="#sistemas" className="fw-btn-outline h-[clamp(44px,6.5vh,52px)] flex-[1_1_140px] border-[rgba(148,190,220,.28)] px-[22px] text-base md:flex-none">
+                Ver sistemas
+              </a>
+            </div>
+          </div>
+
+          {/* Panel esquemático (escritorio) */}
+          <div aria-hidden className="relative hidden aspect-square w-[min(100%,58vh,500px)] justify-self-center border border-[rgba(148,190,220,.18)] bg-[rgba(17,28,38,.55)] backdrop-blur-[6px] [container-type:inline-size] md:block">
+            <Marks opacity={0.8} />
+            <div className="absolute inset-0 [background-image:linear-gradient(rgba(148,190,220,.07)_1px,transparent_1px),linear-gradient(90deg,rgba(148,190,220,.07)_1px,transparent_1px)] [background-size:25%_25%]" />
+            <div className="absolute left-[18px] right-[18px] top-4 flex justify-between text-[11px] font-semibold uppercase leading-none tracking-[.18em] text-fw-label">
+              <span>Fase {current.n} / 04</span>
+              <span className="text-fw-aqua">Progreso {String(Math.round(progress * 100)).padStart(2, "0")}%</span>
+            </div>
+            <div className="absolute inset-x-0 bottom-[34%] top-0 flex items-center justify-center">
+              <span className="absolute font-display text-[60cqw] font-bold leading-none tracking-[-.04em] text-transparent [-webkit-text-stroke:1px_hsl(188_94%_43%/.28)]">
+                {current.n}
+              </span>
+              <div className="relative flex h-[26cqw] w-[26cqw] items-center justify-center bg-gradient-brand shadow-[0_0_0_1px_hsl(174_72%_56%/.4),0_30px_80px_-14px_hsl(188_94%_43%/.75)] transition-transform duration-500">
+                <Icon className="h-[46%] w-[46%] text-fw-text" strokeWidth={1.25} />
+              </div>
+            </div>
+            <div className="absolute bottom-[4cqw] left-[4cqw] right-[4cqw] grid grid-cols-2 gap-[2cqw]">
+              {current.cards.map((c) => (
+                <div key={c.k} className="flex flex-col gap-[5px] border border-[rgba(148,190,220,.18)] bg-[rgba(13,21,29,.88)] px-[clamp(10px,3cqw,14px)] py-[clamp(8px,2.6cqw,14px)]">
+                  <span className="text-[10px] font-semibold uppercase leading-none tracking-[.18em] text-fw-label">{c.k}</span>
+                  <span className="font-display text-[clamp(13px,4cqw,17px)] font-semibold leading-[1.15] text-fw-text">{c.v}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
 
-        {!reducedMotion && (
-          <nav className="scroll-story__indicator" aria-label="Capítulos de la historia">
-            {chapters.map((chapter, index) => (
-              <button
-                key={chapter.label}
-                type="button"
-                className={activeChapter === index ? "is-active" : undefined}
-                onClick={() => scrollToChapter(index)}
-                aria-label={`Capítulo ${index + 1}`}
-                aria-current={activeChapter === index ? "step" : undefined}
-              />
-            ))}
-          </nav>
-        )}
-
-        {!reducedMotion && (
-          <div className="scroll-story__status">
-            <span className="scroll-story__counter" aria-label={`Capítulo ${activeChapter + 1} de ${chapters.length}`}>
-              {String(activeChapter + 1).padStart(2, "0")} / {String(chapters.length).padStart(2, "0")}
-            </span>
-            <span
-              className="scroll-story__scroll-hint"
-              role="img"
-              aria-label={isLastChapter ? "Sigue bajando" : "Desliza hacia los lados o hacia abajo"}
-            >
-              <span className="scroll-story__mouse" aria-hidden="true">
-                <span />
-              </span>
-              <span
-                className={`scroll-story__swipe${isLastChapter ? " is-last" : ""}`}
-                aria-hidden="true"
-              >
-                <ChevronUp className="scroll-story__swipe-arrow scroll-story__swipe-arrow--up" />
-                <ChevronDown className="scroll-story__swipe-arrow scroll-story__swipe-arrow--down" />
-                <ChevronLeft className="scroll-story__swipe-arrow scroll-story__swipe-arrow--left" />
-                <ChevronRight className="scroll-story__swipe-arrow scroll-story__swipe-arrow--right" />
-                <Pointer className="scroll-story__swipe-hand" />
-              </span>
-            </span>
+        {/* Rail de progreso */}
+        <div className="fw-container relative pb-[clamp(12px,2.6vh,26px)] pt-[clamp(10px,2.4vh,22px)]">
+          <div className="relative mb-3 h-px bg-[rgba(148,190,220,.18)]">
+            <div
+              className="absolute left-0 top-0 h-px bg-[linear-gradient(90deg,hsl(199_89%_32%),hsl(188_94%_43%),hsl(174_72%_56%))] shadow-[0_0_12px_hsl(188_94%_43%)]"
+              style={{ width: `${(progress * 100).toFixed(1)}%` }}
+            />
           </div>
-        )}
+          <div className="grid grid-cols-[auto_auto_auto_minmax(0,1fr)] gap-3 md:grid-cols-4">
+            {CHAPTERS.map((ch, i) => (
+              <button
+                key={ch.n}
+                type="button"
+                onClick={() => goChapter(i)}
+                aria-label={`Ir a ${ch.label}`}
+                aria-current={i === active ? "step" : undefined}
+                className={cn(
+                  "flex items-baseline gap-2.5 border-0 bg-transparent p-0 text-left transition-colors duration-300 hover:text-fw-text",
+                  i <= active ? "text-fw-text" : "text-fw-dim2"
+                )}
+              >
+                <span className="font-display text-[13px] font-semibold leading-none tracking-[.1em]">{ch.n}</span>
+                <span className={cn("text-[13px] font-medium leading-[1.25]", i === active ? "inline" : "hidden md:inline")}>{ch.step}</span>
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );
