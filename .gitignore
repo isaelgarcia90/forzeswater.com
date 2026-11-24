@@ -25,3 +25,7 @@ dist-ssr
 
 # Documentos privados (facturas, cotizaciones)
 cotizacion/
+
+# Datos de precios: nunca en el repo público
+data/
+*PRIVADO*
