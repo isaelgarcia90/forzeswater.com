@@ -6,6 +6,9 @@ import { Marks } from "./fw";
 import { cn } from "@/lib/utils";
 
 const HEADER_H = 68;
+/** Alto del bloque fijo: pantalla menos header y franja de Forzecito */
+const stickyHeight = () =>
+  window.innerHeight - HEADER_H - (parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--dock-h")) || 0);
 
 /** Hero "scroll story": 4 capítulos que avanzan con el scroll dentro de una sección de 420vh. */
 const ScrollStory = () => {
@@ -21,7 +24,7 @@ const ScrollStory = () => {
       if (!el) return;
       // El bloque fijo queda debajo del header: recorre de (top - 68) a (top + alto - innerHeight)
       const start = el.getBoundingClientRect().top + window.scrollY - HEADER_H;
-      const dist = Math.max(1, el.offsetHeight - window.innerHeight + HEADER_H);
+      const dist = Math.max(1, el.offsetHeight - stickyHeight());
       const p = Math.min(1, Math.max(0, (window.scrollY - start) / dist));
       if (Math.abs(p - progressRef.current) > 0.002 || p === 0 || p === 1) {
         progressRef.current = p;
@@ -49,14 +52,14 @@ const ScrollStory = () => {
     const el = sectionRef.current;
     if (!el) return;
     const start = el.getBoundingClientRect().top + window.scrollY - HEADER_H;
-    const dist = el.offsetHeight - window.innerHeight + HEADER_H;
+    const dist = el.offsetHeight - stickyHeight();
     window.scrollTo({ top: start + dist * (i / 3) + 2, behavior: "smooth" });
   };
 
   return (
     <section id="inicio" ref={sectionRef} aria-label="Nuestro proceso" className="relative h-[420vh]">
       {/* Se fija debajo del header (68px) para que el rail de progreso quede visible desde el inicio */}
-      <div className="sticky top-[68px] flex h-[calc(100svh-68px)] min-h-0 flex-col overflow-hidden">
+      <div className="sticky top-[68px] flex h-[calc(100svh-68px-var(--dock-h))] min-h-0 flex-col overflow-hidden">
         {/* Fondo */}
         <div aria-hidden className="absolute inset-0 overflow-hidden">
           <img
@@ -78,7 +81,7 @@ const ScrollStory = () => {
               Ingeniería en tratamiento de agua · CDMX
             </h1>
 
-            <div className="relative min-h-[clamp(250px,44vh,330px)] md:min-h-[clamp(200px,40vh,330px)]">
+            <div className="relative min-h-[clamp(220px,36vh,300px)] md:min-h-[clamp(200px,40vh,330px)]">
               {CHAPTERS.map((ch, i) => (
                 <article
                   key={ch.n}

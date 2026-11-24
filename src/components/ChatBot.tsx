@@ -28,8 +28,6 @@ const ChatBot = () => {
   const [greetOn, setGreetOn] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const pendingRef = useRef<string | null>(null);
-  const launcherRef = useRef<HTMLButtonElement>(null);
-  const greetRef = useRef<HTMLDivElement>(null);
   const { quoteOpen, ficha, gate, menuOpen } = useLanding();
   // Se oculta mientras hay un modal, la lista de cotización o el menú móvil abiertos
   const overlayOpen = quoteOpen || !!ficha || gate.open || menuOpen;
@@ -38,41 +36,15 @@ const ChatBot = () => {
   const greetState = useRef({ count: 0, introduced: false, hideTimer: 0, blocked: false });
   greetState.current.blocked = isOpen || overlayOpen;
 
-  /** ¿El saludo taparía texto, botones o enlaces de la sección visible? */
-  const greetingWouldCover = () => {
-    const btn = launcherRef.current?.getBoundingClientRect();
-    if (!btn) return false;
-    const box = greetRef.current?.getBoundingClientRect();
-    const w = box?.width || 260;
-    const h = box?.height || 96;
-    const zone = { left: btn.right - w, right: btn.right, top: btn.top - 14 - h, bottom: btn.top };
-    const targets = document.querySelectorAll(
-      "main h1, main h2, main h3, main p, main a, main button, main li, main label, main input, main span, footer span"
-    );
-    return Array.from(targets).some((el) => {
-      const r = el.getBoundingClientRect();
-      if (!r.width || !r.height) return false;
-      if (r.left >= zone.right || r.right <= zone.left || r.top >= zone.bottom || r.bottom <= zone.top) return false;
-      // Ignora contenedores grandes (tarjetas, secciones): solo cuenta contenido concreto
-      if (r.width > window.innerWidth * 0.9 && r.height > 200) return false;
-      // Solo cuenta lo que realmente se ve (los capítulos inactivos del hero tienen opacidad 0)
-      for (let node: Element | null = el; node && node !== document.body; node = node.parentElement) {
-        const cs = getComputedStyle(node);
-        if (cs.visibility === "hidden" || Number(cs.opacity) < 0.05) return false;
-      }
-      return true;
-    });
-  };
-
   const hideGreeting = () => {
     window.clearTimeout(greetState.current.hideTimer);
     setGreetOn(false);
   };
 
-  /** Muestra el saludo 5 s (máximo 3 veces por visita) si no tapa contenido. */
+  /** Muestra el saludo 5 s en la franja inferior (máximo 3 veces por visita). */
   const tryGreet = () => {
     const st = greetState.current;
-    if (st.blocked || st.count >= MAX_GREETINGS || greetingWouldCover()) return;
+    if (st.blocked || st.count >= MAX_GREETINGS) return;
     st.count += 1;
     setGreetOn(true);
     window.clearTimeout(st.hideTimer);
@@ -80,8 +52,6 @@ const ChatBot = () => {
   };
   const tryGreetRef = useRef(tryGreet);
   tryGreetRef.current = tryGreet;
-  const coverRef = useRef(greetingWouldCover);
-  coverRef.current = greetingWouldCover;
 
   // Forzecito aparece a los 3 s; el primer saludo 2 s después.
   // Luego reaparece tras 3 s sin scroll; el contador se reinicia al volver al inicio.
@@ -97,11 +67,6 @@ const ChatBot = () => {
     const onScroll = () => {
       window.clearTimeout(idle);
       if (window.scrollY <= 2) st.count = 0;
-      // Si al desplazarse el saludo empieza a tapar texto, se oculta de inmediato
-      if (coverRef.current()) {
-        window.clearTimeout(st.hideTimer);
-        setGreetOn(false);
-      }
       if (!st.introduced) return;
       idle = window.setTimeout(() => tryGreetRef.current(), IDLE_GREETING_MS);
     };
@@ -174,14 +139,15 @@ const ChatBot = () => {
 
   const showGreeting = greetOn && launcherVisible && !isOpen;
 
+  // Con un modal, la lista de cotización o el menú móvil abiertos, la franja se oculta
   if (overlayOpen && !isOpen) return null;
 
   return (
-    <div className="fixed bottom-[clamp(14px,2.4vw,28px)] right-[clamp(14px,2.4vw,28px)] z-[95] flex flex-col items-end gap-3.5">
+    <>
       {isOpen && (
         <section
           aria-label="Forzecito, asistente técnico de Forzes Water"
-          className="flex h-[min(calc(100dvh-140px),580px)] w-[min(calc(100vw-28px),390px)] flex-col overflow-hidden border border-[hsl(174_72%_56%/.4)] bg-fw-panel shadow-[0_40px_100px_-30px_rgba(0,0,0,.8),0_0_70px_-30px_hsl(174_72%_56%/.7)] animate-scale-in [transform-origin:bottom_right]"
+          className="fixed bottom-[calc(var(--dock-h)+12px)] right-[clamp(14px,2.4vw,28px)] z-[95] flex h-[min(calc(100dvh-var(--dock-h)-96px),580px)] w-[min(calc(100vw-28px),390px)] flex-col overflow-hidden border border-[hsl(174_72%_56%/.4)] bg-fw-panel shadow-[0_40px_100px_-30px_rgba(0,0,0,.8),0_0_70px_-30px_hsl(174_72%_56%/.7)] animate-scale-in [transform-origin:bottom_right]"
         >
           <div className="flex flex-none items-center gap-3 border-b border-[rgba(148,190,220,.16)] px-4 py-3.5 [background:linear-gradient(120deg,hsl(199_89%_32%/.55),hsl(174_72%_56%/.18))]">
             <span className="relative flex-none">
@@ -268,44 +234,62 @@ const ChatBot = () => {
         </section>
       )}
 
-      {showGreeting && (
-        <div
-          ref={greetRef}
-          role="button"
-          tabIndex={0}
-          onClick={open}
-          onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && open()}
-          className="relative flex max-w-[260px] cursor-pointer flex-col gap-1 border border-[hsl(174_72%_56%/.45)] bg-fw-card py-3.5 pl-4 pr-[38px] shadow-[0_20px_50px_-20px_rgba(0,0,0,.7),0_0_40px_-18px_hsl(174_72%_56%/.7)] animate-rise-in"
-        >
-          <span className="font-display text-[17px] font-semibold leading-[1.1]">¡Hola! Soy Forzecito.</span>
-          <span className="text-sm leading-[1.4] text-fw-sec">¿Te ayudo a elegir tu sistema de agua?</span>
+      {/* Franja inferior reservada: Forzecito y su saludo nunca tapan el contenido */}
+      <div
+        className="fixed inset-x-0 bottom-0 z-[94] h-[var(--dock-h)] border-t border-[rgba(148,190,220,.12)] bg-[rgba(14,22,30,.92)] backdrop-blur-[14px]"
+        aria-label="Asistente Forzecito"
+        role="region"
+      >
+        <div className="fw-container flex h-full items-center justify-end gap-3">
+          <div className="flex min-w-0 flex-1 justify-end" aria-live="polite">
+            {showGreeting ? (
+              <div
+                role="button"
+                tabIndex={0}
+                onClick={open}
+                onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && open()}
+                className="flex min-w-0 max-w-[460px] cursor-pointer items-center gap-2 border border-[hsl(174_72%_56%/.45)] bg-fw-card py-2 pl-3.5 pr-1.5 shadow-[0_0_30px_-14px_hsl(174_72%_56%/.8)] animate-rise-in"
+              >
+                <span className="min-w-0 text-left leading-[1.25]">
+                  <span className="font-display text-[15px] font-semibold md:text-base">¡Hola! Soy Forzecito. </span>
+                  <span className="text-[13px] text-fw-sec md:text-sm">¿Te ayudo a elegir tu sistema de agua?</span>
+                </span>
+                <button
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); hideGreeting(); }}
+                  aria-label="Cerrar saludo"
+                  className="flex h-7 w-7 flex-none items-center justify-center border-0 bg-transparent text-fw-label hover:text-fw-text"
+                >
+                  <X className="h-[13px] w-[13px]" strokeWidth={1.5} />
+                </button>
+              </div>
+            ) : (
+              launcherVisible && (
+                <span className="hidden items-center gap-2 text-[13px] font-medium text-fw-label md:flex">
+                  <span aria-hidden className="h-[7px] w-[7px] rounded-full bg-fw-online shadow-[0_0_8px_hsl(150_70%_50%)]" />
+                  Forzecito en línea · asistente técnico
+                </span>
+              )
+            )}
+          </div>
+
           <button
             type="button"
-            onClick={(e) => { e.stopPropagation(); hideGreeting(); }}
-            aria-label="Cerrar saludo"
-            className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center border-0 bg-transparent text-fw-label hover:text-fw-text"
+            onClick={() => (isOpen ? setIsOpen(false) : open())}
+            aria-label={isOpen ? "Cerrar Forzecito" : "Abrir Forzecito, asistente técnico de Forzes Water"}
+            aria-expanded={isOpen}
+            aria-hidden={!launcherVisible}
+            tabIndex={launcherVisible ? 0 : -1}
+            className={`relative h-12 w-12 flex-none rounded-full border-2 border-fw-aqua bg-fw-card p-0 shadow-[0_0_0_5px_hsl(174_72%_56%/.12),0_10px_30px_-10px_hsl(174_72%_56%/.7)] transition-all duration-500 hover:scale-[1.06] motion-reduce:transition-none ${
+              launcherVisible ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-3 opacity-0"
+            }`}
           >
-            <X className="h-[13px] w-[13px]" strokeWidth={1.5} />
+            <img src={forzecito} alt="" width={48} height={48} className="block h-full w-full rounded-full" />
+            <span aria-hidden className="absolute -right-0.5 bottom-0 h-3 w-3 rounded-full border-2 border-fw-bg bg-fw-online" />
           </button>
         </div>
-      )}
-
-      <button
-        ref={launcherRef}
-        type="button"
-        onClick={() => (isOpen ? setIsOpen(false) : open())}
-        aria-label={isOpen ? "Cerrar Forzecito" : "Abrir Forzecito, asistente técnico de Forzes Water"}
-        aria-expanded={isOpen}
-        aria-hidden={!launcherVisible}
-        tabIndex={launcherVisible ? 0 : -1}
-        className={`relative h-[66px] w-[66px] rounded-full border-2 border-fw-aqua bg-fw-card p-0 shadow-[0_0_0_6px_hsl(174_72%_56%/.12),0_16px_40px_-10px_hsl(174_72%_56%/.7)] transition-all duration-500 hover:scale-[1.06] motion-reduce:transition-none ${
-          launcherVisible ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-4 opacity-0"
-        }`}
-      >
-        <img src={forzecito} alt="" width={66} height={66} className="block h-full w-full rounded-full" />
-        <span aria-hidden className="absolute bottom-1 right-0.5 h-3.5 w-3.5 rounded-full border-2 border-fw-bg bg-fw-online" />
-      </button>
-    </div>
+      </div>
+    </>
   );
 };
 

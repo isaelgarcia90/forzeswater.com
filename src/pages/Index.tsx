@@ -43,7 +43,7 @@ const Index = () => {
 
   return (
     <LandingProvider>
-      <div className="min-h-screen bg-fw-bg text-fw-text">
+      <div className="min-h-screen bg-fw-bg pb-[var(--dock-h)] text-fw-text">
         <Helmet>
           <link rel="canonical" href="https://forzeswater.lovable.app/" />
         </Helmet>
