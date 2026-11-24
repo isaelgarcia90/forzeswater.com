@@ -11,7 +11,11 @@ import { useChatBot } from "@/hooks/useChatBot";
 import { useLanding } from "@/context/LandingContext";
 import ChatMessages from "./ChatMessages";
 
-const GREETING_DELAY_MS = 4000;
+const LAUNCHER_DELAY_MS = 3000; // Forzecito aparece a los 3 s
+const FIRST_GREETING_DELAY_MS = 2000; // el saludo, 2 s después
+const GREETING_VISIBLE_MS = 5000; // dura 5 s
+const IDLE_GREETING_MS = 3000; // reaparece tras 3 s sin scroll
+const MAX_GREETINGS = 3; // por visita (se reinicia al volver al inicio)
 const QUICK_REPLIES = ["Quiero cotizar", "¿Qué sistema necesito?", "Tiempos de entrega", "Lista de precios", "Hablar con un asesor"];
 
 /** Forzecito: asistente flotante. La conversación real vive en useChatBot (Supabase + IA). */
@@ -20,40 +24,94 @@ const ChatBot = () => {
   const [input, setInput] = useState("");
   const { messages, isLoading, sendMessage, resetChat, submitContact, leadSaved } = useChatBot();
   const [showReturnPrompt, setShowReturnPrompt] = useState(false);
-  const [greet, setGreet] = useState(false);
-  const [greetDismissed, setGreetDismissed] = useState(false);
+  const [launcherVisible, setLauncherVisible] = useState(false);
+  const [greetOn, setGreetOn] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const pendingRef = useRef<string | null>(null);
+  const launcherRef = useRef<HTMLButtonElement>(null);
+  const greetRef = useRef<HTMLDivElement>(null);
   const { quoteOpen, ficha, gate, menuOpen } = useLanding();
   // Se oculta mientras hay un modal, la lista de cotización o el menú móvil abiertos
   const overlayOpen = quoteOpen || !!ficha || gate.open || menuOpen;
 
-  // Saludo a los 4 s. En celular espera a que el usuario salga de la portada
-  // para no tapar los botones principales, y se oculta solo a los 10 s.
+  // Estado del saludo que leen los listeners sin volver a registrarse
+  const greetState = useRef({ count: 0, introduced: false, hideTimer: 0, blocked: false });
+  greetState.current.blocked = isOpen || overlayOpen;
+
+  /** ¿El saludo taparía texto, botones o enlaces de la sección visible? */
+  const greetingWouldCover = () => {
+    const btn = launcherRef.current?.getBoundingClientRect();
+    if (!btn) return false;
+    const box = greetRef.current?.getBoundingClientRect();
+    const w = box?.width || 260;
+    const h = box?.height || 96;
+    const zone = { left: btn.right - w, right: btn.right, top: btn.top - 14 - h, bottom: btn.top };
+    const targets = document.querySelectorAll(
+      "main h1, main h2, main h3, main p, main a, main button, main li, main label, main input, main span, footer span"
+    );
+    return Array.from(targets).some((el) => {
+      const r = el.getBoundingClientRect();
+      if (!r.width || !r.height) return false;
+      if (r.left >= zone.right || r.right <= zone.left || r.top >= zone.bottom || r.bottom <= zone.top) return false;
+      // Ignora contenedores grandes (tarjetas, secciones): solo cuenta contenido concreto
+      if (r.width > window.innerWidth * 0.9 && r.height > 200) return false;
+      // Solo cuenta lo que realmente se ve (los capítulos inactivos del hero tienen opacidad 0)
+      for (let node: Element | null = el; node && node !== document.body; node = node.parentElement) {
+        const cs = getComputedStyle(node);
+        if (cs.visibility === "hidden" || Number(cs.opacity) < 0.05) return false;
+      }
+      return true;
+    });
+  };
+
+  const hideGreeting = () => {
+    window.clearTimeout(greetState.current.hideTimer);
+    setGreetOn(false);
+  };
+
+  /** Muestra el saludo 5 s (máximo 3 veces por visita) si no tapa contenido. */
+  const tryGreet = () => {
+    const st = greetState.current;
+    if (st.blocked || st.count >= MAX_GREETINGS || greetingWouldCover()) return;
+    st.count += 1;
+    setGreetOn(true);
+    window.clearTimeout(st.hideTimer);
+    st.hideTimer = window.setTimeout(() => setGreetOn(false), GREETING_VISIBLE_MS);
+  };
+  const tryGreetRef = useRef(tryGreet);
+  tryGreetRef.current = tryGreet;
+  const coverRef = useRef(greetingWouldCover);
+  coverRef.current = greetingWouldCover;
+
+  // Forzecito aparece a los 3 s; el primer saludo 2 s después.
+  // Luego reaparece tras 3 s sin scroll; el contador se reinicia al volver al inicio.
   useEffect(() => {
-    let hide = 0;
-    let shown = false;
-    const pastHero = () => {
-      const hero = document.getElementById("inicio");
-      return !hero || window.scrollY > hero.offsetHeight - window.innerHeight;
+    const st = greetState.current;
+    let idle = 0;
+    const tLauncher = window.setTimeout(() => setLauncherVisible(true), LAUNCHER_DELAY_MS);
+    const tFirst = window.setTimeout(() => {
+      st.introduced = true;
+      tryGreetRef.current();
+    }, LAUNCHER_DELAY_MS + FIRST_GREETING_DELAY_MS);
+
+    const onScroll = () => {
+      window.clearTimeout(idle);
+      if (window.scrollY <= 2) st.count = 0;
+      // Si al desplazarse el saludo empieza a tapar texto, se oculta de inmediato
+      if (coverRef.current()) {
+        window.clearTimeout(st.hideTimer);
+        setGreetOn(false);
+      }
+      if (!st.introduced) return;
+      idle = window.setTimeout(() => tryGreetRef.current(), IDLE_GREETING_MS);
     };
-    const tryShow = () => {
-      if (shown) return;
-      const mobile = window.innerWidth < 760;
-      if (mobile && !pastHero()) return;
-      shown = true;
-      setGreet(true);
-      if (mobile) hide = window.setTimeout(() => setGreet(false), 10_000);
-      window.removeEventListener("scroll", tryShow);
-    };
-    const t = window.setTimeout(() => {
-      tryShow();
-      if (!shown) window.addEventListener("scroll", tryShow, { passive: true });
-    }, GREETING_DELAY_MS);
+    window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
-      window.clearTimeout(t);
-      window.clearTimeout(hide);
-      window.removeEventListener("scroll", tryShow);
+      window.clearTimeout(tLauncher);
+      window.clearTimeout(tFirst);
+      window.clearTimeout(idle);
+      window.clearTimeout(st.hideTimer);
+      window.removeEventListener("scroll", onScroll);
     };
   }, []);
 
@@ -84,7 +142,7 @@ const ChatBot = () => {
 
   const open = () => {
     setShowReturnPrompt(messages.length > 0);
-    setGreetDismissed(true);
+    hideGreeting();
     setIsOpen(true);
   };
 
@@ -93,7 +151,8 @@ const ChatBot = () => {
     const onOpenRequest = (event: Event) => {
       const detail = (event as CustomEvent<{ message?: string; send?: boolean } | undefined>).detail;
       const message = detail?.message?.trim();
-      setGreetDismissed(true);
+      hideGreeting();
+      setLauncherVisible(true);
       setIsOpen(true);
       if (message && detail?.send) {
         send(message);
@@ -113,7 +172,7 @@ const ChatBot = () => {
     setShowReturnPrompt(false);
   };
 
-  const showGreeting = greet && !isOpen && !greetDismissed;
+  const showGreeting = greetOn && launcherVisible && !isOpen;
 
   if (overlayOpen && !isOpen) return null;
 
@@ -211,6 +270,7 @@ const ChatBot = () => {
 
       {showGreeting && (
         <div
+          ref={greetRef}
           role="button"
           tabIndex={0}
           onClick={open}
@@ -221,7 +281,7 @@ const ChatBot = () => {
           <span className="text-sm leading-[1.4] text-fw-sec">¿Te ayudo a elegir tu sistema de agua?</span>
           <button
             type="button"
-            onClick={(e) => { e.stopPropagation(); setGreetDismissed(true); }}
+            onClick={(e) => { e.stopPropagation(); hideGreeting(); }}
             aria-label="Cerrar saludo"
             className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center border-0 bg-transparent text-fw-label hover:text-fw-text"
           >
@@ -231,11 +291,16 @@ const ChatBot = () => {
       )}
 
       <button
+        ref={launcherRef}
         type="button"
         onClick={() => (isOpen ? setIsOpen(false) : open())}
         aria-label={isOpen ? "Cerrar Forzecito" : "Abrir Forzecito, asistente técnico de Forzes Water"}
         aria-expanded={isOpen}
-        className="relative h-[66px] w-[66px] rounded-full border-2 border-fw-aqua bg-fw-card p-0 shadow-[0_0_0_6px_hsl(174_72%_56%/.12),0_16px_40px_-10px_hsl(174_72%_56%/.7)] transition-transform duration-[250ms] hover:scale-[1.06] motion-reduce:transition-none"
+        aria-hidden={!launcherVisible}
+        tabIndex={launcherVisible ? 0 : -1}
+        className={`relative h-[66px] w-[66px] rounded-full border-2 border-fw-aqua bg-fw-card p-0 shadow-[0_0_0_6px_hsl(174_72%_56%/.12),0_16px_40px_-10px_hsl(174_72%_56%/.7)] transition-all duration-500 hover:scale-[1.06] motion-reduce:transition-none ${
+          launcherVisible ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-4 opacity-0"
+        }`}
       >
         <img src={forzecito} alt="" width={66} height={66} className="block h-full w-full rounded-full" />
         <span aria-hidden className="absolute bottom-1 right-0.5 h-3.5 w-3.5 rounded-full border-2 border-fw-bg bg-fw-online" />

@@ -12,6 +12,15 @@ const ScrollStory = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const [progress, setProgress] = useState(0);
   const progressRef = useRef(0);
+  const [reduceMotion, setReduceMotion] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const sync = () => setReduceMotion(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
 
   useEffect(() => {
     let raf = 0;
@@ -44,6 +53,8 @@ const ScrollStory = () => {
   const active = Math.min(3, Math.max(0, Math.round(progress * 3)));
   const current = CHAPTERS[active];
   const Icon = current.icon;
+  // Fracción dentro del capítulo (-0.5 a 0.5): 0° al centro, ±180° en el cambio de capítulo
+  const coinAngle = (progress * 3 - active) * 360;
 
   const goChapter = (i: number) => {
     const el = sectionRef.current;
@@ -148,8 +159,22 @@ const ScrollStory = () => {
               <span className="absolute font-display text-[60cqw] font-bold leading-none tracking-[-.04em] text-transparent [-webkit-text-stroke:1px_hsl(188_94%_43%/.28)]">
                 {current.n}
               </span>
-              <div className="relative flex h-[26cqw] w-[26cqw] items-center justify-center bg-gradient-brand shadow-[0_0_0_1px_hsl(174_72%_56%/.4),0_30px_80px_-14px_hsl(188_94%_43%/.75)] transition-transform duration-500">
-                <Icon className="h-[46%] w-[46%] text-fw-text" strokeWidth={1.25} />
+              {/* Ícono tipo moneda: da un giro completo sobre su eje vertical en cada capítulo */}
+              <div className="relative h-[26cqw] w-[26cqw] [perspective:900px]">
+                <div
+                  className="relative h-full w-full [transform-style:preserve-3d]"
+                  style={{ transform: reduceMotion ? undefined : `rotateY(${coinAngle.toFixed(1)}deg)` }}
+                >
+                  {[0, 180].map((face) => (
+                    <div
+                      key={face}
+                      className="absolute inset-0 flex items-center justify-center rounded-[22%] bg-gradient-brand shadow-[0_0_0_1px_hsl(174_72%_56%/.4),0_30px_80px_-14px_hsl(188_94%_43%/.75)] [backface-visibility:hidden]"
+                      style={{ transform: `rotateY(${face}deg)` }}
+                    >
+                      <Icon className="h-[46%] w-[46%] text-fw-text" strokeWidth={1.25} />
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
             <div className="absolute bottom-[4cqw] left-[4cqw] right-[4cqw] grid grid-cols-2 gap-[2cqw]">
