@@ -165,6 +165,17 @@
   to { transform: translateY(0); opacity: 1; }
 }
 
+/* Giro tipo moneda: una vuelta completa y una pausa breve, en bucle */
+@keyframes coin-flip {
+  0% { transform: rotateY(0deg); }
+  55% { transform: rotateY(360deg); }
+  100% { transform: rotateY(360deg); }
+}
+
+.animate-coin {
+  animation: coin-flip 3.2s cubic-bezier(.45, 0, .2, 1) infinite;
+}
+
 .animate-fade-in {
   animation: fade-in 0.3s ease-out forwards;
 }
@@ -181,5 +192,6 @@
   html { scroll-behavior: auto; }
   .animate-fade-in,
   .animate-scale-in,
-  .animate-rise-in { animation: none; }
+  .animate-rise-in,
+  .animate-coin { animation: none; }
 }

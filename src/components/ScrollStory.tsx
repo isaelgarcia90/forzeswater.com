@@ -12,15 +12,6 @@ const ScrollStory = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const [progress, setProgress] = useState(0);
   const progressRef = useRef(0);
-  const [reduceMotion, setReduceMotion] = useState(false);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const sync = () => setReduceMotion(mq.matches);
-    sync();
-    mq.addEventListener("change", sync);
-    return () => mq.removeEventListener("change", sync);
-  }, []);
 
   useEffect(() => {
     let raf = 0;
@@ -53,8 +44,6 @@ const ScrollStory = () => {
   const active = Math.min(3, Math.max(0, Math.round(progress * 3)));
   const current = CHAPTERS[active];
   const Icon = current.icon;
-  // Fracción dentro del capítulo (-0.5 a 0.5): 0° al centro, ±180° en el cambio de capítulo
-  const coinAngle = (progress * 3 - active) * 360;
 
   const goChapter = (i: number) => {
     const el = sectionRef.current;
@@ -159,12 +148,9 @@ const ScrollStory = () => {
               <span className="absolute font-display text-[60cqw] font-bold leading-none tracking-[-.04em] text-transparent [-webkit-text-stroke:1px_hsl(188_94%_43%/.28)]">
                 {current.n}
               </span>
-              {/* Ícono tipo moneda: da un giro completo sobre su eje vertical en cada capítulo */}
+              {/* Ícono tipo moneda: gira solo sobre su eje vertical todo el tiempo */}
               <div className="relative h-[26cqw] w-[26cqw] [perspective:900px]">
-                <div
-                  className="relative h-full w-full [transform-style:preserve-3d]"
-                  style={{ transform: reduceMotion ? undefined : `rotateY(${coinAngle.toFixed(1)}deg)` }}
-                >
+                <div className="animate-coin relative h-full w-full [transform-style:preserve-3d]">
                   {[0, 180].map((face) => (
                     <div
                       key={face}
