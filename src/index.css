@@ -176,21 +176,6 @@
   animation: coin-flip 3.2s cubic-bezier(.45, 0, .2, 1) infinite;
 }
 
-/* Pista táctil: se mueve a los lados y luego arriba/abajo */
-@keyframes swipe-hint {
-  0%, 100% { transform: translate(0, 0); }
-  12% { transform: translateX(-5px); }
-  25% { transform: translateX(5px); }
-  37% { transform: translate(0, 0); }
-  50% { transform: translateY(-5px); }
-  62% { transform: translateY(5px); }
-  75% { transform: translate(0, 0); }
-}
-
-.animate-swipe-hint {
-  animation: swipe-hint 2.6s ease-in-out infinite;
-}
-
 .animate-fade-in {
   animation: fade-in 0.3s ease-out forwards;
 }
@@ -208,6 +193,5 @@
   .animate-fade-in,
   .animate-scale-in,
   .animate-rise-in,
-  .animate-coin,
-  .animate-swipe-hint { animation: none; }
+  .animate-coin { animation: none; }
 }
