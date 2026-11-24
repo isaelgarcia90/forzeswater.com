@@ -89,3 +89,8 @@ insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_typ
 values ('listas-precios', 'listas-precios', false, 20971520, array['application/pdf'])
 on conflict (id) do nothing;
 -- Sin políticas en storage.objects para este bucket: solo se descarga con URL firmada emitida por el backend.
+
+-- El proyecto se creó con "Grant API access to new tables automatically": quitamos explícitamente
+-- el acceso del Data API a estas tablas. Solo el backend (service role) las usa.
+revoke all on public.catalogo_items, public.leads, public.quotes from anon, authenticated;
+revoke all on all tables in schema privado from anon, authenticated;
