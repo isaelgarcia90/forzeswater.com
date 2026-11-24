@@ -303,6 +303,11 @@ export const PriceGate = () => {
           </button>
           <p className="m-0 text-center text-xs leading-[1.45] text-fw-dim">
             Al enviar tus datos aceptas que un asesor te contacte para ofrecerte descuentos y cotizaciones personalizadas.
+            Consulta nuestro{" "}
+            <a href="/aviso-de-privacidad" target="_blank" rel="noopener" className="text-fw-aqua underline-offset-2 hover:underline">
+              aviso de privacidad
+            </a>
+            .
           </p>
         </form>
       ) : (

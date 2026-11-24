@@ -140,6 +140,13 @@ const ContactFormCard = ({
         <Button type="submit" disabled={locked} className="w-full bg-gradient-primary">
           {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : disabled ? "Datos enviados" : "Enviar mis datos"}
         </Button>
+        <p className="text-center text-[11px] leading-snug text-muted-foreground">
+          Al enviar aceptas nuestro{" "}
+          <a href="/aviso-de-privacidad" target="_blank" rel="noopener" className="text-accent underline-offset-2 hover:underline">
+            aviso de privacidad
+          </a>
+          .
+        </p>
       </form>
     </div>
   );
