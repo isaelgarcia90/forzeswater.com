@@ -1,99 +1,125 @@
-import { Clock, Phone, Mail, MapPin, ArrowRight } from "lucide-react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
+import { ArrowRight, Clock, Mail, MapPin, Phone } from "lucide-react";
+import forzecito from "@/assets/forzecito.webp";
+import { EMAIL_ADDRESS, OFFICE_ADDRESS, OFFICE_MAPS_URL, PHONE_DISPLAY, PHONE_HREF, WA_DEFAULT } from "@/data/landing";
+import { openForzecito } from "@/context/LandingContext";
 import { useAnalytics } from "@/hooks/useAnalytics";
+import { Marks, WhatsAppIcon } from "./fw";
 
-const WHATSAPP_URL = `https://wa.me/525518070867?text=${encodeURIComponent(
-  "Hola, quiero asesoría para un sistema de tratamiento de agua."
-)}`;
-const WhatsAppLogo = ({ className = "" }: { className?: string }) => (
-  <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
-    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-  </svg>
-);
+/** ¿Está abierta la oficina ahora? (L–V 9:00–18:00, hora de CDMX) */
+function isOpenNow() {
+  try {
+    const parts = new Intl.DateTimeFormat("en-US", {
+      timeZone: "America/Mexico_City",
+      weekday: "short",
+      hour: "numeric",
+      hour12: false,
+    }).formatToParts(new Date());
+    const wd = parts.find((x) => x.type === "weekday")?.value ?? "";
+    const h = Number(parts.find((x) => x.type === "hour")?.value);
+    return !["Sat", "Sun"].includes(wd) && h >= 9 && h < 18;
+  } catch {
+    return false;
+  }
+}
 
-const ADDRESS = "Campeche 1723-111, Chalma de Guadalupe, Gustavo A. Madero, 07210, CDMX";
+const cellCls =
+  "flex gap-3.5 p-[22px] text-fw-text transition-colors hover:bg-[hsl(188_94%_43%/.06)] hover:text-fw-text";
+const iconCls = "mt-0.5 h-5 w-5 flex-none text-[hsl(188_94%_50%)]";
+const labelCls = "text-[11px] font-semibold uppercase leading-none tracking-[.16em] text-fw-label";
 
 const Contact = () => {
+  const [open, setOpen] = useState(isOpenNow);
   const { trackContactClick } = useAnalytics();
 
-  const details = [
-    { icon: Phone, label: "Teléfono", value: "+52 55 1807 0867", href: "tel:+525518070867", type: "Phone" },
-    { icon: Mail, label: "Correo", value: "forzeswater@outlook.com", href: "mailto:forzeswater@outlook.com", type: "Email" },
-    {
-      icon: MapPin,
-      label: "Oficina",
-      value: ADDRESS,
-      href: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(ADDRESS)}`,
-      type: "Map",
-    },
-    { icon: Clock, label: "Horario", value: "Lunes a Viernes, 9:00 a 18:00 hrs", href: undefined, type: "Hours" },
-  ];
+  useEffect(() => {
+    const t = window.setInterval(() => setOpen(isOpenNow()), 60_000);
+    return () => window.clearInterval(t);
+  }, []);
 
   return (
-    <section id="contact" className="py-24 bg-background">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4">Hablemos de tu proyecto</h2>
-          <p className="text-base sm:text-xl text-muted-foreground max-w-3xl mx-auto">
-            Elige el canal que prefieras. Te respondemos rápido.
-          </p>
+    <section id="contacto" className="scroll-mt-[68px] border-t border-[rgba(148,190,220,.1)]">
+      <div className="fw-section mx-auto flex max-w-[1080px] flex-col gap-10 px-[clamp(18px,4vw,40px)]">
+        <div className="flex flex-col items-center gap-4 text-center">
+          <p className="fw-eyebrow">06 · Centro de contacto</p>
+          <h2 className="m-0 font-display text-[clamp(40px,5vw,64px)] font-semibold leading-none">Hablemos de tu proyecto</h2>
+          <p className="m-0 text-lg leading-normal text-fw-sec">Elige el canal que prefieras. Te respondemos rápido.</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-6">
-          <Card className="p-8 bg-card border-primary/40 shadow-medium flex flex-col">
-            <div className="w-14 h-14 rounded-full bg-whatsapp flex items-center justify-center mb-5">
-              <WhatsAppLogo className="h-8 w-8 text-white" />
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,340px),1fr))] gap-5">
+          <div className="relative flex flex-col gap-4 border border-[hsl(188_94%_43%/.4)] p-8 transition-all duration-300 [background:linear-gradient(160deg,hsl(199_89%_32%/.35),#17232e_55%)] hover:shadow-[0_0_0_1px_hsl(188_94%_43%/.3),0_30px_70px_-30px_hsl(188_94%_43%/.7)] max-md:p-6">
+            <Marks opacity={1} />
+            <div className="flex items-center justify-between">
+              <span className="flex h-[60px] w-[60px] items-center justify-center rounded-full bg-[hsl(142_70%_42%)] text-white">
+                <WhatsAppIcon className="h-[30px] w-[30px]" />
+              </span>
+              <span className="border border-[hsl(174_72%_56%/.4)] px-2.5 py-1.5 text-[11px] font-semibold uppercase leading-none tracking-[.16em] text-fw-aqua">
+                Canal principal
+              </span>
             </div>
-            <h3 className="text-2xl font-bold text-foreground mb-2">WhatsApp</h3>
-            <p className="text-muted-foreground mb-6">Habla directo con un asesor técnico y envía fotos de tu equipo o tu agua.</p>
-            <Button asChild size="lg" className="mt-auto bg-gradient-primary text-white hover:opacity-90 shadow-large">
-              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" onClick={() => trackContactClick("WhatsApp")}>
-                Escribir por WhatsApp <ArrowRight className="h-4 w-4" />
-              </a>
-            </Button>
-          </Card>
-
-          <Card className="p-8 bg-card border-border flex flex-col">
-            <img src="/forzecito-icon-no-dot.webp" alt="Forzecito" className="w-14 h-14 rounded-full object-cover mb-5" />
-            <h3 className="text-2xl font-bold text-foreground mb-2">Forzecito</h3>
-            <p className="text-muted-foreground mb-6">Resuelve tus dudas al instante y te ayuda a encontrar el sistema correcto.</p>
-            <Button
-              size="lg"
-              variant="outline"
-              className="mt-auto"
-              onClick={() => {
-                trackContactClick("Forzecito");
-                window.dispatchEvent(new Event("open-forzecito"));
-              }}
+            <h3 className="m-0 font-display text-[34px] font-semibold leading-none">WhatsApp</h3>
+            <p className="m-0 text-base leading-[1.55] text-fw-sec">Habla directo con un asesor técnico y envía fotos de tu equipo o tu agua.</p>
+            <a
+              href={WA_DEFAULT}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackContactClick("WhatsApp - Contacto")}
+              className="fw-btn-cyan mt-auto h-[52px] gap-2.5 text-base hover:shadow-[0_14px_40px_-12px_hsl(174_72%_56%/.8)]"
             >
-              Preguntar a Forzecito <ArrowRight className="h-4 w-4" />
-            </Button>
-          </Card>
+              Escribir por WhatsApp <ArrowRight className="h-[18px] w-[18px]" strokeWidth={1.5} />
+            </a>
+          </div>
+
+          <div className="relative flex flex-col gap-4 border border-[hsl(174_72%_56%/.4)] p-8 transition-all duration-300 [background:linear-gradient(160deg,hsl(174_72%_56%/.16),#17232e_55%)] hover:shadow-[0_0_0_1px_hsl(174_72%_56%/.3),0_30px_70px_-30px_hsl(174_72%_56%/.7)] max-md:p-6">
+            <Marks opacity={1} />
+            <div className="flex items-center justify-between">
+              <img src={forzecito} alt="Forzecito" className="h-[60px] w-[60px] rounded-full" />
+              <span className="flex items-center gap-[7px] border border-[rgba(148,190,220,.25)] px-2.5 py-1.5 text-[11px] font-semibold uppercase leading-none tracking-[.16em] text-fw-nav">
+                <span aria-hidden className="h-[7px] w-[7px] rounded-full bg-fw-online shadow-[0_0_8px_hsl(150_70%_50%)]" />
+                En línea
+              </span>
+            </div>
+            <h3 className="m-0 font-display text-[34px] font-semibold leading-none">Forzecito</h3>
+            <p className="m-0 text-base leading-[1.55] text-fw-sec">Resuelve tus dudas al instante y te ayuda a encontrar el sistema correcto.</p>
+            <button type="button" onClick={() => openForzecito()} className="fw-btn-aqua mt-auto h-[52px] gap-2.5 text-base">
+              Preguntar a Forzecito <ArrowRight className="h-[18px] w-[18px]" strokeWidth={1.5} />
+            </button>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-4xl mx-auto">
-          {details.map((d) => {
-            const Tag = d.href ? "a" : "div";
-            return (
-            <Tag
-              key={d.label}
-              href={d.href}
-              target={d.type === "Map" ? "_blank" : undefined}
-              rel={d.type === "Map" ? "noopener noreferrer" : undefined}
-              onClick={d.href ? () => trackContactClick(d.type) : undefined}
-              className="flex items-start gap-3 rounded-lg border border-border bg-card p-4 transition-all duration-300 hover:shadow-large hover:-translate-y-0.5"
-            >
-              <div className="w-10 h-10 shrink-0 rounded-lg bg-gradient-primary flex items-center justify-center">
-                <d.icon className="h-5 w-5 text-white" />
-              </div>
-              <div className="min-w-0">
-                <p className="text-sm font-medium text-muted-foreground">{d.label}</p>
-                <p className="text-sm font-semibold text-foreground break-words">{d.value}</p>
-              </div>
-            </Tag>
-            );
-          })}
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,230px),1fr))] border border-[rgba(148,190,220,.16)] [&>*]:border-[rgba(148,190,220,.16)] [&>*:not(:last-child)]:border-b min-[1000px]:[&>*:not(:last-child)]:border-b-0 min-[1000px]:[&>*:not(:last-child)]:border-r">
+          <a href={PHONE_HREF} onClick={() => trackContactClick("Teléfono - Contacto")} className={cellCls}>
+            <Phone className={iconCls} strokeWidth={1.5} />
+            <span className="flex flex-col gap-1.5">
+              <span className={labelCls}>Teléfono</span>
+              <span className="text-base font-medium leading-[1.3]">{PHONE_DISPLAY}</span>
+            </span>
+          </a>
+          <a href={`mailto:${EMAIL_ADDRESS}`} onClick={() => trackContactClick("Correo - Contacto")} className={cellCls}>
+            <Mail className={iconCls} strokeWidth={1.5} />
+            <span className="flex min-w-0 flex-col gap-1.5">
+              <span className={labelCls}>Correo</span>
+              <span className="text-base font-medium leading-[1.3] [overflow-wrap:anywhere]">{EMAIL_ADDRESS}</span>
+            </span>
+          </a>
+          <a href={OFFICE_MAPS_URL} target="_blank" rel="noopener noreferrer" className={cellCls}>
+            <MapPin className={iconCls} strokeWidth={1.5} />
+            <span className="flex flex-col gap-1.5">
+              <span className={labelCls}>Oficina CDMX</span>
+              <span className="text-[15px] font-medium leading-[1.4]">{OFFICE_ADDRESS}</span>
+            </span>
+          </a>
+          <div className="flex gap-3.5 p-[22px]">
+            <Clock className={iconCls} strokeWidth={1.5} />
+            <span className="flex flex-col gap-1.5">
+              <span className={labelCls}>Horario</span>
+              <span className="text-base font-medium leading-[1.3]">Lunes a Viernes, 9:00 a 18:00 hrs</span>
+              <span className={`flex items-center gap-1.5 text-xs font-semibold leading-none ${open ? "text-[hsl(150_70%_55%)]" : "text-fw-ter"}`}>
+                <span aria-hidden className={`h-1.5 w-1.5 rounded-full ${open ? "bg-[hsl(150_70%_55%)]" : "bg-fw-ter"}`} />
+                {open ? "Abierto ahora" : "Fuera de horario · Forzecito te atiende"}
+              </span>
+            </span>
+          </div>
         </div>
       </div>
     </section>

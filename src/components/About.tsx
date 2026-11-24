@@ -1,148 +1,92 @@
 import { useState } from "react";
-import { Award, Shield, Wrench, HeadphonesIcon, ArrowRight, Check } from "lucide-react";
-import { Card } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { ArrowRight, Check } from "lucide-react";
+import { BENEFITS } from "@/data/landing";
+import { CloseButton, Eyebrow, Marks, Modal } from "./fw";
 
-const benefits = [
-  {
-    icon: Award,
-    title: "Experiencia comprobada",
-    description: "Soluciones a la medida, del hogar a la industria.",
-    details: [
-      "Más de una década en tratamiento de agua.",
-      "Experiencia en proyectos residenciales, comerciales e industriales.",
-      "Cada sistema se adapta a las necesidades del proyecto.",
-    ],
-  },
-  {
-    icon: Shield,
-    title: "Equipos confiables",
-    description: "Componentes durables para un rendimiento consistente.",
-    details: [
-      "Equipos de grado ingenieril seleccionados por calidad y eficiencia.",
-      "Sistemas preparados para condiciones de operación exigentes.",
-      "Componentes de marcas reconocidas según cada aplicación.",
-    ],
-  },
-  {
-    icon: Wrench,
-    title: "Proyecto llave en mano",
-    description: "Diseño, instalación y puesta en marcha en un solo lugar.",
-    details: [
-      "Acompañamiento desde la evaluación inicial hasta la entrega.",
-      "Instalación, puesta en marcha y capacitación para operar el sistema.",
-      "Automatización y monitoreo según las necesidades del proyecto.",
-    ],
-  },
-  {
-    icon: HeadphonesIcon,
-    title: "Soporte que continúa",
-    description: "Atención técnica y mantenimiento después de instalar.",
-    details: [
-      "Soporte técnico 24/7 para incidencias y consultas.",
-      "Mantenimiento preventivo para prolongar la vida útil de los equipos.",
-      "Acompañamiento para mantener la continuidad de tu operación.",
-    ],
-  },
+const METRICS = [
+  { value: "10+", label: "años de experiencia", accent: false },
+  { value: "24/7", label: "soporte técnico", accent: true },
+  { value: "CDMX", label: "y zona metropolitana, con proyectos en todo México", accent: false },
 ];
 
 const About = () => {
-  const [selectedBenefit, setSelectedBenefit] = useState<number | null>(null);
-  const currentBenefit = selectedBenefit !== null ? benefits[selectedBenefit] : null;
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const benefit = openIndex != null ? BENEFITS[openIndex] : null;
+  const BenefitIcon = benefit?.icon;
 
   return (
-    <section id="about" className="py-20 sm:py-24 bg-muted">
-      <div className="container mx-auto px-4 max-w-6xl">
-        <div className="grid lg:grid-cols-[0.85fr_1.15fr] gap-10 lg:gap-14 items-center">
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary mb-3">
-              Acerca de Forzes Water
-            </p>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground leading-tight mb-5">
-              Ingeniería que simplifica tu proyecto de agua.
-            </h2>
-            <p className="text-base sm:text-lg text-muted-foreground leading-relaxed mb-8">
-              Combinamos experiencia técnica y atención cercana para que encuentres la solución correcta sin complicaciones.
-            </p>
-
-            <dl className="grid grid-cols-2 gap-5 mb-8">
-              <div className="border-l-2 border-secondary pl-4">
-                <dt className="text-3xl sm:text-4xl font-bold text-foreground">10+</dt>
-                <dd className="text-sm text-muted-foreground mt-1">años de experiencia</dd>
+    <section id="nosotros" className="scroll-mt-[68px] border-t border-[rgba(148,190,220,.1)]">
+      <div className="fw-container fw-section grid grid-cols-[repeat(auto-fit,minmax(min(100%,460px),1fr))] items-start gap-[clamp(40px,6vw,80px)]">
+        <div className="flex flex-col gap-[22px]">
+          <Eyebrow lineClass="w-auto max-w-[120px] flex-1">02 · Nosotros</Eyebrow>
+          <h2 className="fw-h2">Ingeniería que simplifica tu proyecto de agua.</h2>
+          <p className="m-0 max-w-[500px] text-lg leading-[1.6] text-fw-sec [text-wrap:pretty]">
+            Combinamos experiencia técnica y atención cercana para que encuentres la solución correcta sin complicaciones.
+          </p>
+          <div className="relative mt-3.5 grid grid-cols-3 border border-[rgba(148,190,220,.18)]">
+            <Marks />
+            {METRICS.map((m, i) => (
+              <div key={m.value} className={`flex flex-col gap-2 px-5 py-[22px] ${i > 0 ? "border-l border-[rgba(148,190,220,.18)]" : ""}`}>
+                <span className={`font-display text-[clamp(40px,4.4vw,56px)] font-semibold leading-none ${m.accent ? "text-fw-aqua" : "text-fw-text"}`}>
+                  {m.value}
+                </span>
+                <span className="text-sm font-medium leading-[1.35] text-fw-ter">{m.label}</span>
               </div>
-              <div className="border-l-2 border-accent pl-4">
-                <dt className="text-3xl sm:text-4xl font-bold text-foreground">24/7</dt>
-                <dd className="text-sm text-muted-foreground mt-1">soporte técnico</dd>
-              </div>
-            </dl>
-
-            <a
-              href="#solutions"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:text-secondary transition-colors"
-            >
-              Explora nuestros sistemas
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </a>
-          </div>
-
-          <div className="grid sm:grid-cols-2 gap-4">
-            {benefits.map((benefit, index) => (
-              <Card key={benefit.title} className="bg-card border-border overflow-hidden transition-all duration-300 hover:shadow-large hover:-translate-y-1">
-                <button
-                  type="button"
-                  className="group w-full h-full p-5 sm:p-6 text-left cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
-                  onClick={() => setSelectedBenefit(index)}
-                  aria-label={`Conocer más sobre ${benefit.title}`}
-                >
-                  <div className="w-12 h-12 rounded-lg bg-gradient-primary flex items-center justify-center mb-5">
-                    <benefit.icon className="h-6 w-6 text-white" aria-hidden="true" />
-                  </div>
-                  <h3 className="text-lg font-bold text-foreground mb-2">{benefit.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed mb-5">{benefit.description}</p>
-                  <span className="inline-flex items-center gap-1 text-sm font-semibold text-primary">
-                    Conocer más
-                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
-                  </span>
-                </button>
-              </Card>
             ))}
           </div>
         </div>
 
-        <Dialog open={currentBenefit !== null} onOpenChange={() => setSelectedBenefit(null)}>
-          <DialogContent className="max-w-xl">
-            {currentBenefit && (
-              <>
-                <DialogHeader>
-                  <div className="w-14 h-14 rounded-lg bg-gradient-primary flex items-center justify-center mb-4">
-                    <currentBenefit.icon className="h-7 w-7 text-white" aria-hidden="true" />
-                  </div>
-                  <DialogTitle className="text-2xl">{currentBenefit.title}</DialogTitle>
-                  <DialogDescription className="text-base pt-1">
-                    {currentBenefit.description}
-                  </DialogDescription>
-                </DialogHeader>
-                <ul className="space-y-3 mt-2">
-                  {currentBenefit.details.map((detail) => (
-                    <li key={detail} className="flex items-start gap-3 text-muted-foreground leading-relaxed">
-                      <span className="mt-0.5 w-5 h-5 rounded-full bg-muted flex items-center justify-center shrink-0">
-                        <Check className="h-3.5 w-3.5 text-accent" aria-hidden="true" />
-                      </span>
-                      {detail}
-                    </li>
-                  ))}
-                </ul>
-              </>
-            )}
-          </DialogContent>
-        </Dialog>
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,250px),1fr))] gap-4">
+          {BENEFITS.map((b, i) => {
+            const Icon = b.icon;
+            return (
+              <button
+                key={b.title}
+                type="button"
+                onClick={() => setOpenIndex(i)}
+                className="fw-card fw-card-hover flex flex-col gap-3.5 px-6 py-[26px] text-left text-fw-text"
+              >
+                <span className="flex h-12 w-12 items-center justify-center bg-[linear-gradient(135deg,hsl(199_89%_32%),hsl(188_94%_43%))] shadow-[0_10px_28px_-10px_hsl(188_94%_43%/.8)]">
+                  <Icon className="h-6 w-6 text-fw-text" strokeWidth={1.5} />
+                </span>
+                <span className="font-display text-[23px] font-semibold leading-[1.1]">{b.title}</span>
+                <span className="text-[15px] leading-normal text-fw-ter">{b.description}</span>
+                <span className="mt-auto flex items-center gap-1.5 text-[13px] font-semibold uppercase leading-none tracking-[.08em] text-fw-aqua">
+                  Conocer más <ArrowRight className="h-3.5 w-3.5" strokeWidth={1.5} />
+                </span>
+              </button>
+            );
+          })}
+        </div>
       </div>
+
+      <Modal
+        open={!!benefit}
+        onOpenChange={(o) => !o && setOpenIndex(null)}
+        title={benefit?.title ?? "Beneficio"}
+        description={benefit?.description}
+        className="flex max-w-[560px] flex-col gap-4 overflow-visible p-8"
+      >
+        {benefit && BenefitIcon && (
+          <>
+            <Marks opacity={1} />
+            <CloseButton className="absolute right-4 top-4" />
+            <span className="flex h-14 w-14 items-center justify-center bg-[linear-gradient(135deg,hsl(199_89%_32%),hsl(188_94%_43%))] shadow-[0_12px_32px_-10px_hsl(188_94%_43%/.8)]">
+              <BenefitIcon className="h-7 w-7 text-fw-text" strokeWidth={1.5} />
+            </span>
+            <h3 className="m-0 pr-10 font-display text-[34px] font-semibold leading-none">{benefit.title}</h3>
+            <p className="m-0 text-[17px] leading-normal text-fw-sec">{benefit.description}</p>
+            <ul className="m-0 flex list-none flex-col border-t border-[rgba(148,190,220,.14)] p-0">
+              {benefit.details.map((d) => (
+                <li key={d} className="flex items-start gap-3 border-b border-[rgba(148,190,220,.14)] py-3 text-[15px] leading-normal text-fw-spec">
+                  <Check className="mt-0.5 h-[18px] w-[18px] flex-none text-fw-aqua" strokeWidth={1.75} />
+                  {d}
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+      </Modal>
     </section>
   );
 };

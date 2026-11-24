@@ -1,115 +1,53 @@
-@import "@fontsource/outfit/600.css";
-@import "@fontsource/outfit/700.css";
-@import "@fontsource-variable/figtree";
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Sistema de diseño "Industry" (blueprint) en modo oscuro.
+   Todos los colores del tema de shadcn están en HSL. */
 
 @layer base {
   :root {
-    /* Water treatment theme - Professional blue/cyan palette */
-    --background: 210 20% 98%;
-    --foreground: 210 40% 15%;
+    --background: 208 33% 10%;          /* #111a22 */
+    --foreground: 42 33% 93%;           /* #f3efe6 */
 
-    --card: 0 0% 100%;
-    --whatsapp: 142 70% 49%;
-    --card-foreground: 210 40% 15%;
+    --card: 208 33% 13.5%;              /* #17232e */
+    --card-foreground: 42 33% 93%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 210 40% 15%;
+    --popover: 206 34% 11.4%;           /* #131e27 */
+    --popover-foreground: 42 33% 93%;
 
-    /* Deep ocean blue - primary brand color */
-    --primary: 199 89% 32%;
-    --primary-foreground: 0 0% 100%;
-    
-    /* Fresh cyan - secondary color */
-    --secondary: 188 94% 43%;
-    --secondary-foreground: 0 0% 100%;
+    --primary: 188 94% 43%;             /* cian, CTA */
+    --primary-foreground: 205 42% 7.5%; /* #0b141b */
 
-    /* Light muted backgrounds */
-    --muted: 210 30% 96%;
-    --muted-foreground: 210 15% 50%;
+    --secondary: 199 89% 32%;           /* azul profundo */
+    --secondary-foreground: 42 33% 93%;
 
-    /* Turquoise accent */
-    --accent: 174 72% 56%;
-    --accent-foreground: 0 0% 100%;
+    --muted: 204 31% 15.5%;             /* #1a2833 */
+    --muted-foreground: 208 21% 65%;    /* #93a6b8 */
 
-    --destructive: 0 84.2% 60.2%;
+    --accent: 174 72% 56%;              /* aqua */
+    --accent-foreground: 205 42% 7.5%;
+
+    --destructive: 0 80% 65%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 210 20% 88%;
-    --input: 210 20% 88%;
-    --ring: 199 89% 32%;
+    --border: 205 40% 25%;
+    --input: 205 40% 25%;
+    --ring: 188 94% 43%;
 
-    --radius: 0.75rem;
+    --whatsapp: 142 70% 42%;
 
-    /* Custom design tokens */
+    --radius: 0px;
+
     --gradient-primary: linear-gradient(135deg, hsl(199 89% 32%) 0%, hsl(188 94% 43%) 100%);
     --gradient-hero: linear-gradient(180deg, hsl(199 89% 32%) 0%, hsl(188 94% 43%) 100%);
     --gradient-accent: linear-gradient(135deg, hsl(188 94% 43%) 0%, hsl(174 72% 56%) 100%);
-    
-    --shadow-soft: 0 2px 8px -2px hsl(199 89% 32% / 0.1);
-    --shadow-medium: 0 4px 16px -4px hsl(199 89% 32% / 0.15);
-    --shadow-large: 0 8px 32px -8px hsl(199 89% 32% / 0.2);
-    
+
+    --shadow-soft: 0 2px 8px -2px rgba(0, 0, 0, 0.35);
+    --shadow-medium: 0 4px 16px -4px rgba(0, 0, 0, 0.45);
+    --shadow-large: 0 20px 50px -20px rgba(0, 0, 0, 0.7);
+
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
-    /* Scroll Story dark hero */
-    --story-background: 216 12.2% 8%;
-    --story-foreground: 210 40% 96.1%;
-    --story-muted: 215 20.2% 65.1%;
-    --story-accent: 187.9 85.7% 53.3%;
-    --story-brand-start: 200.4 98% 39.4%;
-    --story-brand-end: 172.5 66% 50.4%;
-    --story-card: 214.3 11.5% 12%;
-    --story-card-border: 215 12.5% 18.8%;
-    --story-blob-analysis: 192.9 82.3% 31%;
-    --story-blob-design: 201 90% 27.5%;
-    --story-blob-installation: 175.3 77.4% 26.1%;
-    --story-blob-maintenance: 224.4 64.3% 32.9%;
-    --story-gradient-brand: linear-gradient(135deg, hsl(var(--story-brand-start)) 0%, hsl(var(--story-brand-end)) 100%);
-    --story-gradient-stage:
-      radial-gradient(circle at 8% 4%, hsl(var(--story-accent) / 0.18) 0%, transparent 42%),
-      radial-gradient(circle at 94% 94%, hsl(var(--story-brand-start) / 0.22) 0%, transparent 46%);
-    --story-shadow-icon: 0 24px 70px -18px hsl(var(--story-accent) / 0.48);
-    --story-shadow-card: 0 14px 38px hsl(var(--story-background) / 0.48);
-    --story-shadow-button: 0 12px 34px -12px hsl(var(--story-brand-start) / 0.6);
-  }
-
-  .dark {
-    --background: 210 40% 8%;
-    --foreground: 210 20% 95%;
-
-    --card: 210 35% 12%;
-    --card-foreground: 210 20% 95%;
-
-    --popover: 210 35% 12%;
-    --popover-foreground: 210 20% 95%;
-
-    --primary: 188 94% 43%;
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 199 89% 32%;
-    --secondary-foreground: 0 0% 100%;
-
-    --muted: 210 30% 15%;
-    --muted-foreground: 210 15% 60%;
-
-    --accent: 174 72% 56%;
-    --accent-foreground: 210 40% 8%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 210 30% 20%;
-    --input: 210 30% 20%;
-    --ring: 188 94% 43%;
   }
 }
 
@@ -118,53 +56,139 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-fw-bg font-sans text-fw-text antialiased;
   }
 
-  .font-chat {
-    font-family: "Figtree Variable", sans-serif;
+  ::selection {
+    background: hsl(188 94% 43% / 0.35);
   }
 
-  .font-chat-heading {
-    font-family: "Outfit", sans-serif;
+  :focus-visible {
+    outline: 2px solid hsl(188 94% 43%);
+    outline-offset: 2px;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: #6f8396;
   }
 }
 
-/* CRO Animations */
-@keyframes slide-up {
-  from {
-    transform: translateY(100%);
-    opacity: 0;
+@layer components {
+  /* Contenedor y ritmo de sección */
+  .fw-container {
+    @apply mx-auto w-full max-w-[1280px] px-[clamp(18px,4vw,40px)];
   }
-  to {
-    transform: translateY(0);
-    opacity: 1;
+  .fw-section {
+    @apply py-[clamp(72px,10vw,120px)];
+  }
+
+  .fw-eyebrow {
+    @apply m-0 flex items-center gap-3 font-sans text-xs font-semibold uppercase leading-none tracking-[.2em] text-fw-aqua;
+  }
+  .fw-eyebrow-line {
+    @apply h-px w-[120px] bg-[rgba(148,190,220,.2)];
+  }
+  .fw-h2 {
+    @apply m-0 font-display text-[clamp(38px,4.6vw,58px)] font-semibold leading-none tracking-[-.01em];
+    text-wrap: balance;
+  }
+
+  /* Botones */
+  .fw-btn {
+    @apply inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap font-display font-semibold uppercase leading-none tracking-[.08em] transition-all duration-200 disabled:pointer-events-none disabled:opacity-40;
+  }
+  .fw-btn-cyan {
+    @apply fw-btn bg-fw-cyan text-fw-ink hover:bg-fw-aqua hover:text-fw-ink hover:shadow-[0_0_26px_-6px_hsl(174_72%_56%/.8)];
+  }
+  .fw-btn-outline {
+    @apply fw-btn border border-[rgba(148,190,220,.25)] bg-transparent text-fw-text hover:border-fw-cyan hover:bg-[hsl(188_94%_43%/.08)];
+  }
+  .fw-btn-aqua {
+    @apply fw-btn border border-fw-aqua bg-transparent text-fw-text hover:bg-[hsl(174_72%_56%/.12)] hover:shadow-[0_14px_40px_-14px_hsl(174_72%_56%/.7)];
+  }
+
+  /* Tarjeta base */
+  .fw-card {
+    @apply relative border border-[rgba(148,190,220,.14)] bg-fw-card;
+  }
+  .fw-card-hover {
+    @apply transition-all duration-300 hover:-translate-y-[3px] hover:border-[hsl(188_94%_43%/.6)] hover:shadow-card-hover;
+  }
+
+  /* Foto duotono azul */
+  .fw-duotone {
+    filter: grayscale(1) contrast(1.1) brightness(0.88);
+  }
+  .fw-duotone-layer {
+    @apply pointer-events-none absolute inset-0 bg-fw-deep;
+    mix-blend-mode: color;
+  }
+
+  /* Marca de registro "+" */
+  .fw-mark {
+    @apply pointer-events-none absolute h-[11px] w-[11px];
+    background:
+      linear-gradient(#22c5dd, #22c5dd) 5px 0 / 1px 11px no-repeat,
+      linear-gradient(#22c5dd, #22c5dd) 0 5px / 11px 1px no-repeat;
+  }
+
+  .fw-input {
+    @apply h-[46px] min-w-0 border bg-fw-input px-3.5 font-sans text-base text-fw-text outline-none transition-colors focus:border-fw-cyan;
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 }
 
 @keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes scale-in {
-  from {
-    transform: scale(0.9);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
+  from { transform: scale(0.96); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }
 
-.animate-slide-up {
-  animation: slide-up 0.3s ease-out forwards;
+@keyframes rise-in {
+  from { transform: translateY(10px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Giro tipo moneda: una vuelta completa y una pausa breve, en bucle */
+@keyframes coin-flip {
+  0% { transform: rotateY(0deg); }
+  55% { transform: rotateY(360deg); }
+  100% { transform: rotateY(360deg); }
+}
+
+.animate-coin {
+  animation: coin-flip 3.2s cubic-bezier(.45, 0, .2, 1) infinite;
+}
+
+/* Pista táctil: se mueve a los lados y luego arriba/abajo */
+@keyframes swipe-hint {
+  0%, 100% { transform: translate(0, 0); }
+  12% { transform: translateX(-5px); }
+  25% { transform: translateX(5px); }
+  37% { transform: translate(0, 0); }
+  50% { transform: translateY(-5px); }
+  62% { transform: translateY(5px); }
+  75% { transform: translate(0, 0); }
+}
+
+.animate-swipe-hint {
+  animation: swipe-hint 2.6s ease-in-out infinite;
 }
 
 .animate-fade-in {
@@ -172,5 +196,18 @@ All colors MUST be HSL.
 }
 
 .animate-scale-in {
-  animation: scale-in 0.3s ease-out forwards;
+  animation: scale-in 0.25s ease-out forwards;
+}
+
+.animate-rise-in {
+  animation: rise-in 0.3s ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .animate-fade-in,
+  .animate-scale-in,
+  .animate-rise-in,
+  .animate-coin,
+  .animate-swipe-hint { animation: none; }
 }

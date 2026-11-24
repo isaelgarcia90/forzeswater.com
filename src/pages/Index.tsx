@@ -4,66 +4,65 @@ import Header from "@/components/Header";
 import ScrollStory from "@/components/ScrollStory";
 import About from "@/components/About";
 import Solutions from "@/components/Solutions";
-import Products from "@/components/Products";
 import Catalog from "@/components/Catalog";
 import FAQ from "@/components/FAQ";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import ChatBot from "@/components/ChatBot";
-import StickyCTABar from "@/components/StickyCTABar";
+import { PriceGate, ProductSheet, QuoteDrawer } from "@/components/Overlays";
+import { LandingProvider } from "@/context/LandingContext";
 import { useAnalytics } from "@/hooks/useAnalytics";
 
 const Index = () => {
   const { trackScrollDepth } = useAnalytics();
 
-  // Ensure page starts at top on load/reload
+  // Inicia arriba al cargar, salvo que se llegue con un ancla (#catalogo, etc.)
   useEffect(() => {
-    if ('scrollRestoration' in window.history) {
-      window.history.scrollRestoration = 'manual';
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
     }
-    window.scrollTo(0, 0);
+    if (!window.location.hash) window.scrollTo(0, 0);
   }, []);
 
-  // Track scroll depth
   useEffect(() => {
-    const scrollThresholds = [25, 50, 75, 100];
-    const trackedThresholds = new Set<number>();
-
+    const thresholds = [25, 50, 75, 100];
+    const tracked = new Set<number>();
     const handleScroll = () => {
       const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const scrollPercent = Math.round((window.scrollY / scrollHeight) * 100);
-
-      scrollThresholds.forEach((threshold) => {
-        if (scrollPercent >= threshold && !trackedThresholds.has(threshold)) {
-          trackedThresholds.add(threshold);
-          trackScrollDepth(threshold);
+      const pct = Math.round((window.scrollY / scrollHeight) * 100);
+      thresholds.forEach((t) => {
+        if (pct >= t && !tracked.has(t)) {
+          tracked.add(t);
+          trackScrollDepth(t);
         }
       });
     };
-
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, [trackScrollDepth]);
 
   return (
-    <div className="min-h-screen">
-      <Helmet>
-        <link rel="canonical" href="https://forzeswater.lovable.app/" />
-      </Helmet>
-      <Header />
-      <main>
-        <ScrollStory />
-        <About />
-        <Solutions />
-        <Products />
-        <Catalog />
-        <FAQ />
-        <Contact />
-      </main>
-      <Footer />
-      <ChatBot />
-      <StickyCTABar />
-    </div>
+    <LandingProvider>
+      <div className="min-h-screen bg-fw-bg text-fw-text">
+        <Helmet>
+          <link rel="canonical" href="https://forzeswater.lovable.app/" />
+        </Helmet>
+        <Header />
+        <main>
+          <ScrollStory />
+          <About />
+          <Solutions />
+          <Catalog />
+          <FAQ />
+          <Contact />
+        </main>
+        <Footer />
+        <QuoteDrawer />
+        <ProductSheet />
+        <PriceGate />
+        <ChatBot />
+      </div>
+    </LandingProvider>
   );
 };
 
