@@ -41,7 +41,7 @@ const ChatBot = () => {
     setGreetOn(false);
   };
 
-  /** Muestra el saludo 5 s en la franja inferior (máximo 3 veces por visita). */
+  /** Muestra el saludo 5 s (máximo 3 veces por visita). */
   const tryGreet = () => {
     const st = greetState.current;
     if (st.blocked || st.count >= MAX_GREETINGS) return;
@@ -139,15 +139,15 @@ const ChatBot = () => {
 
   const showGreeting = greetOn && launcherVisible && !isOpen;
 
-  // Con un modal, la lista de cotización o el menú móvil abiertos, la franja se oculta
+  // Con un modal, la lista de cotización o el menú móvil abiertos, Forzecito se oculta
   if (overlayOpen && !isOpen) return null;
 
   return (
-    <>
+    <div className="fixed bottom-[clamp(14px,2.4vw,28px)] right-[clamp(14px,2.4vw,28px)] z-[95] flex flex-col items-end gap-2.5">
       {isOpen && (
         <section
           aria-label="Forzecito, asistente técnico de Forzes Water"
-          className="fixed bottom-[calc(var(--dock-h)+12px)] right-[clamp(14px,2.4vw,28px)] z-[95] flex h-[min(calc(100dvh-var(--dock-h)-96px),580px)] w-[min(calc(100vw-28px),390px)] flex-col overflow-hidden border border-[hsl(174_72%_56%/.4)] bg-fw-panel shadow-[0_40px_100px_-30px_rgba(0,0,0,.8),0_0_70px_-30px_hsl(174_72%_56%/.7)] animate-scale-in [transform-origin:bottom_right]"
+          className="flex h-[min(calc(100dvh-140px),580px)] w-[min(calc(100vw-28px),390px)] flex-col overflow-hidden border border-[hsl(174_72%_56%/.4)] bg-fw-panel shadow-[0_40px_100px_-30px_rgba(0,0,0,.8),0_0_70px_-30px_hsl(174_72%_56%/.7)] animate-scale-in [transform-origin:bottom_right]"
         >
           <div className="flex flex-none items-center gap-3 border-b border-[rgba(148,190,220,.16)] px-4 py-3.5 [background:linear-gradient(120deg,hsl(199_89%_32%/.55),hsl(174_72%_56%/.18))]">
             <span className="relative flex-none">
@@ -234,62 +234,45 @@ const ChatBot = () => {
         </section>
       )}
 
-      {/* Franja inferior reservada: Forzecito y su saludo nunca tapan el contenido */}
-      <div
-        className="fixed inset-x-0 bottom-0 z-[94] h-[var(--dock-h)] border-t border-[rgba(148,190,220,.12)] bg-[rgba(14,22,30,.92)] backdrop-blur-[14px]"
-        aria-label="Asistente Forzecito"
-        role="region"
-      >
-        <div className="fw-container flex h-full items-center justify-end gap-3">
-          <div className="flex min-w-0 flex-1 justify-end" aria-live="polite">
-            {showGreeting ? (
-              <div
-                role="button"
-                tabIndex={0}
-                onClick={open}
-                onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && open()}
-                className="flex min-w-0 max-w-[460px] cursor-pointer items-center gap-2 border border-[hsl(174_72%_56%/.45)] bg-fw-card py-2 pl-3.5 pr-1.5 shadow-[0_0_30px_-14px_hsl(174_72%_56%/.8)] animate-rise-in"
-              >
-                <span className="min-w-0 text-left leading-[1.25]">
-                  <span className="font-display text-[15px] font-semibold md:text-base">¡Hola! Soy Forzecito. </span>
-                  <span className="text-[13px] text-fw-sec md:text-sm">¿Te ayudo a elegir tu sistema de agua?</span>
-                </span>
-                <button
-                  type="button"
-                  onClick={(e) => { e.stopPropagation(); hideGreeting(); }}
-                  aria-label="Cerrar saludo"
-                  className="flex h-7 w-7 flex-none items-center justify-center border-0 bg-transparent text-fw-label hover:text-fw-text"
-                >
-                  <X className="h-[13px] w-[13px]" strokeWidth={1.5} />
-                </button>
-              </div>
-            ) : (
-              launcherVisible && (
-                <span className="hidden items-center gap-2 text-[13px] font-medium text-fw-label md:flex">
-                  <span aria-hidden className="h-[7px] w-[7px] rounded-full bg-fw-online shadow-[0_0_8px_hsl(150_70%_50%)]" />
-                  Forzecito en línea · asistente técnico
-                </span>
-              )
-            )}
-          </div>
-
+      {/* Saludo compacto sobre el avatar, como en la versión original */}
+      {showGreeting && (
+        <div
+          role="button"
+          tabIndex={0}
+          onClick={open}
+          onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && open()}
+          className="relative cursor-pointer border border-[hsl(174_72%_56%/.45)] bg-fw-card py-2 pl-3 pr-7 text-left shadow-[0_16px_40px_-18px_rgba(0,0,0,.8),0_0_30px_-14px_hsl(174_72%_56%/.7)] animate-rise-in"
+        >
+          <span className="block whitespace-nowrap font-display text-[15px] font-semibold leading-tight">Hola, soy Forzecito.</span>
+          <span className="block whitespace-nowrap text-[13px] leading-snug text-fw-aqua">¿Tienes dudas?</span>
           <button
             type="button"
-            onClick={() => (isOpen ? setIsOpen(false) : open())}
-            aria-label={isOpen ? "Cerrar Forzecito" : "Abrir Forzecito, asistente técnico de Forzes Water"}
-            aria-expanded={isOpen}
-            aria-hidden={!launcherVisible}
-            tabIndex={launcherVisible ? 0 : -1}
-            className={`relative h-12 w-12 flex-none rounded-full border-2 border-fw-aqua bg-fw-card p-0 shadow-[0_0_0_5px_hsl(174_72%_56%/.12),0_10px_30px_-10px_hsl(174_72%_56%/.7)] transition-all duration-500 hover:scale-[1.06] motion-reduce:transition-none ${
-              launcherVisible ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-3 opacity-0"
-            }`}
+            onClick={(e) => { e.stopPropagation(); hideGreeting(); }}
+            aria-label="Cerrar saludo"
+            className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center border-0 bg-transparent text-fw-label hover:text-fw-text"
           >
-            <img src={forzecito} alt="" width={48} height={48} className="block h-full w-full rounded-full" />
-            <span aria-hidden className="absolute -right-0.5 bottom-0 h-3 w-3 rounded-full border-2 border-fw-bg bg-fw-online" />
+            <X className="h-3 w-3" strokeWidth={1.5} />
           </button>
+          {/* Pico apuntando al avatar */}
+          <span aria-hidden className="absolute -bottom-[6px] right-6 h-2.5 w-2.5 rotate-45 border-b border-r border-[hsl(174_72%_56%/.45)] bg-fw-card" />
         </div>
-      </div>
-    </>
+      )}
+
+      <button
+        type="button"
+        onClick={() => (isOpen ? setIsOpen(false) : open())}
+        aria-label={isOpen ? "Cerrar Forzecito" : "Abrir Forzecito, asistente técnico de Forzes Water"}
+        aria-expanded={isOpen}
+        aria-hidden={!launcherVisible}
+        tabIndex={launcherVisible ? 0 : -1}
+        className={`relative h-[60px] w-[60px] rounded-full border-2 border-fw-aqua bg-fw-card p-0 shadow-[0_0_0_6px_hsl(174_72%_56%/.12),0_16px_40px_-10px_hsl(174_72%_56%/.7)] transition-all duration-500 hover:scale-[1.06] motion-reduce:transition-none md:h-[66px] md:w-[66px] ${
+          launcherVisible ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-4 opacity-0"
+        }`}
+      >
+        <img src={forzecito} alt="" width={66} height={66} className="block h-full w-full rounded-full" />
+        <span aria-hidden className="absolute bottom-1 right-0.5 h-3.5 w-3.5 rounded-full border-2 border-fw-bg bg-fw-online" />
+      </button>
+    </div>
   );
 };
 

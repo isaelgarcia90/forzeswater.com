@@ -1,14 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Move } from "lucide-react";
 import heroImg from "@/assets/hero-water-treatment.webp";
 import { CHAPTERS } from "@/data/landing";
 import { Marks } from "./fw";
 import { cn } from "@/lib/utils";
 
 const HEADER_H = 68;
-/** Alto del bloque fijo: pantalla menos header y franja de Forzecito */
-const stickyHeight = () =>
-  window.innerHeight - HEADER_H - (parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--dock-h")) || 0);
+/** Alto del bloque fijo: pantalla menos header */
+const stickyHeight = () => window.innerHeight - HEADER_H;
 
 /** Hero "scroll story": 4 capítulos que avanzan con el scroll dentro de una sección de 420vh. */
 const ScrollStory = () => {
@@ -56,10 +55,39 @@ const ScrollStory = () => {
     window.scrollTo({ top: start + dist * (i / 3) + 2, behavior: "smooth" });
   };
 
+  // Celular: deslizar a los lados cambia de capítulo; el scroll vertical sigue funcionando normal
+  const touchRef = useRef<{ x: number; y: number } | null>(null);
+  const onTouchStart = (e: React.TouchEvent) => {
+    const t = e.touches[0];
+    touchRef.current = { x: t.clientX, y: t.clientY };
+  };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    const start = touchRef.current;
+    touchRef.current = null;
+    if (!start) return;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - start.x;
+    const dy = t.clientY - start.y;
+    if (Math.abs(dx) < 45 || Math.abs(dx) < Math.abs(dy) * 1.3) return;
+    const next = dx < 0 ? Math.min(3, active + 1) : Math.max(0, active - 1);
+    if (next !== active) goChapter(next);
+  };
+
   return (
     <section id="inicio" ref={sectionRef} aria-label="Nuestro proceso" className="relative h-[420vh]">
       {/* Se fija debajo del header (68px) para que el rail de progreso quede visible desde el inicio */}
-      <div className="sticky top-[68px] flex h-[calc(100svh-68px-var(--dock-h))] min-h-0 flex-col overflow-hidden">
+      <div
+        className="sticky top-[68px] flex h-[calc(100svh-68px)] min-h-0 touch-pan-y flex-col overflow-hidden"
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
+      >
+        {/* Indicador táctil (celular): se puede deslizar a los lados y hacia arriba/abajo */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute right-[18px] top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-[hsl(174_72%_56%/.45)] bg-[rgba(13,21,29,.7)] text-fw-aqua shadow-[0_0_24px_-8px_hsl(174_72%_56%/.8)] md:hidden"
+        >
+          <Move className="h-5 w-5 animate-swipe-hint" strokeWidth={1.5} />
+        </div>
         {/* Fondo */}
         <div aria-hidden className="absolute inset-0 overflow-hidden">
           <img
