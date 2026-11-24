@@ -21,7 +21,7 @@ const SYSTEM_PROMPT = `Eres **Forzecito**, el asistente virtual de **Forzes Wate
 
 **Contacto:**
 - WhatsApp: +52 55 1807 0867
-- Correo: forzeswater@gmail.com
+- Correo: forzeswater@outlook.com
 - Dirección: Campeche 1723-111, Chalma de Guadalupe, Gustavo A. Madero, 07210, Ciudad de México
 
 **Horario:** Lunes a Viernes 9:00 - 18:00
@@ -117,9 +117,10 @@ serve(async (req) => {
       );
     }
 
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) {
-      console.error("LOVABLE_API_KEY is not configured");
+    const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
+    const GEMINI_MODEL = Deno.env.get("GEMINI_MODEL") || "gemini-2.5-flash";
+    if (!GEMINI_API_KEY) {
+      console.error("GEMINI_API_KEY is not configured");
       return new Response(
         JSON.stringify({ error: "Error interno del servidor" }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -127,15 +128,16 @@ serve(async (req) => {
     }
 
     const response = await fetch(
-      "https://ai.gateway.lovable.dev/v1/chat/completions",
+      // Endpoint de Gemini compatible con el formato OpenAI (mismo stream SSE que ya lee useChatBot.ts)
+      "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
       {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${LOVABLE_API_KEY}`,
+          Authorization: `Bearer ${GEMINI_API_KEY}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "google/gemini-3-flash-preview",
+          model: GEMINI_MODEL,
           messages: [
             { role: "system", content: SYSTEM_PROMPT },
             ...sanitizedMessages,
@@ -158,7 +160,6 @@ serve(async (req) => {
                     },
                   },
                   required: ["reason"],
-                  additionalProperties: false,
                 },
               },
             },
@@ -187,7 +188,6 @@ serve(async (req) => {
                     },
                   },
                   required: ["name", "email", "phone", "message"],
-                  additionalProperties: false,
                 },
               },
             },
