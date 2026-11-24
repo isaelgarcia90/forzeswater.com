@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, Move } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import heroImg from "@/assets/hero-water-treatment.webp";
 import { CHAPTERS } from "@/data/landing";
 import { Marks } from "./fw";
 import { cn } from "@/lib/utils";
 
 const HEADER_H = 68;
+const STEP_LOCK_MS = 750; // tiempo de la animación entre capítulos
 /** Alto del bloque fijo: pantalla menos header */
 const stickyHeight = () => window.innerHeight - HEADER_H;
 
@@ -47,47 +48,111 @@ const ScrollStory = () => {
   const current = CHAPTERS[active];
   const Icon = current.icon;
 
-  const goChapter = (i: number) => {
+  /** Posición de scroll donde se ve cada capítulo y rango en que el hero está fijo. */
+  const geometry = () => {
     const el = sectionRef.current;
-    if (!el) return;
+    if (!el) return null;
     const start = el.getBoundingClientRect().top + window.scrollY - HEADER_H;
-    const dist = el.offsetHeight - stickyHeight();
-    window.scrollTo({ top: start + dist * (i / 3) + 2, behavior: "smooth" });
+    const dist = Math.max(1, el.offsetHeight - stickyHeight());
+    return { start, dist, end: start + dist };
   };
 
-  // Celular: deslizar a los lados cambia de capítulo; el scroll vertical sigue funcionando normal
-  const touchRef = useRef<{ x: number; y: number } | null>(null);
-  const onTouchStart = (e: React.TouchEvent) => {
-    const t = e.touches[0];
-    touchRef.current = { x: t.clientX, y: t.clientY };
+  const activeRef = useRef(active);
+  activeRef.current = active;
+  // Capítulo hacia el que se está animando; evita saltar dos capítulos con un solo gesto
+  const targetRef = useRef<number | null>(null);
+  const lockUntil = useRef(0);
+
+  const goChapter = (i: number) => {
+    const g = geometry();
+    if (!g) return;
+    targetRef.current = i;
+    lockUntil.current = Date.now() + STEP_LOCK_MS;
+    window.scrollTo({ top: g.start + g.dist * (i / 3) + 2, behavior: "smooth" });
   };
-  const onTouchEnd = (e: React.TouchEvent) => {
-    const start = touchRef.current;
-    touchRef.current = null;
-    if (!start) return;
-    const t = e.changedTouches[0];
-    const dx = t.clientX - start.x;
-    const dy = t.clientY - start.y;
-    if (Math.abs(dx) < 45 || Math.abs(dx) < Math.abs(dy) * 1.3) return;
-    const next = dx < 0 ? Math.min(3, active + 1) : Math.max(0, active - 1);
-    if (next !== active) goChapter(next);
-  };
+  const goRef = useRef(goChapter);
+  goRef.current = goChapter;
+
+  // Un gesto (rueda, trackpad o deslizamiento vertical/horizontal) = un capítulo.
+  // En el primer capítulo hacia arriba y en el último hacia abajo, el scroll sigue normal para salir del hero.
+  useEffect(() => {
+    const pinned = () => {
+      const g = geometry();
+      return !!g && window.scrollY >= g.start - 4 && window.scrollY <= g.end + 4;
+    };
+    // Mientras la animación va en camino, el capítulo "actual" es el destino
+    const current = () => {
+      const t = targetRef.current;
+      if (t != null && (t === activeRef.current || Date.now() > lockUntil.current + 1200)) targetRef.current = null;
+      return targetRef.current ?? activeRef.current;
+    };
+    /** Intenta moverse un capítulo; devuelve true si el gesto se consumió dentro del hero. */
+    const step = (dir: 1 | -1) => {
+      const from = current();
+      const next = from + dir;
+      if (next < 0 || next > 3) return false;
+      if (Date.now() >= lockUntil.current) goRef.current(next);
+      return true;
+    };
+
+    let wheelAcc = 0;
+    let wheelReset = 0;
+    const onWheel = (e: WheelEvent) => {
+      if (e.ctrlKey || !pinned() || Math.abs(e.deltaY) < Math.abs(e.deltaX)) return;
+      const dir: 1 | -1 = e.deltaY > 0 ? 1 : -1;
+      const from = current();
+      if ((dir === 1 && from === 3) || (dir === -1 && from === 0)) return; // deja salir del hero
+      e.preventDefault();
+      window.clearTimeout(wheelReset);
+      wheelReset = window.setTimeout(() => (wheelAcc = 0), 200);
+      wheelAcc += e.deltaY;
+      if (Math.abs(wheelAcc) >= 30) {
+        wheelAcc = 0;
+        step(dir);
+      }
+    };
+
+    let touch: { x: number; y: number; handled: boolean } | null = null;
+    const onTouchStart = (e: TouchEvent) => {
+      const t = e.touches[0];
+      touch = { x: t.clientX, y: t.clientY, handled: false };
+    };
+    const onTouchMove = (e: TouchEvent) => {
+      if (!touch || !pinned()) return;
+      const t = e.touches[0];
+      const dx = t.clientX - touch.x;
+      const dy = t.clientY - touch.y;
+      const horizontal = Math.abs(dx) > Math.abs(dy);
+      const dir: 1 | -1 = (horizontal ? dx : dy) < 0 ? 1 : -1;
+      const from = current();
+      // Vertical en los extremos: scroll normal para entrar o salir del hero
+      if (!horizontal && ((dir === 1 && from === 3) || (dir === -1 && from === 0))) return;
+      if (e.cancelable) e.preventDefault();
+      if (!touch.handled && Math.max(Math.abs(dx), Math.abs(dy)) > 40) {
+        touch.handled = true;
+        step(dir);
+      }
+    };
+    const onTouchEnd = () => (touch = null);
+
+    window.addEventListener("wheel", onWheel, { passive: false });
+    const el = sectionRef.current;
+    el?.addEventListener("touchstart", onTouchStart, { passive: true });
+    el?.addEventListener("touchmove", onTouchMove, { passive: false });
+    el?.addEventListener("touchend", onTouchEnd, { passive: true });
+    return () => {
+      window.removeEventListener("wheel", onWheel);
+      el?.removeEventListener("touchstart", onTouchStart);
+      el?.removeEventListener("touchmove", onTouchMove);
+      el?.removeEventListener("touchend", onTouchEnd);
+      window.clearTimeout(wheelReset);
+    };
+  }, []);
 
   return (
     <section id="inicio" ref={sectionRef} aria-label="Nuestro proceso" className="relative h-[420vh]">
       {/* Se fija debajo del header (68px) para que el rail de progreso quede visible desde el inicio */}
-      <div
-        className="sticky top-[68px] flex h-[calc(100svh-68px)] min-h-0 touch-pan-y flex-col overflow-hidden"
-        onTouchStart={onTouchStart}
-        onTouchEnd={onTouchEnd}
-      >
-        {/* Indicador táctil (celular): se puede deslizar a los lados y hacia arriba/abajo */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute right-[18px] top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-[hsl(174_72%_56%/.45)] bg-[rgba(13,21,29,.7)] text-fw-aqua shadow-[0_0_24px_-8px_hsl(174_72%_56%/.8)] md:hidden"
-        >
-          <Move className="h-5 w-5 animate-swipe-hint" strokeWidth={1.5} />
-        </div>
+      <div className="sticky top-[68px] flex h-[calc(100svh-68px)] min-h-0 flex-col overflow-hidden">
         {/* Fondo */}
         <div aria-hidden className="absolute inset-0 overflow-hidden">
           <img
