@@ -29,3 +29,8 @@ cotizacion/
 # Datos de precios: nunca en el repo público
 data/
 *PRIVADO*
+
+# Python (servicio de agentes)
+.venv/
+__pycache__/
+.pytest_cache/

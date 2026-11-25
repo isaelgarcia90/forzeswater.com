@@ -135,6 +135,31 @@ function parseOptions(raw: string): { text: string; options?: string[] } {
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
 const SAVE_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/save-chat-lead`;
 
+// Backend de agentes (Cloud Run). Si no está definido, se usa la Edge Function de Supabase.
+const AGENTS_URL = (import.meta.env.VITE_AGENTS_URL as string | undefined)?.replace(/\/$/, "") || "";
+const AGENT_SESSION_KEY = "forzes-agent-session";
+
+type AgentSession = { session_id: string; session_token: string };
+
+function loadAgentSession(): AgentSession | null {
+  try {
+    const raw = window.localStorage.getItem(AGENT_SESSION_KEY);
+    const parsed = raw ? (JSON.parse(raw) as AgentSession) : null;
+    return parsed?.session_id && parsed?.session_token ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
+function storeAgentSession(session: AgentSession | null) {
+  try {
+    if (session) window.localStorage.setItem(AGENT_SESSION_KEY, JSON.stringify(session));
+    else window.localStorage.removeItem(AGENT_SESSION_KEY);
+  } catch {
+    // sin almacenamiento disponible
+  }
+}
+
 const STORAGE_KEY = "forzes-chat-history";
 const MAX_AGE_MS = 24 * 60 * 60 * 1000;
 
@@ -158,6 +183,84 @@ function loadStoredChat(): StoredChat | null {
     return parsed;
   } catch {
     return null;
+  }
+}
+
+const CHAT_ERROR_TEXT =
+  "Lo siento, hubo un error al procesar tu mensaje. Por favor intenta de nuevo o contáctanos por WhatsApp al +52 55 1807 0867.";
+
+type SetMessages = (update: (prev: Message[]) => Message[]) => void;
+
+/** Envía un mensaje al backend de agentes y aplica sus eventos SSE (session, delta, options, ui, done, error). */
+async function streamFromAgents(input: string, signal: AbortSignal, setMessages: SetMessages) {
+  const session = loadAgentSession();
+  let quoteItems: string[] = [];
+  try {
+    const raw = window.localStorage.getItem("forzes-quote-list");
+    quoteItems = raw ? (JSON.parse(raw) as string[]).slice(0, 10) : [];
+  } catch {
+    quoteItems = [];
+  }
+  const resp = await fetch(`${AGENTS_URL}/v1/chat`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      ...(session ?? {}),
+      message: input,
+      context: { page: window.location.pathname + window.location.hash, quote_items: quoteItems },
+    }),
+    signal,
+  });
+  if (resp.status === 401) storeAgentSession(null); // sesión vencida: la siguiente petición crea otra
+  if (!resp.ok || !resp.body) {
+    const errData = await resp.json().catch(() => ({}));
+    throw new Error(errData.detail || "Error al conectar con el asistente");
+  }
+
+  let text = "";
+  const reader = resp.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+  let started = false;
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+    let sep: number;
+    while ((sep = buffer.indexOf("\n\n")) !== -1) {
+      const block = buffer.slice(0, sep);
+      buffer = buffer.slice(sep + 2);
+      let event = "message";
+      let data = "";
+      for (const line of block.split("\n")) {
+        if (line.startsWith("event: ")) event = line.slice(7).trim();
+        else if (line.startsWith("data: ")) data += line.slice(6);
+      }
+      if (!data) continue;
+      const payload = JSON.parse(data);
+      if (event === "session") storeAgentSession(payload as AgentSession);
+      else if (event === "delta") {
+        text += payload.text as string;
+        if (!started) {
+          started = true;
+          setMessages((prev) => [...prev, { role: "assistant", content: text.trim() }]);
+        } else {
+          setMessages((prev) => prev.map((m, i) => (i === prev.length - 1 && m.role === "assistant" && m.type !== "email_form" ? { ...m, content: text.trim() } : m)));
+        }
+      } else if (event === "options") {
+        const items = (payload.items as string[]).slice(0, 6);
+        if (started) setMessages((prev) => prev.map((m, i) => (i === prev.length - 1 && m.role === "assistant" && m.type !== "email_form" ? { ...m, options: items } : m)));
+      } else if (event === "ui" && payload.action === "email_form") {
+        setMessages((prev) => [
+          ...prev,
+          { role: "assistant", type: "email_form", content: payload.payload?.reason || "Déjanos tus datos para enviarte la información:" },
+        ]);
+        started = false;
+        text = "";
+      } else if (event === "error") {
+        throw new Error(payload.message || "Error del asistente");
+      }
+    }
   }
 }
 
@@ -185,6 +288,18 @@ export function useChatBot() {
   const saveLead = useCallback(
     async (args: { name: string; email: string; phone: string; message: string }): Promise<boolean> => {
       try {
+        if (AGENTS_URL) {
+          const session = loadAgentSession();
+          if (!session) return false;
+          const resp = await fetch(`${AGENTS_URL}/v1/leads`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ ...session, name: args.name, email: args.email, phone: args.phone || null }),
+          });
+          if (!resp.ok) return false;
+          setLeadSaved(true);
+          return true;
+        }
         const resp = await fetch(SAVE_URL, {
           method: "POST",
           headers: {
@@ -245,6 +360,21 @@ export function useChatBot() {
 
       const controller = new AbortController();
       abortRef.current = controller;
+
+      if (AGENTS_URL) {
+        try {
+          await streamFromAgents(input, controller.signal, setMessages);
+        } catch (e) {
+          if ((e as Error).name !== "AbortError") {
+            console.error("Chat error:", e);
+            setMessages((prev) => [...prev, { role: "assistant", content: CHAT_ERROR_TEXT }]);
+          }
+        } finally {
+          setIsLoading(false);
+          abortRef.current = null;
+        }
+        return;
+      }
 
       let assistantSoFar = "";
       let toolCallArgs = "";
@@ -388,6 +518,7 @@ export function useChatBot() {
     setMessages([]);
     setLeadSaved(false);
     abortRef.current?.abort();
+    if (clearStorage) storeAgentSession(null);
     if (clearStorage && typeof window !== "undefined") {
       try {
         window.localStorage.removeItem(STORAGE_KEY);
