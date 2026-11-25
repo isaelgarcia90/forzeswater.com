@@ -15,7 +15,7 @@ import { NarrationPill } from "./Narration";
 const LAUNCHER_DELAY_MS = 3000; // Forzecito aparece a los 3 s
 const FIRST_GREETING_DELAY_MS = 2000; // el saludo, 2 s después
 const GREETING_VISIBLE_MS = 5000; // dura 5 s
-const WELCOME_VISIBLE_MS = 3000; // la bienvenida inicial dura 3 s
+const WELCOME_VISIBLE_MS = 6000; // la bienvenida inicial dura 6 s
 const AFTER_WELCOME_MS = 2000; // pausa antes del saludo normal
 const IDLE_GREETING_MS = 3000; // reaparece tras 3 s sin scroll
 const MAX_GREETINGS = 3; // por visita (se reinicia al volver al inicio)
@@ -60,7 +60,7 @@ const ChatBot = () => {
   const tryGreetRef = useRef(tryGreet);
   tryGreetRef.current = tryGreet;
 
-  // Forzecito aparece a los 3 s; 2 s después dice "¡Hola!, Bienvenido a Forzes Water" (3 s),
+  // Forzecito aparece a los 3 s; 2 s después dice "¡Hola!, Bienvenido a Forzes Water" (6 s),
   // desaparece y, tras 2 s, muestra el saludo normal.
   // Luego reaparece tras 3 s sin scroll; el contador se reinicia al volver al inicio.
   useEffect(() => {
