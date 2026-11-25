@@ -1,4 +1,9 @@
-project_id = "dlnliulhxpgvsoygsboe"
+project_id = "forzeswater"
+
+[db.seed]
+enabled = true
+# Archivo local con el catálogo y los precios: está en .gitignore (*PRIVADO*) y nunca se sube al repo.
+sql_paths = ["./seed/catalogo_PRIVADO.sql"]
 
 [functions.chat]
 verify_jwt = false
