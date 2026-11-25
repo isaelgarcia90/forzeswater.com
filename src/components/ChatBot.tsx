@@ -10,6 +10,7 @@ import {
 import { useChatBot } from "@/hooks/useChatBot";
 import { useLanding } from "@/context/LandingContext";
 import ChatMessages from "./ChatMessages";
+import { NarrationPill } from "./Narration";
 
 const LAUNCHER_DELAY_MS = 3000; // Forzecito aparece a los 3 s
 const FIRST_GREETING_DELAY_MS = 2000; // el saludo, 2 s después
@@ -284,6 +285,9 @@ const ChatBot = () => {
         </div>
       )}
 
+      <div className="flex items-center gap-3">
+      {/* Escritorio: "Escuchar" junto al avatar; en móvil vive en la barra superior */}
+      {launcherVisible && !isOpen && <NarrationPill className="hidden animate-fade-in nav:flex" />}
       <button
         type="button"
         onClick={() => (isOpen ? setIsOpen(false) : open())}
@@ -298,6 +302,7 @@ const ChatBot = () => {
         <img src={forzecito} alt="" width={66} height={66} className="block h-full w-full rounded-full" />
         <span aria-hidden className="absolute bottom-1 right-0.5 h-3.5 w-3.5 rounded-full border-2 border-fw-bg bg-fw-online" />
       </button>
+      </div>
     </div>
   );
 };
