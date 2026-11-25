@@ -12,7 +12,9 @@ import { useLanding } from "@/context/LandingContext";
 import ChatMessages from "./ChatMessages";
 
 const LAUNCHER_DELAY_MS = 3000; // Forzecito aparece a los 3 s
-const FIRST_GREETING_DELAY_MS = 2000; // el saludo, 2 s después
+const FIRST_GREETING_DELAY_MS = 2000; // la bienvenida, 2 s después
+const WELCOME_VISIBLE_MS = 3000; // "¡Hola!, Bienvenido a Forzes Water" dura 3 s
+const WELCOME_GAP_MS = 2000; // pausa antes del saludo normal
 const GREETING_VISIBLE_MS = 5000; // dura 5 s
 const IDLE_GREETING_MS = 3000; // reaparece tras 3 s sin scroll
 const MAX_GREETINGS = 3; // por visita (se reinicia al volver al inicio)
@@ -26,6 +28,7 @@ const ChatBot = () => {
   const [showReturnPrompt, setShowReturnPrompt] = useState(false);
   const [launcherVisible, setLauncherVisible] = useState(false);
   const [greetOn, setGreetOn] = useState(false);
+  const [welcome, setWelcome] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const pendingRef = useRef<string | null>(null);
   const { quoteOpen, ficha, gate, menuOpen } = useLanding();
@@ -46,6 +49,7 @@ const ChatBot = () => {
     const st = greetState.current;
     if (st.blocked || st.count >= MAX_GREETINGS) return;
     st.count += 1;
+    setWelcome(false);
     setGreetOn(true);
     window.clearTimeout(st.hideTimer);
     st.hideTimer = window.setTimeout(() => setGreetOn(false), GREETING_VISIBLE_MS);
@@ -53,16 +57,24 @@ const ChatBot = () => {
   const tryGreetRef = useRef(tryGreet);
   tryGreetRef.current = tryGreet;
 
-  // Forzecito aparece a los 3 s; el primer saludo 2 s después.
+  // Forzecito aparece a los 3 s; 2 s después, la bienvenida (3 s), una pausa de 2 s y el saludo normal.
   // Luego reaparece tras 3 s sin scroll; el contador se reinicia al volver al inicio.
   useEffect(() => {
     const st = greetState.current;
     let idle = 0;
+    const welcomeAt = LAUNCHER_DELAY_MS + FIRST_GREETING_DELAY_MS;
     const tLauncher = window.setTimeout(() => setLauncherVisible(true), LAUNCHER_DELAY_MS);
+    const tWelcome = window.setTimeout(() => {
+      if (st.blocked) return;
+      setWelcome(true);
+      setGreetOn(true);
+      window.clearTimeout(st.hideTimer);
+      st.hideTimer = window.setTimeout(() => setGreetOn(false), WELCOME_VISIBLE_MS);
+    }, welcomeAt);
     const tFirst = window.setTimeout(() => {
       st.introduced = true;
       tryGreetRef.current();
-    }, LAUNCHER_DELAY_MS + FIRST_GREETING_DELAY_MS);
+    }, welcomeAt + WELCOME_VISIBLE_MS + WELCOME_GAP_MS);
 
     const onScroll = () => {
       window.clearTimeout(idle);
@@ -73,6 +85,7 @@ const ChatBot = () => {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
       window.clearTimeout(tLauncher);
+      window.clearTimeout(tWelcome);
       window.clearTimeout(tFirst);
       window.clearTimeout(idle);
       window.clearTimeout(st.hideTimer);
@@ -243,8 +256,14 @@ const ChatBot = () => {
           onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && open()}
           className="relative cursor-pointer border border-[hsl(174_72%_56%/.45)] bg-fw-card py-2 pl-3 pr-7 text-left shadow-[0_16px_40px_-18px_rgba(0,0,0,.8),0_0_30px_-14px_hsl(174_72%_56%/.7)] animate-rise-in"
         >
-          <span className="block whitespace-nowrap font-display text-[15px] font-semibold leading-tight">Hola, soy Forzecito.</span>
-          <span className="block whitespace-nowrap text-[13px] leading-snug text-fw-aqua">¿Tienes dudas?</span>
+          {welcome ? (
+            <span className="block whitespace-nowrap font-display text-[15px] font-semibold leading-tight">¡Hola!, Bienvenido a Forzes Water</span>
+          ) : (
+            <>
+              <span className="block whitespace-nowrap font-display text-[15px] font-semibold leading-tight">Hola, soy Forzecito.</span>
+              <span className="block whitespace-nowrap text-[13px] leading-snug text-fw-aqua">¿Tienes dudas?</span>
+            </>
+          )}
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); hideGreeting(); }}
