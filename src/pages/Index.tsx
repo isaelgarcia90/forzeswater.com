@@ -9,6 +9,7 @@ import FAQ from "@/components/FAQ";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import ChatBot from "@/components/ChatBot";
+import Narration from "@/components/Narration";
 import { PriceGate, ProductSheet, QuoteDrawer } from "@/components/Overlays";
 import { LandingProvider } from "@/context/LandingContext";
 import { useAnalytics } from "@/hooks/useAnalytics";
@@ -60,6 +61,7 @@ const Index = () => {
         <QuoteDrawer />
         <ProductSheet />
         <PriceGate />
+        <Narration />
         <ChatBot />
       </div>
     </LandingProvider>
