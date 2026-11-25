@@ -5,6 +5,7 @@ import forzecito from "@/assets/forzecito.webp";
 import { NAV_LINKS, PHONE_DISPLAY, PHONE_HREF, WA_DEFAULT } from "@/data/landing";
 import { openForzecito, useLanding } from "@/context/LandingContext";
 import { WhatsAppIcon } from "./fw";
+import { NarrationIcon } from "./Narration";
 import { useAnalytics } from "@/hooks/useAnalytics";
 
 const Header = () => {
@@ -74,6 +75,7 @@ const Header = () => {
           </div>
 
           <div className="ml-auto flex flex-none items-center gap-2 nav:hidden">
+            <NarrationIcon />
             <button
               type="button"
               onClick={() => { setMenuOpen(false); setQuoteOpen(true); }}
