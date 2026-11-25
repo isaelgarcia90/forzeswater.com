@@ -14,6 +14,8 @@ import ChatMessages from "./ChatMessages";
 const LAUNCHER_DELAY_MS = 3000; // Forzecito aparece a los 3 s
 const FIRST_GREETING_DELAY_MS = 2000; // el saludo, 2 s después
 const GREETING_VISIBLE_MS = 5000; // dura 5 s
+const WELCOME_VISIBLE_MS = 3000; // la bienvenida inicial dura 3 s
+const AFTER_WELCOME_MS = 2000; // pausa antes del saludo normal
 const IDLE_GREETING_MS = 3000; // reaparece tras 3 s sin scroll
 const MAX_GREETINGS = 3; // por visita (se reinicia al volver al inicio)
 const QUICK_REPLIES = ["Quiero cotizar", "¿Qué sistema necesito?", "Tiempos de entrega", "Lista de precios", "Hablar con un asesor"];
@@ -26,6 +28,7 @@ const ChatBot = () => {
   const [showReturnPrompt, setShowReturnPrompt] = useState(false);
   const [launcherVisible, setLauncherVisible] = useState(false);
   const [greetOn, setGreetOn] = useState(false);
+  const [welcome, setWelcome] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const pendingRef = useRef<string | null>(null);
   const { quoteOpen, ficha, gate, menuOpen } = useLanding();
@@ -38,7 +41,9 @@ const ChatBot = () => {
 
   const hideGreeting = () => {
     window.clearTimeout(greetState.current.hideTimer);
+    greetState.current.introduced = true;
     setGreetOn(false);
+    setWelcome(false);
   };
 
   /** Muestra el saludo 5 s (máximo 3 veces por visita). */
@@ -46,6 +51,7 @@ const ChatBot = () => {
     const st = greetState.current;
     if (st.blocked || st.count >= MAX_GREETINGS) return;
     st.count += 1;
+    setWelcome(false);
     setGreetOn(true);
     window.clearTimeout(st.hideTimer);
     st.hideTimer = window.setTimeout(() => setGreetOn(false), GREETING_VISIBLE_MS);
@@ -53,15 +59,28 @@ const ChatBot = () => {
   const tryGreetRef = useRef(tryGreet);
   tryGreetRef.current = tryGreet;
 
-  // Forzecito aparece a los 3 s; el primer saludo 2 s después.
+  // Forzecito aparece a los 3 s; 2 s después dice "¡Hola!, Bienvenido a Forzes Water" (3 s),
+  // desaparece y, tras 2 s, muestra el saludo normal.
   // Luego reaparece tras 3 s sin scroll; el contador se reinicia al volver al inicio.
   useEffect(() => {
     const st = greetState.current;
     let idle = 0;
     const tLauncher = window.setTimeout(() => setLauncherVisible(true), LAUNCHER_DELAY_MS);
+    let tAfter = 0;
     const tFirst = window.setTimeout(() => {
-      st.introduced = true;
-      tryGreetRef.current();
+      if (st.blocked) {
+        st.introduced = true;
+        return;
+      }
+      setWelcome(true);
+      setGreetOn(true);
+      st.hideTimer = window.setTimeout(() => {
+        setGreetOn(false);
+        tAfter = window.setTimeout(() => {
+          st.introduced = true;
+          tryGreetRef.current();
+        }, AFTER_WELCOME_MS);
+      }, WELCOME_VISIBLE_MS);
     }, LAUNCHER_DELAY_MS + FIRST_GREETING_DELAY_MS);
 
     const onScroll = () => {
@@ -74,6 +93,7 @@ const ChatBot = () => {
     return () => {
       window.clearTimeout(tLauncher);
       window.clearTimeout(tFirst);
+      window.clearTimeout(tAfter);
       window.clearTimeout(idle);
       window.clearTimeout(st.hideTimer);
       window.removeEventListener("scroll", onScroll);
@@ -243,8 +263,14 @@ const ChatBot = () => {
           onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && open()}
           className="relative cursor-pointer border border-[hsl(174_72%_56%/.45)] bg-fw-card py-2 pl-3 pr-7 text-left shadow-[0_16px_40px_-18px_rgba(0,0,0,.8),0_0_30px_-14px_hsl(174_72%_56%/.7)] animate-rise-in"
         >
-          <span className="block whitespace-nowrap font-display text-[15px] font-semibold leading-tight">Hola, soy Forzecito.</span>
-          <span className="block whitespace-nowrap text-[13px] leading-snug text-fw-aqua">¿Tienes dudas?</span>
+          {welcome ? (
+            <span className="block whitespace-nowrap font-display text-[15px] font-semibold leading-tight">¡Hola!, Bienvenido a Forzes Water</span>
+          ) : (
+            <>
+              <span className="block whitespace-nowrap font-display text-[15px] font-semibold leading-tight">Hola, soy Forzecito.</span>
+              <span className="block whitespace-nowrap text-[13px] leading-snug text-fw-aqua">¿Tienes dudas?</span>
+            </>
+          )}
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); hideGreeting(); }}
